@@ -28,6 +28,14 @@ input, textarea, [contenteditable="true"]{
   pointer-events: auto !important;
   touch-action: manipulation;
 }
+/* iOS 输入框字体强制 16px，防止聚焦时页面被自动放大（仅 iOS 生效） */
+@supports (-webkit-touch-callout: none){
+  @media screen and (max-width: 900px){
+    input, textarea, select{
+      font-size: 16px !important;
+    }
+  }
+}
 html,body{height:100%;margin:0;padding:0}
   body{font-family:var(--font-family);font-size:var(--font-size-base);background:#e3eaec;color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
   svg{display:block}
@@ -213,7 +221,7 @@ html,body{height:100%;margin:0;padding:0}
   .composer-quote-close{border:0;background:transparent;color:var(--light-text);cursor:pointer;padding:2px 6px;font-size:16px;}
   .bubble-quote{margin-bottom:6px;padding:5px 10px;background:rgba(255,255,255,.85);border-left:2px solid var(--primary);border-radius:6px;font-size:12px;color:var(--text);line-height:1.4;word-break:break-word;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .msg.out .bubble-quote{background:rgba(255,255,255,.9)}
-  .composer-wrap{flex:0 0 auto;display:flex;flex-direction:column;background:var(--bar);border-top:1px solid var(--line);}
+  .composer-wrap{flex:0 0 auto;display:flex;flex-direction:column;background:var(--bar);}
   
   /* 红包气泡 */
   .redpacket-bubble{width:200px;border-radius:12px;overflow:hidden;background:#a03a3a;color:#fff;cursor:pointer;user-select:none;-webkit-user-select:none;box-shadow:0 2px 8px rgba(0,0,0,.15)}
@@ -1156,7 +1164,7 @@ html,body{height:100%;margin:0;padding:0}
   </div>
 </div>
 
-  <div style="height: 96px;"></div>
+  <div style="height: 140px;"></div>
 </div>
 
 <div class="bottom-dock" id="bottomDock">
@@ -8685,13 +8693,13 @@ function updateScoreChip(){
       board[c.y][c.x] = EMPTY;
       if(win) return c;
     }
-    if(difficulty === 'easy' && Math.random() < 0.45){
-      return cands[Math.floor(Math.random()*cands.length)];
-    }
+    if(difficulty === 'easy' && Math.random() < 0.6){
+  return cands[Math.floor(Math.random()*cands.length)];
+}
     var wMe, wOp, noise;
-    if(difficulty === 'easy'){ wMe = 1; wOp = 0.35; noise = 700; }
-    else if(difficulty === 'normal'){ wMe = 1; wOp = 0.9; noise = 90; }
-    else { wMe = 1.1; wOp = 1.05; noise = 6; }
+if(difficulty === 'easy'){ wMe = 1; wOp = 0.2; noise = 1200; }
+else if(difficulty === 'normal'){ wMe = 1; wOp = 0.6; noise = 320; }
+else { wMe = 1.05; wOp = 1.0; noise = 30; }
     var best = null, bestScore = -Infinity;
     for(var i=0;i<cands.length;i++){
       var c = cands[i];
@@ -9140,20 +9148,48 @@ bg.classList.add('show');
   var isStandalone = (('standalone' in navigator) && navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches;
   if(!isIOS) return;
 
-  // 兜底一：iOS PWA 下，点击 input/textarea 强制 focus
-  document.addEventListener('touchend', function(e){
-    var el = e.target;
+  /* 核心兜底：针对所有 input/textarea，touchstart 强制 focus */
+  function forceFocus(el){
     if(!el) return;
     if(el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') return;
     if(document.activeElement === el) return;
-    setTimeout(function(){
-      try{
-        el.focus();
-        if(el.setSelectionRange && typeof el.value === 'string'){
-          el.setSelectionRange(el.value.length, el.value.length);
-        }
-      }catch(err){}
-    }, 50);
+    try{
+      el.focus();
+      if(el.setSelectionRange && typeof el.value === 'string'){
+        el.setSelectionRange(el.value.length, el.value.length);
+      }
+    }catch(err){}
+  }
+
+  document.addEventListener('touchstart', function(e){
+    var el = e.target;
+    if(!el) return;
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+      setTimeout(function(){ forceFocus(el); }, 0);
+    } else if(el.closest){
+      var inner = el.closest('input, textarea');
+      if(inner) setTimeout(function(){ forceFocus(inner); }, 0);
+    }
+  }, {passive: true});
+
+  document.addEventListener('touchend', function(e){
+    var el = e.target;
+    if(!el) return;
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+      setTimeout(function(){ forceFocus(el); }, 50);
+    } else if(el.closest){
+      var inner = el.closest('input, textarea');
+      if(inner) setTimeout(function(){ forceFocus(inner); }, 50);
+    }
+  }, false);
+
+  /* click 兜底（有些 iOS 版本 touchend 不触发） */
+  document.addEventListener('click', function(e){
+    var el = e.target;
+    if(!el) return;
+    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+      setTimeout(function(){ forceFocus(el); }, 20);
+    }
   }, false);
 
   // 兜底二：PWA 模式下，body 上临时解锁键盘相关样式
