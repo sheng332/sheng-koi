@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
 <title>sheng·g</title>
 <style>
   :root{
@@ -17,7 +18,17 @@
     --font-size-base: 15px;--home-bg: linear-gradient(160deg,#dceef5 0%,#eef7fa 45%,#e6f0f4 100%);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;margin:0;padding:0}
+/* iOS PWA 输入保护：防止 user-select:none 影响键盘弹出 */
+input, textarea, [contenteditable="true"]{
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+html,body{height:100%;margin:0;padding:0}
   body{font-family:var(--font-family);font-size:var(--font-size-base);background:#e3eaec;color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
   svg{display:block}
   .app{position:relative;display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;margin:0 auto;background:var(--panel);overflow:hidden}
@@ -751,8 +762,12 @@
   font-style:italic;
 }
 
+/* 主屏所有直接子元素禁止被 flex 压缩（修复 vivo/Edge 纪念卡展示不全） */
+.home > *{flex-shrink:0}
+
 /* 纪念日卡 */
-.anniversary-card{padding:20px 20px 16px;border-radius:18px;background:rgba(255,255,255,.6);border:1px solid rgba(31,95,108,.06);box-shadow:0 4px 16px rgba(31,95,108,.04);display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;background-size:cover;background-position:center}
+.anniversary-card{padding:20px 20px 16px;border-radius:18px;background:rgba(255,255,255,.6);border:1px solid rgba(31,95,108,.06);box-shadow:0 4px 16px rgba(31,95,108,.04);display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;background-size:cover;background-position:center;flex-shrink:0;min-height:auto}
+.anniversary-top,.anniversary-bottom,.anniversary-dashed-line{flex-shrink:0}
 .anniversary-top{text-align:center;position:relative;z-index:2}
 .anniversary-label{font-size:13px;color:var(--light-text);letter-spacing:1px;margin-right:4px}
 .anniversary-days{display:flex;align-items:baseline;justify-content:center;gap:6px;color:var(--primary)}
@@ -866,8 +881,116 @@
 .welcome-note p{margin:0 0 8px}
 .welcome-note-strong{color:#c47c5a;font-weight:600;text-align:center;margin-top:10px !important}
 
+/* 游戏大厅 */
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:18px}
+
+/* 五子棋 */
+.gomoku-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);gap:8px}
+.gomoku-ta-row{flex:0 0 auto;display:flex;align-items:flex-end;gap:8px;min-height:46px}
+.gomoku-ta-avatar{width:34px;height:34px;border-radius:50%;flex:0 0 auto;background:#e8ecef;display:grid;place-items:center;color:#b8c0c7;overflow:hidden;background-size:cover;background-position:center}
+.gomoku-ta-avatar svg{width:20px;height:20px}
+.gomoku-ta-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.gomoku-ta-bubble{max-width:78%;padding:8px 13px;background:#fff;border-radius:14px 14px 14px 4px;font-size:13px;line-height:1.5;color:var(--text);box-shadow:0 2px 8px rgba(31,95,108,.06);animation:gomokuBubbleIn .25s ease}
+.gomoku-ta-bubble.thinking{color:var(--light-text);display:inline-flex;align-items:center;gap:5px}
+.gomoku-ta-bubble.thinking .gm-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--light-text);animation:dotBounce 1.2s infinite ease-in-out}
+.gomoku-ta-bubble.thinking .gm-dot:nth-child(2){animation-delay:.18s}
+.gomoku-ta-bubble.thinking .gm-dot:nth-child(3){animation-delay:.36s}
+@keyframes gomokuBubbleIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.gomoku-board-wrap{flex:1 1 auto;min-height:0;position:relative}
+#gomokuCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:14px;box-shadow:0 8px 28px rgba(31,95,108,.15),0 2px 6px rgba(0,0,0,.06);display:block;touch-action:manipulation}
+.gomoku-controls{flex:0 0 auto;display:flex;gap:10px}
+.gomoku-ctrl{flex:1;height:44px;border:0;border-radius:13px;background:rgba(255,255,255,.9);color:var(--text);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 8px rgba(31,95,108,.06);transition:transform .12s ease,background .15s ease}
+.gomoku-ctrl:active{transform:scale(.97);background:#fff}
+.gomoku-ctrl.primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(31,95,108,.25)}
+.gomoku-ctrl.primary:active{background:#18505c}
+.gomoku-ctrl:disabled{opacity:.4;pointer-events:none}
+.gomoku-ctrl .cnt{font-size:11px;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:8px}
+.gomoku-ctrl.primary .cnt{background:rgba(255,255,255,.22)}
+.gomoku-diff-list{display:flex;flex-direction:column;gap:10px;margin-top:16px;text-align:left}
+.gomoku-diff-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:var(--soft);border:2px solid transparent;cursor:pointer;transition:all .15s ease}
+.gomoku-diff-card:active{transform:scale(.98)}
+.gomoku-diff-card.selected{background:#e2f0f4;border-color:var(--primary)}
+.gomoku-diff-emoji{font-size:22px;flex:0 0 auto}
+.gomoku-diff-info{flex:1;min-width:0}
+.gomoku-diff-name{font-size:14.5px;font-weight:600;color:var(--text)}
+.gomoku-diff-desc{font-size:11.5px;color:var(--light-text);margin-top:3px}
+.gomoku-diff-check{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center}
+.gomoku-diff-card.selected .gomoku-diff-check{border-color:var(--primary);background:var(--primary)}
+.gomoku-diff-check svg{width:12px;height:12px;opacity:0;transition:opacity .15s}
+.gomoku-diff-card.selected .gomoku-diff-check svg{opacity:1}
+.gomoku-result-emoji{text-align:center;font-size:38px;line-height:1;margin-bottom:8px}
+.gomoku-result-box{margin:14px 16px 0;padding:12px 16px;background:linear-gradient(135deg,#fff4e6,#ffeae0);border-radius:12px;display:flex;align-items:center;gap:10px;border:1px solid rgba(216,160,130,.25);text-align:left}
+.gomoku-result-box .icon{font-size:26px}
+.gomoku-result-box .txt{flex:1;font-size:13px;line-height:1.5;color:#7a6156}
+.gomoku-result-box .txt b{color:#c47c5a;font-size:15px}
+
+/* 五子棋比分板 */
+.gomoku-scoreboard{flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:32px;padding:8px 0 6px;user-select:none;-webkit-user-select:none}
+.gomoku-score-side{display:flex;flex-direction:column;align-items:center;gap:3px}
+.gomoku-score-name{font-size:11.5px;color:var(--light-text);letter-spacing:.8px}
+.gomoku-score-num{font-size:38px;font-weight:700;color:var(--primary);line-height:1;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}
+.gomoku-score-sep{font-size:24px;color:var(--light-text);font-weight:300;margin-top:18px;opacity:.55}
+
+/* 聊天回复设置 折叠分类 */
+.reply-cat{margin:10px 12px;background:var(--panel);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(31,95,108,.06)}
+.reply-cat-head{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer;transition:background .14s ease;user-select:none;-webkit-user-select:none}
+.reply-cat-head:active{background:var(--soft)}
+.reply-cat-emoji{font-size:19px;line-height:1;flex:0 0 auto}
+.reply-cat-name{flex:1;font-size:15px;font-weight:600;color:var(--text)}
+.reply-cat-arrow{flex:0 0 auto;color:var(--accent);transition:transform .22s ease;display:flex;align-items:center}
+.reply-cat.open .reply-cat-arrow{transform:rotate(90deg)}
+.reply-cat-body{display:none;background:var(--panel);border-top:1px solid var(--line)}
+.reply-cat.open .reply-cat-body{display:block}
+.reply-cat-body .field-group{margin:0;background:transparent}
+.reply-cat-body .stepper-row:last-child,.reply-cat-body .field:last-child,.reply-cat-body .color-row:last-child{border-bottom:0}
+
+/* 系统预设大分类 */
+.syscat-card{margin:8px 12px;background:var(--panel);border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(31,95,108,.06)}
+.syscat-head{display:flex;align-items:center;gap:10px;padding:13px 15px;cursor:pointer;background:var(--panel);transition:background .14s ease;user-select:none;-webkit-user-select:none}
+.syscat-head:active{background:var(--soft)}
+.syscat-emoji{font-size:19px;flex:0 0 auto;line-height:1}
+.syscat-name{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.syscat-count{flex:0 0 auto;font-size:11.5px;color:var(--light-text);background:var(--soft);padding:2px 9px;border-radius:9px}
+.syscat-arrow{flex:0 0 auto;color:var(--accent);transition:transform .22s ease;display:flex;align-items:center}
+.syscat-card.open .syscat-arrow{transform:rotate(90deg)}
+.syscat-body{display:none;padding:4px 6px 6px;background:var(--bg);border-top:1px solid var(--line)}
+.syscat-card.open .syscat-body{display:block}
+.syscat-body .subgroup-card{margin:6px 6px;box-shadow:0 1px 3px rgba(31,95,108,.04)}
+
+/* 游戏邀请卡片 */
+.game-invite-msg-wrap{display:flex;justify-content:center;width:100%;margin:6px 0}
+.game-invite-card{width:auto;min-width:220px;max-width:80%;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid var(--line)}
+.game-invite-head{padding:10px 14px;background:linear-gradient(135deg,#e8f0f3,#f2f7f8);font-size:12px;color:var(--primary);font-weight:600;display:flex;align-items:center;gap:6px}
+.game-invite-body{padding:14px 16px 6px;font-size:14px;color:var(--text);line-height:1.5;text-align:center;font-weight:600}
+.game-invite-diff{font-size:11.5px;color:var(--light-text);font-weight:400;margin-top:4px}
+.game-invite-status{padding:6px 14px 12px;font-size:12.5px;color:var(--light-text);display:flex;align-items:center;justify-content:center;gap:6px}
+.game-invite-status.pending{color:#c9a03a}
+.game-invite-status.accepted{color:var(--primary);font-weight:600}
+.game-invite-status.rejected{color:#b8b8b8}
+.game-invite-btns{display:flex;gap:8px;padding:0 14px 14px;justify-content:center}
+.game-invite-btn{flex:1;height:34px;border-radius:9px;border:0;font-size:13px;font-family:inherit;cursor:pointer;transition:opacity .15s ease}
+.game-invite-btn:active{opacity:.8}
+.game-invite-btn.accept{background:var(--primary);color:#fff}
+.game-invite-btn.reject{background:#f5eaea;color:#c47c8a}
+.game-card{background:rgba(255,255,255,.95);border-radius:18px;padding:22px 16px 18px;border:0;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;box-shadow:0 4px 16px rgba(31,95,108,.06);transition:transform .15s ease,box-shadow .15s ease}
+.game-card:active{transform:scale(.96);box-shadow:0 2px 8px rgba(31,95,108,.1)}
+.game-card.disabled{opacity:.45;cursor:default;pointer-events:none}
+.game-card-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,#e8f0f3,#d2e6ec);color:var(--primary);box-shadow:0 2px 8px rgba(31,95,108,.08)}
+.game-card-icon svg{width:30px;height:30px}
+.game-card-name{font-size:14.5px;font-weight:600;color:var(--text)}
+.game-card-desc{font-size:11.5px;color:var(--light-text);margin-top:-2px}
+
 /* 更新提示卡片 */
 .update-bg{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+
+/* 更新内容列表 */
+.update-log{margin-top:14px;padding:12px 14px 10px;background:linear-gradient(180deg,#f2f7f8,#eef5f7);border-radius:12px;text-align:left;max-height:210px;overflow-y:auto;border:1px solid rgba(31,95,108,.06)}
+.update-log::-webkit-scrollbar{width:4px}
+.update-log::-webkit-scrollbar-thumb{background:rgba(31,95,108,.15);border-radius:2px}
+.update-log-title{font-size:11.5px;color:var(--primary);font-weight:600;letter-spacing:1px;margin-bottom:8px;text-align:center;opacity:.85}
+.update-log-item{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--text);line-height:1.55;padding:4px 0;border-bottom:1px dashed rgba(31,95,108,.06)}
+.update-log-item:last-child{border-bottom:0}
+.update-log-item .u-dot{flex:0 0 auto;width:5px;height:5px;border-radius:50%;background:var(--primary);margin-top:7px;opacity:.55}
 .update-bg.show{display:flex;animation:fadeIn .25s ease}
 .update-card{width:100%;max-width:320px;background:#fff;border-radius:20px;padding:26px 22px 20px;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center;animation:pop .3s ease}
 .update-emoji{font-size:38px;line-height:1;margin-bottom:8px}
@@ -1016,10 +1139,14 @@
       <span class="app-label">信箱</span>
     </button>
     <button class="app-item" data-app="wallet">
-      <div class="app-icon" data-icon-key="wallet"></div>
-      <span class="app-label">钱包</span>
-    </button>
-  </div>
+    <div class="app-icon" data-icon-key="wallet"></div>
+    <span class="app-label">钱包</span>
+  </button>
+  <button class="app-item" data-app="game">
+    <div class="app-icon" data-icon-key="game"></div>
+    <span class="app-label">小游戏</span>
+  </button>
+</div>
   <div class="big-photo-card" id="bigPhotoCard">
     <img id="bigPhotoImg" src="" alt="" style="display:none;">
     <div class="big-photo-empty" id="bigPhotoEmpty">点 ✎ 放照片</div>
@@ -1077,6 +1204,10 @@
     <button class="more-menu-btn" id="moreMenuInvite">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
   <span>邀请他一起听歌</span>
+</button>
+<button class="more-menu-btn" id="moreMenuGame">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+  <span>邀请 TA 一起玩</span>
 </button>
 <button class="more-menu-btn" id="moreMenuQuiz">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6"/><path d="M9 15h3"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
@@ -1362,68 +1493,134 @@
 <section class="page" id="replyPage">
   <header class="page-header"><button class="icon-btn" id="replyBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="page-title">聊天回复设置</div></header>
   <div class="page-body">
-    <div class="field-group">
-      <div class="field"><span class="field-label">回复最快</span><input type="number" id="replyMinInput" min="0" max="60" step="0.5" value="1"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">秒</span></div>
-      <div class="field"><span class="field-label">回复最慢</span><input type="number" id="replyMaxInput" min="0" max="120" step="0.5" value="3"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">秒</span></div>
-      <div class="field"><span class="field-label">回复条数</span><input type="number" id="replyCountInput" min="1" max="5" step="1" value="3"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">条内</span></div>
-    </div>
-    <div class="beautify-section-title">概率</div>
-    <div class="field-group">
-      <div class="stepper-row"><span class="stepper-label">表情包概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="sticker" data-dir="-1">−</button><span class="stepper-value" id="stepperStickerVal">20</span><button class="stepper-btn" data-step="sticker" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-      <div class="stepper-row"><span class="stepper-label">emoji 概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="emoji" data-dir="-1">−</button><span class="stepper-value" id="stepperEmojiVal">10</span><button class="stepper-btn" data-step="emoji" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-      <div class="stepper-row"><span class="stepper-label">语音概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="voice" data-dir="-1">−</button><span class="stepper-value" id="stepperVoiceVal">15</span><button class="stepper-btn" data-step="voice" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-    </div>
-    <div class="beautify-section-title">互动</div>
-<div class="field-group">
-  <div class="stepper-row"><span class="stepper-label">今日状态优先抽卡概率<span class="sub">概率越高，TA 越容易根据今日状态去对应分组抽卡</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="moodChance" data-dir="-1">−</button><span class="stepper-value" id="stepperMoodChanceVal">60</span><button class="stepper-btn" data-step="moodChance" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">引用回复概率<span class="sub">触发后，TA 会引用你的上一句话回复</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="quote" data-dir="-1">−</button><span class="stepper-value" id="stepperQuoteVal">15</span><button class="stepper-btn" data-step="quote" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-<div class="stepper-row"><span class="stepper-label">已读不回概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="readNoReply" data-dir="-1">−</button><span class="stepper-value" id="stepperReadNoReplyVal">15</span><button class="stepper-btn" data-step="readNoReply" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-<div class="stepper-row"><span class="stepper-label">接受听歌邀请</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="invite" data-dir="-1">−</button><span class="stepper-value" id="stepperInviteVal">80</span><button class="stepper-btn" data-step="invite" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-<div class="stepper-row"><span class="stepper-label">TA 主动邀请听歌</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taInvite" data-dir="-1">−</button><span class="stepper-value" id="stepperTaInviteVal">10</span><button class="stepper-btn" data-step="taInvite" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-    </div>
-    <div class="beautify-section-title">红包</div>
-    <div class="field-group">
-      <div class="stepper-row"><span class="stepper-label">TA 发红包概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="redpacket" data-dir="-1">−</button><span class="stepper-value" id="stepperRedpacketVal">5</span><button class="stepper-btn" data-step="redpacket" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-    </div>
-    <div class="beautify-section-title">拼字卡</div>
-    <div class="field-group">
-      <div class="stepper-row"><span class="stepper-label">拼字卡概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="concat" data-dir="-1">−</button><span class="stepper-value" id="stepperConcatVal">15</span><button class="stepper-btn" data-step="concat" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-      <div class="stepper-row"><span class="stepper-label">拼几张</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="concatCount" data-dir="-1">−</button><span class="stepper-value" id="stepperConcatCountVal">3</span><button class="stepper-btn" data-step="concatCount" data-dir="1">+</button><span class="stepper-unit">张</span></div></div>
-<div class="stepper-row"><span class="stepper-label">强制语法概率<span class="sub">越高越像正经情话（我+想+你），越低越胡言乱语（宝贝+吃醋+啦）</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="strictGrammar" data-dir="-1">−</button><span class="stepper-value" id="stepperStrictGrammarVal">80</span><button class="stepper-btn" data-step="strictGrammar" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-      <div class="color-row"><span class="color-row-label">融合全部字卡</span><label class="switch"><input type="checkbox" id="concatUseAllToggle"><span class="switch-slider"></span></label></div>
-</div>
 
-<div class="beautify-section-title">信件</div>
-<div class="field-group">
-  <div class="stepper-row"><span class="stepper-label">TA 寄信概率<span class="sub">TA 主动给你写信的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letter" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterVal">10</span><button class="stepper-btn" data-step="letter" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">信件包含字卡张数<span class="sub">信件正文由几张字卡拼成</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterCount" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterCountVal">3</span><button class="stepper-btn" data-step="letterCount" data-dir="1">+</button><span class="stepper-unit">张</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 回信最快<span class="sub">写完信后，最快多少小时收到回信</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterMin" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterMinVal">2</span><button class="stepper-btn" data-step="letterMin" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 回信最慢<span class="sub">写完信后，最慢多少小时收到回信</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterMax" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterMaxVal">24</span><button class="stepper-btn" data-step="letterMax" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
-  <div class="color-row"><span class="color-row-label">信件包含词典字卡<span class="sub">开启后，信件内容可以抽取词典的词</span></span><label class="switch"><input type="checkbox" id="letterUseDictToggle"><span class="switch-slider"></span></label></div>
-</div>
-    <div class="beautify-section-title">动态</div>
-<div class="field-group">
-  <div class="stepper-row"><span class="stepper-label">你发帖后 TA 跟发<span class="sub">你发一条，TA 也发一条的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentFollow" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentFollowVal">60</span><button class="stepper-btn" data-step="momentFollow" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 回赞你<span class="sub">你点赞 TA 的帖子，TA 回赞你的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentLike" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentLikeVal">50</span><button class="stepper-btn" data-step="momentLike" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 赞你的帖子<span class="sub">你发帖后，TA 来点赞的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentLikeMy" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentLikeMyVal">80</span><button class="stepper-btn" data-step="momentLikeMy" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-<div class="stepper-row"><span class="stepper-label">TA 评论你的帖子<span class="sub">你发帖后，TA 来评论的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentReplyMy" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentReplyMyVal">60</span><button class="stepper-btn" data-step="momentReplyMy" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 回复评论<span class="sub">你评论 TA，TA 回复的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentComment" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentCommentVal">70</span><button class="stepper-btn" data-step="momentComment" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 多久没发帖才自动发<span class="sub">间隔时间，越短 TA 越活跃</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentHours" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentHoursVal">4</span><button class="stepper-btn" data-step="momentHours" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 自动发帖概率<span class="sub">到时间了，TA 真发的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentAuto" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentAutoVal">70</span><button class="stepper-btn" data-step="momentAuto" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-</div>
-<div class="beautify-section-title">通话</div>
-<div class="field-group">
-  <div class="stepper-row"><span class="stepper-label">TA 主动来电<span class="sub">TA 主动给你打电话的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaCallVal">10</span><button class="stepper-btn" data-step="taCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 拒接<span class="sub">你打过去，TA 不接的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taRejectCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaRejectCallVal">20</span><button class="stepper-btn" data-step="taRejectCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-  <div class="stepper-row"><span class="stepper-label">TA 中途挂断<span class="sub">接通后，TA 有事先挂的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taHangup" data-dir="-1">−</button><span class="stepper-value" id="stepperTaHangupVal">10</span><button class="stepper-btn" data-step="taHangup" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
-</div>
-<div class="beautify-section-title">防复读</div>
-    <div class="field-group">
-      <div class="stepper-row"><span class="stepper-label">冷却长度</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="cooldown" data-dir="-1">−</button><span class="stepper-value" id="stepperCooldownVal">5</span><button class="stepper-btn" data-step="cooldown" data-dir="1">+</button><span class="stepper-unit">条</span></div></div>
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">💬</span>
+        <span class="reply-cat-name">聊天</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="field-group">
+          <div class="field"><span class="field-label">回复最快</span><input type="number" id="replyMinInput" min="0" max="60" step="0.5" value="1"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">秒</span></div>
+          <div class="field"><span class="field-label">回复最慢</span><input type="number" id="replyMaxInput" min="0" max="120" step="0.5" value="3"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">秒</span></div>
+          <div class="field"><span class="field-label">回复条数</span><input type="number" id="replyCountInput" min="1" max="5" step="1" value="3"><span style="font-size:13px;color:var(--light-text);flex:0 0 auto;">条内</span></div>
+        </div>
+        <div class="stepper-row"><span class="stepper-label">表情包概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="sticker" data-dir="-1">−</button><span class="stepper-value" id="stepperStickerVal">20</span><button class="stepper-btn" data-step="sticker" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">emoji 概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="emoji" data-dir="-1">−</button><span class="stepper-value" id="stepperEmojiVal">10</span><button class="stepper-btn" data-step="emoji" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">语音概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="voice" data-dir="-1">−</button><span class="stepper-value" id="stepperVoiceVal">15</span><button class="stepper-btn" data-step="voice" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">引用回复概率<span class="sub">触发后，TA 会引用你的上一句话回复</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="quote" data-dir="-1">−</button><span class="stepper-value" id="stepperQuoteVal">15</span><button class="stepper-btn" data-step="quote" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">已读不回概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="readNoReply" data-dir="-1">−</button><span class="stepper-value" id="stepperReadNoReplyVal">15</span><button class="stepper-btn" data-step="readNoReply" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+      </div>
     </div>
-    <div class="tip">抽过的字卡，接下来 N 次不再抽到。</div>
-    <div class="tip">TA 每条回复都会按概率决定发文字、emoji 还是表情包。</div>
-    <div class="actions"><button class="btn-primary" id="replySaveBtn">保存</button></div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">💗</span>
+        <span class="reply-cat-name">互动</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">今日状态优先抽卡概率<span class="sub">概率越高，TA 越容易根据今日状态去对应分组抽卡</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="moodChance" data-dir="-1">−</button><span class="stepper-value" id="stepperMoodChanceVal">60</span><button class="stepper-btn" data-step="moodChance" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">接受听歌邀请</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="invite" data-dir="-1">−</button><span class="stepper-value" id="stepperInviteVal">80</span><button class="stepper-btn" data-step="invite" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 主动邀请听歌</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taInvite" data-dir="-1">−</button><span class="stepper-value" id="stepperTaInviteVal">10</span><button class="stepper-btn" data-step="taInvite" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">🧧</span>
+        <span class="reply-cat-name">红包</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">TA 发红包概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="redpacket" data-dir="-1">−</button><span class="stepper-value" id="stepperRedpacketVal">5</span><button class="stepper-btn" data-step="redpacket" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">✍️</span>
+        <span class="reply-cat-name">拼字卡</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">拼字卡概率</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="concat" data-dir="-1">−</button><span class="stepper-value" id="stepperConcatVal">15</span><button class="stepper-btn" data-step="concat" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">拼几张</span><div class="stepper-ctrl"><button class="stepper-btn" data-step="concatCount" data-dir="-1">−</button><span class="stepper-value" id="stepperConcatCountVal">3</span><button class="stepper-btn" data-step="concatCount" data-dir="1">+</button><span class="stepper-unit">张</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">强制语法概率<span class="sub">越高越像正经情话（我+想+你），越低越胡言乱语（宝贝+吃醋+啦）</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="strictGrammar" data-dir="-1">−</button><span class="stepper-value" id="stepperStrictGrammarVal">80</span><button class="stepper-btn" data-step="strictGrammar" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="color-row"><span class="color-row-label">融合全部字卡</span><label class="switch"><input type="checkbox" id="concatUseAllToggle"><span class="switch-slider"></span></label></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">💌</span>
+        <span class="reply-cat-name">信件</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">TA 寄信概率<span class="sub">TA 主动给你写信的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letter" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterVal">10</span><button class="stepper-btn" data-step="letter" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">信件包含字卡张数<span class="sub">信件正文由几张字卡拼成</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterCount" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterCountVal">3</span><button class="stepper-btn" data-step="letterCount" data-dir="1">+</button><span class="stepper-unit">张</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 回信最快<span class="sub">写完信后，最快多少小时收到回信</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterMin" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterMinVal">2</span><button class="stepper-btn" data-step="letterMin" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 回信最慢<span class="sub">写完信后，最慢多少小时收到回信</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="letterMax" data-dir="-1">−</button><span class="stepper-value" id="stepperLetterMaxVal">24</span><button class="stepper-btn" data-step="letterMax" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
+        <div class="color-row"><span class="color-row-label">信件包含词典字卡<span class="sub">开启后，信件内容可以抽取词典的词</span></span><label class="switch"><input type="checkbox" id="letterUseDictToggle"><span class="switch-slider"></span></label></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">🌸</span>
+        <span class="reply-cat-name">动态</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">你发帖后 TA 跟发<span class="sub">你发一条，TA 也发一条的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentFollow" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentFollowVal">60</span><button class="stepper-btn" data-step="momentFollow" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 回赞你<span class="sub">你点赞 TA 的帖子，TA 回赞你的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentLike" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentLikeVal">50</span><button class="stepper-btn" data-step="momentLike" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 赞你的帖子<span class="sub">你发帖后，TA 来点赞的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentLikeMy" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentLikeMyVal">80</span><button class="stepper-btn" data-step="momentLikeMy" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 评论你的帖子<span class="sub">你发帖后，TA 来评论的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentReplyMy" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentReplyMyVal">60</span><button class="stepper-btn" data-step="momentReplyMy" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 回复评论<span class="sub">你评论 TA，TA 回复的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentComment" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentCommentVal">70</span><button class="stepper-btn" data-step="momentComment" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 多久没发帖才自动发<span class="sub">间隔时间，越短 TA 越活跃</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentHours" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentHoursVal">4</span><button class="stepper-btn" data-step="momentHours" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 自动发帖概率<span class="sub">到时间了，TA 真发的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="momentAuto" data-dir="-1">−</button><span class="stepper-value" id="stepperMomentAutoVal">70</span><button class="stepper-btn" data-step="momentAuto" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">📞</span>
+        <span class="reply-cat-name">通话</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">TA 主动来电<span class="sub">TA 主动给你打电话的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaCallVal">10</span><button class="stepper-btn" data-step="taCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 拒接<span class="sub">你打过去，TA 不接的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taRejectCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaRejectCallVal">20</span><button class="stepper-btn" data-step="taRejectCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 中途挂断<span class="sub">接通后，TA 有事先挂的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taHangup" data-dir="-1">−</button><span class="stepper-value" id="stepperTaHangupVal">10</span><button class="stepper-btn" data-step="taHangup" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">🎮</span>
+        <span class="reply-cat-name">游戏</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">TA 接受你的邀请<span class="sub">你邀请 TA 玩，TA 同意的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="gameAccept" data-dir="-1">−</button><span class="stepper-value" id="stepperGameAcceptVal">70</span><button class="stepper-btn" data-step="gameAccept" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">TA 主动邀请你玩<span class="sub">聊天时 TA 主动来约你的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="gameInvite" data-dir="-1">−</button><span class="stepper-value" id="stepperGameInviteVal">10</span><button class="stepper-btn" data-step="gameInvite" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+        <div class="stepper-row"><span class="stepper-label">被拒后冷却<span class="sub">你拒绝 TA 后，多久 TA 才会再约你</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="gameCooldown" data-dir="-1">−</button><span class="stepper-value" id="stepperGameCooldownVal">1</span><button class="stepper-btn" data-step="gameCooldown" data-dir="1">+</button><span class="stepper-unit">小时</span></div></div>
+      </div>
+    </div>
+
+    <div class="reply-cat" data-replycat>
+      <div class="reply-cat-head" data-replycat-toggle>
+        <span class="reply-cat-emoji">🔧</span>
+        <span class="reply-cat-name">其他</span>
+        <span class="reply-cat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>
+      </div>
+      <div class="reply-cat-body">
+        <div class="stepper-row"><span class="stepper-label">冷却长度<span class="sub">抽过的字卡，接下来 N 次不再抽到</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="cooldown" data-dir="-1">−</button><span class="stepper-value" id="stepperCooldownVal">5</span><button class="stepper-btn" data-step="cooldown" data-dir="1">+</button><span class="stepper-unit">条</span></div></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1632,6 +1829,125 @@
   </div>
 </section>
 
+<section class="page" id="gameHallPage">
+  <header class="page-header">
+    <button class="icon-btn" id="gameHallBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">小游戏</div>
+  </header>
+  <div class="page-body">
+    <div class="game-grid" id="gameGrid">
+      <button class="game-card" data-game="gomoku">
+        <div class="game-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+        </div>
+        <div class="game-card-name">五子棋</div>
+        <div class="game-card-desc">和 TA 来一盘</div>
+      </button>
+      <div class="game-card disabled">
+        <div class="game-card-icon" style="font-size:22px;">🔒</div>
+        <div class="game-card-name">敬请期待</div>
+        <div class="game-card-desc">更多游戏开发中</div>
+      </div>
+      <div class="game-card disabled">
+        <div class="game-card-icon" style="font-size:22px;">🔒</div>
+        <div class="game-card-name">敬请期待</div>
+        <div class="game-card-desc">更多游戏开发中</div>
+      </div>
+      <div class="game-card disabled">
+        <div class="game-card-icon" style="font-size:22px;">🔒</div>
+        <div class="game-card-name">敬请期待</div>
+        <div class="game-card-desc">更多游戏开发中</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="gomokuPage">
+  <header class="page-header">
+    <button class="icon-btn" id="gomokuBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">五子棋</div>
+<div id="gomokuDiffChip" style="padding:5px 11px;background:rgba(255,255,255,.75);border-radius:10px;color:var(--light-text);font-size:11.5px;box-shadow:0 2px 8px rgba(31,95,108,.04);white-space:nowrap;margin-right:8px;">未选难度</div>
+  </header>
+  <div class="gomoku-wrap">
+  <div class="gomoku-scoreboard">
+    <div class="gomoku-score-side">
+      <div class="gomoku-score-name">你</div>
+      <div class="gomoku-score-num" id="gomokuScoreMe">0</div>
+    </div>
+    <div class="gomoku-score-sep">:</div>
+    <div class="gomoku-score-side">
+      <div class="gomoku-score-name">TA</div>
+      <div class="gomoku-score-num" id="gomokuScoreTa">0</div>
+    </div>
+  </div>
+  <div class="gomoku-ta-row">
+      <div class="gomoku-ta-avatar" id="gomokuTaAvatar"></div>
+      <div class="gomoku-ta-bubble" id="gomokuTaBubble">选个难度吧～</div>
+    </div>
+    <div class="gomoku-board-wrap">
+      <canvas id="gomokuCanvas"></canvas>
+    </div>
+    <div class="gomoku-controls">
+      <button class="gomoku-ctrl" id="gomokuUndoBtn">悔棋 <span class="cnt" id="gomokuUndoCount">3</span></button>
+      <button class="gomoku-ctrl" id="gomokuResignBtn">认输</button>
+      <button class="gomoku-ctrl primary" id="gomokuRestartBtn">重开</button>
+    </div>
+  </div>
+</section>
+
+<div class="dialog-bg" id="gomokuDiffBg">
+  <div class="dialog">
+    <div class="gomoku-result-emoji">🎯</div>
+    <div class="dialog-title">选择难度</div>
+    <div class="dialog-body">选好难度，就可以开局了</div>
+    <div class="gomoku-diff-list" id="gomokuDiffList">
+      <div class="gomoku-diff-card" data-diff="easy">
+        <div class="gomoku-diff-emoji">🌱</div>
+        <div class="gomoku-diff-info">
+          <div class="gomoku-diff-name">简单</div>
+          <div class="gomoku-diff-desc">TA 有点手忙脚乱，很好赢</div>
+        </div>
+        <div class="gomoku-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+      </div>
+      <div class="gomoku-diff-card" data-diff="normal">
+        <div class="gomoku-diff-emoji">🍃</div>
+        <div class="gomoku-diff-info">
+          <div class="gomoku-diff-name">普通</div>
+          <div class="gomoku-diff-desc">TA 会认真堵你，需要动动脑</div>
+        </div>
+        <div class="gomoku-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+      </div>
+      <div class="gomoku-diff-card" data-diff="hard">
+        <div class="gomoku-diff-emoji">🔥</div>
+        <div class="gomoku-diff-info">
+          <div class="gomoku-diff-name">困难</div>
+          <div class="gomoku-diff-desc">TA 会给你挖坑，赢面很小</div>
+        </div>
+        <div class="gomoku-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+      </div>
+    </div>
+    <div class="dialog-btns" style="margin-top:14px;border-top:0;">
+      <button class="dialog-btn primary" id="gomokuDiffConfirm" disabled>开始下棋</button>
+    </div>
+  </div>
+</div>
+
+<div class="dialog-bg" id="gomokuResultBg">
+  <div class="dialog">
+    <div class="gomoku-result-emoji" id="gomokuResultEmoji">🎉</div>
+    <div class="dialog-title" id="gomokuResultTitle">你赢了！</div>
+    <div class="dialog-body" id="gomokuResultSub">TA 说：…</div>
+    <div class="gomoku-result-box" id="gomokuResultBox">
+      <div class="icon">🧧</div>
+      <div class="txt" id="gomokuResultReward">TA 给你 <b>¥1.00</b></div>
+    </div>
+    <div class="dialog-btns">
+      <button class="dialog-btn" id="gomokuResultClose">看看棋盘</button>
+      <button class="dialog-btn primary" id="gomokuResultAgain">再来一局</button>
+    </div>
+  </div>
+</div>
+
 <section class="page" id="rpFormPage">
   <header class="page-header"><button class="icon-btn" id="rpFormBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="page-title">发红包</div></header>
   <div class="page-body">
@@ -1713,7 +2029,7 @@
     <input type="text" class="music-import-input" id="musicImportInput" placeholder="https://... 或 网易云分享链接">
     <label class="music-import-label">歌名 - 歌手（格式：歌名 - 歌手）</label>
     <input type="text" class="music-import-input" id="musicImportName" placeholder="未命名歌曲 - 未知歌手">
-<div style="text-align:center;margin-bottom:14px;">
+<div class="music-import-actions">
   <input type="file" id="musicUploadFile" accept="audio/mp3,audio/*" style="display:none;">
   <button type="button" class="music-import-btn ghost" id="musicUploadBtn" style="width:100%;">📂 从手机上传音频文件</button>
 </div>
@@ -1888,6 +2204,10 @@
     <div class="update-title">更新来啦</div>
     <div class="update-sub">sheng·g 有新内容了，要不要看看？</div>
     <div class="update-version" id="updateVersionText">v1.0.1</div>
+    <div class="update-log" id="updateLogBox" style="display:none;">
+      <div class="update-log-title">✨ 本次更新内容</div>
+      <div id="updateLogList"></div>
+    </div>
     <div class="update-actions">
       <button class="update-btn ghost" id="updateLaterBtn">稍等</button>
       <button class="update-btn primary" id="updateNowBtn">立即更新</button>
@@ -1996,6 +2316,10 @@ function saveImgToIdb(key, dataUrl){
     imgKeyToBlob[key] = url;
     imgBlobToKey[url] = key;
     return url;
+  }).catch(function(err){
+    // 如果IndexedDB写入失败，回退使用原本的dataUrl，确保图片不消失
+    console.warn('IndexedDB 写入失败，使用 data URL 回退', err);
+    return dataUrl;
   });
 }
 function urlToIdbMarker(url){
@@ -2215,6 +2539,9 @@ appIcons: {},
 taCallChance: 10,
 taRejectCallChance: 20,
 taHangupChance: 10,
+gameAcceptChance: 70,
+gameInviteChance: 10,
+gameInviteCooldown: 1,
     callBg: '',
 callBgImage: '',
 callCapsuleColor: 'rgba(28,28,30,.9)'
@@ -2295,16 +2622,25 @@ var musicAudio = null;
 var musicTimerStart = 0;
 
   /* 读取 */
-  function loadPerson(){
+function loadPerson(){
   try{
     var raw = localStorage.getItem(PERSON_KEY);
     if(raw){
       var d = JSON.parse(raw);
       if(d && typeof d === 'object'){
-        for(var k in person){ if(d[k] !== undefined && IMG_FIELDS.indexOf(k) === -1) person[k] = d[k]; }
+        for(var k in person){ 
+            if(d[k] !== undefined && IMG_FIELDS.indexOf(k) === -1 && k !== 'appIcons') person[k] = d[k]; 
+        }
         IMG_FIELDS.forEach(function(f){
           var v = d[f];
           if(typeof v !== 'string' || !v){ person[f] = v || ''; return; }
+          
+          // 👈 新增：如果发现是失效的 blob 链接，直接清空，恢复默认头像/背景
+          if(v.indexOf('blob:') === 0 && !imgBlobToKey[v]){
+            person[f] = '';
+            return;
+          }
+
           var key = idbMarkerToKey(v);
           if(key){
             person[f] = imgKeyToBlob[key] || '';
@@ -2321,6 +2657,37 @@ var musicTimerStart = 0;
             person[f] = v;
           }
         });
+        
+        // 单独恢复App图标，避免白块
+        if(d.appIcons && typeof d.appIcons === 'object'){
+          person.appIcons = {};
+          for(var ik in d.appIcons){
+            var v = d.appIcons[ik];
+            if(typeof v !== 'string' || !v){ person.appIcons[ik] = ''; continue; }
+            
+            // 👈 新增：如果发现是失效的 blob 链接，直接清空，恢复默认图标
+            if(v.indexOf('blob:') === 0 && !imgBlobToKey[v]){
+              person.appIcons[ik] = '';
+              continue;
+            }
+
+            var key = idbMarkerToKey(v);
+            if(key){
+              person.appIcons[ik] = imgKeyToBlob[key] || '';
+            } else if(v.indexOf('data:image') === 0){
+  person.appIcons[ik] = v;
+  (function(k){
+    saveImgToIdb('appicon_' + k, v).then(function(url){
+      person.appIcons[k] = url;
+      savePerson();
+      renderAppIcons();
+    });
+  })(ik);
+} else {
+              person.appIcons[ik] = v;
+            }
+          }
+        }
       }
     }
   }catch(e){}
@@ -2442,11 +2809,18 @@ function loadUserStickers(){
   }
 
   /* 保存 */
-  function savePerson(){
+function savePerson(){
   try{
     var toSave = {};
     for(var k in person){ toSave[k] = person[k]; }
     IMG_FIELDS.forEach(function(f){ toSave[f] = urlToIdbMarker(toSave[f]); });
+    // 单独处理appIcons对象，防止它变成失效的blob链接导致白块
+    if(person.appIcons && typeof person.appIcons === 'object'){
+      toSave.appIcons = {};
+      for(var ik in person.appIcons){
+        toSave.appIcons[ik] = urlToIdbMarker(person.appIcons[ik]);
+      }
+    }
     safeSetItem(PERSON_KEY, JSON.stringify(toSave));
   }catch(e){}
 }
@@ -2535,6 +2909,10 @@ if(!Array.isArray(d.system.callRejectedByMe) || d.system.callRejectedByMe.length
 if(!Array.isArray(d.system.waitForYou) || d.system.waitForYou.length === 0) d.system.waitForYou = ['宝宝，你怎么还没来找我', '你怎么还不出现呀', '宝宝，不要玩手机啦！快来陪陪我', '你再不来我就生气了哦', '好想你，快点回来嘛', '喂，你在忙吗？想你了', '我在这里等你哦', '忙完了记得找我', '刚刚一直在想你', '再不回来我就自己玩啦'];
 if(!Array.isArray(d.system.rpThanks) || d.system.rpThanks.length === 0) d.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
     if(!Array.isArray(d.system.mood)) d.system.mood = DEFAULT_MOODS.slice();
+    if(!Array.isArray(d.system.rejectGame) || d.system.rejectGame.length === 0) d.system.rejectGame = ['下次再玩吧～', '现在有点忙，回头陪你玩。', '这局先不玩啦，改天～', '嗯…今天不太想玩，抱抱。'];
+    if(!Array.isArray(d.system.rejectedGame) || d.system.rejectedGame.length === 0) d.system.rejectedGame = ['好吧，那下次再一起玩。', '那我等你，随时都可以。', '没关系，等你想玩了再找我。', '嗯…那我先自己练练。'];
+    if(!Array.isArray(d.system.scoreLead) || d.system.scoreLead.length === 0) d.system.scoreLead = ['哎哟可以啊，这盘我服了。', '你是不是偷偷练过…', '哼，不服气，再来一局！', '被你杀了个措手不及，厉害。', '好嘛好嘛，这局算你赢～'];
+    if(!Array.isArray(d.system.scoreBehind) || d.system.scoreBehind.length === 0) d.system.scoreBehind = ['别难过啦，已经很厉害了。', '这局我运气好而已，真的。', '抱抱，下一盘你肯定赢。', '嘿嘿，我赢啦，但不许不高兴哦。', '再下一盘嘛，说不定就翻盘了。'];
 if(!Array.isArray(d.system.proactive)) d.system.proactive = [];
 
     d.text.forEach(function(b){
@@ -2818,8 +3196,9 @@ function renderAppIcons(){
     wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/><path d="M3 7h16"/><path d="M16 12h5"/><circle cx="16" cy="12" r="0.8" fill="currentColor"/></svg>',
     chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"/></svg>',
     cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>',
-    settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'
-  };
+    settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  game:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>'
+};
   var icons = person.appIcons || {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-icon-key]'), function(el){
     var key = el.dataset.iconKey;
@@ -3239,6 +3618,39 @@ if(m.type === 'invite'){
            '</div>' +
          '</div>';
 }
+if(m.type === 'game_invite'){
+  var gName = m.game === 'gomoku' ? '五子棋' : '游戏';
+  var dName = ({easy:'简单', normal:'普通', hard:'困难'})[m.difficulty] || '';
+  var gHeadText = m.me ? ('邀请 TA · ' + gName) : ((person.name || 'TA') + ' · 邀请你玩 ' + gName);
+  var gStatusText = '';
+  var gStatusCls = 'pending';
+  var gBtns = '';
+  if(m.status === 'pending'){
+    gStatusText = m.me ? '等 TA 回应...' : '等你回应';
+    if(!m.me){
+      gBtns = '<div class="game-invite-btns">' +
+        '<button class="game-invite-btn accept" data-game-invite-accept="' + (m.inviteId||'') + '">接受</button>' +
+        '<button class="game-invite-btn reject" data-game-invite-reject="' + (m.inviteId||'') + '">婉拒</button>' +
+        '</div>';
+    }
+  } else if(m.status === 'accepted'){
+    gStatusText = m.me ? ((person.name || 'TA') + ' 接受了你的邀请') : '你接受了邀请';
+    gStatusCls = 'accepted';
+  } else {
+    gStatusText = m.me ? ((person.name || 'TA') + ' 婉拒了邀请') : '你婉拒了邀请';
+    gStatusCls = 'rejected';
+  }
+  return '<div class="game-invite-msg-wrap">' +
+    '<div class="game-invite-card">' +
+      '<div class="game-invite-head">🎮 ' + esc(gHeadText) + '</div>' +
+      '<div class="game-invite-body">' + esc(gName) +
+        (dName ? '<div class="game-invite-diff">难度：' + dName + '</div>' : '') +
+      '</div>' +
+      '<div class="game-invite-status ' + gStatusCls + '">' + esc(gStatusText) + '</div>' +
+      gBtns +
+    '</div>' +
+  '</div>';
+}
 if(m.type === 'call_record'){
   return '<div class="call-record-card">' +
            '<div class="call-record-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>' +
@@ -3521,175 +3933,121 @@ content.innerHTML = html;
   else box.innerHTML = html;
 }
   function renderSystemView(){
-    var v = $('viewSystem');
-    if(!v) return;
-    v.style.display = '';
-    if(!Array.isArray(cards.system.redpacket)) cards.system.redpacket = DEFAULT_RP_REPLIES.slice();
-    var html = '';
-    html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="love">' +
-                '<span class="subgroup-name">今日情话</span>' +
-                '<span class="subgroup-count">' + cards.system.love.length + '</span>' +
-                '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-              '</div>' +
-              '<div class="subgroup-body">' +
-                cards.system.love.map(function(txt, i){
-                  return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-love-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-                }).join('') +
-                '<form class="subgroup-add" data-add-love="1" autocomplete="off"><input type="text" placeholder="添加一句情话" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-              '</div>' +
-            '</div>';
-    /* 红包致谢（TA 收到你红包后说的话） */
-if(!Array.isArray(cards.system.rpThanks)) cards.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心'];
-html += '<div class="subgroup-card">' +
-      '<div class="subgroup-head" data-sys-toggle="rpThanks">' +
-            '<span class="subgroup-name">红包致谢</span>' +
-            '<span class="subgroup-count">' + cards.system.rpThanks.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">TA 领了你的红包之后，会说的话。跟“红包回复”是两回事，别搞混。</div>' +
-            cards.system.rpThanks.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-rp-thanks-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-rp-thanks="1" autocomplete="off"><input type="text" placeholder="添加一句红包致谢" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="readback">' +
-                '<span class="subgroup-name">红包回复</span>' +
-                '<span class="subgroup-count">' + cards.system.redpacket.length + '</span>' +
-                '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-              '</div>' +
-              '<div class="subgroup-body">' +
-                cards.system.redpacket.map(function(txt, i){
-                  return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-rp-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-                }).join('') +
-                '<form class="subgroup-add" data-add-rp="1" autocomplete="off"><input type="text" placeholder="添加一句红包回复" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-              '</div>' +
-            '</div>';
-    html += '<div class="subgroup-card">' +
-              '<div class="subgroup-head" data-sys-toggle="readback">' +
-                '<span class="subgroup-name">已读不回被炸</span>' +
-                '<span class="subgroup-count">' + cards.system.readback.length + '</span>' +
-                '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-              '</div>' +
-              '<div class="subgroup-body">' +
-                cards.system.readback.map(function(txt, i){
-                  return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-readback-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-                }).join('') +
-               '<form class="subgroup-add" data-add-readback="1" autocomplete="off"><input type="text" placeholder="添加一句被炸出来的台词" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-              '</div>' +
-            '</div>';
-    /* 今日状态 */
-if(!Array.isArray(cards.system.mood)) cards.system.mood = DEFAULT_MOODS.slice();
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="mood">' +
-            '<span class="subgroup-name">今日状态</span>' +
-            '<span class="subgroup-count">' + cards.system.mood.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">格式：<code style="background:var(--soft);padding:1px 6px;border-radius:5px;">状态名 | 关键词1,关键词2</code><br>关键词是"去哪抽卡"，比如"短回复"就去找名字带"短回复"的分组。<br>不写竖线 → 只显示不生效。匹配不到 → 正常随机抽卡。</div>' +
-            cards.system.mood.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-mood-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-mood="1" autocomplete="off"><input type="text" placeholder="例：有点累 | 短回复,嗯,困" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
+  var v = $('viewSystem');
+  if(!v) return;
+  v.style.display = '';
+  if(!Array.isArray(cards.system.redpacket) || !cards.system.redpacket.length) cards.system.redpacket = DEFAULT_RP_REPLIES.slice();
+  if(!Array.isArray(cards.system.rpThanks) || !cards.system.rpThanks.length) cards.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
+  if(!Array.isArray(cards.system.mood)) cards.system.mood = DEFAULT_MOODS.slice();
+  if(!Array.isArray(cards.system.waitForYou)) cards.system.waitForYou = [];
+  if(!Array.isArray(cards.system.callReject)) cards.system.callReject = [];
+  if(!Array.isArray(cards.system.callRejectedByMe)) cards.system.callRejectedByMe = [];
+  if(!Array.isArray(cards.system.rejectListen)) cards.system.rejectListen = [];
+  if(!Array.isArray(cards.system.rejectedByMe)) cards.system.rejectedByMe = [];
+  if(!Array.isArray(cards.system.readback)) cards.system.readback = [];
+  if(!Array.isArray(cards.system.rejectGame)) cards.system.rejectGame = ['下次再玩吧～', '现在有点忙，回头陪你玩。', '这局先不玩啦，改天～', '嗯…今天不太想玩，抱抱。'];
+  if(!Array.isArray(cards.system.rejectedGame)) cards.system.rejectedGame = ['好吧，那下次再一起玩。', '那我等你，随时都可以。', '没关系，等你想玩了再找我。', '嗯…那我先自己练练。'];
+  if(!Array.isArray(cards.system.scoreLead) || !cards.system.scoreLead.length) cards.system.scoreLead = ['哎哟可以啊，这盘我服了。', '你是不是偷偷练过…', '哼，不服气，再来一局！', '被你杀了个措手不及，厉害。', '好嘛好嘛，这局算你赢～'];
+  if(!Array.isArray(cards.system.scoreBehind) || !cards.system.scoreBehind.length) cards.system.scoreBehind = ['别难过啦，已经很厉害了。', '这局我运气好而已，真的。', '抱抱，下一盘你肯定赢。', '嘿嘿，我赢啦，但不许不高兴哦。', '再下一盘嘛，说不定就翻盘了。'];
 
-/* 等你回来 */
-if(!Array.isArray(cards.system.waitForYou)) cards.system.waitForYou = [];
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="waitForYou">' +
-            '<span class="subgroup-name">等你回来</span>' +
-            '<span class="subgroup-count">' + cards.system.waitForYou.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">你离开一段时间再回来，TA 会一次性补给你一些“在你不在时想你”的话。离开越久，堆得越多。</div>' +
-            cards.system.waitForYou.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-wait-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-wait="1" autocomplete="off"><input type="text" placeholder="添加一句等你的话" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-/* 通话相关 */
-if(!Array.isArray(cards.system.callReject)) cards.system.callReject = [];
-if(!Array.isArray(cards.system.callRejectedByMe)) cards.system.callRejectedByMe = [];
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="callReject">' +
-            '<span class="subgroup-name">拒接/挂断你电话</span>' +
-            '<span class="subgroup-count">' + cards.system.callReject.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">TA 拒接你电话、或者中途挂断时，会补上这些话。</div>' +
-            cards.system.callReject.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-call-reject-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-call-reject="1" autocomplete="off"><input type="text" placeholder="添加一句拒接台词" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="callRejectedByMe">' +
-            '<span class="subgroup-name">你拒接TA电话</span>' +
-            '<span class="subgroup-count">' + cards.system.callRejectedByMe.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">你拒接了 TA 的电话，TA 失落时会说的话。</div>' +
-            cards.system.callRejectedByMe.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-call-rejected-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-call-rejected="1" autocomplete="off"><input type="text" placeholder="添加一句失落台词" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-/* 婉拒一起听 */
-    html += '<div class="subgroup-card">' +
-              '<div class="subgroup-head" data-sys-toggle="rejectListen">' +
-                '<span class="subgroup-name">婉拒一起听</span>' +
-                '<span class="subgroup-count">' + cards.system.rejectListen.length + '</span>' +
-                '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-              '</div>' +
-              '<div class="subgroup-body">' +
-                cards.system.rejectListen.map(function(txt, i){
-                  return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-reject-listen-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-                }).join('') +
-                        '<form class="subgroup-add" data-add-reject-listen="1" autocomplete="off"><input type="text" placeholder="添加一句婉拒台词" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-/* 被拒绝 */
-html += '<div class="subgroup-card">' +
-          '<div class="subgroup-head" data-sys-toggle="rejectedByMe">' +
-            '<span class="subgroup-name">被拒绝</span>' +
-            '<span class="subgroup-count">' + cards.system.rejectedByMe.length + '</span>' +
-            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-          '</div>' +
-          '<div class="subgroup-body">' +
-            cards.system.rejectedByMe.map(function(txt, i){
-              return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-rejected-del="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-            }).join('') +
-            '<form class="subgroup-add" data-add-rejected="1" autocomplete="off"><input type="text" placeholder="添加一句被拒绝后的台词" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-          '</div>' +
-        '</div>';
-    cards.system.proactive.forEach(function(pg, pi){
-      html += '<div class="subgroup-card">' +
-                '<div class="subgroup-head" data-sys-toggle="pro-' + pi + '">' +
-                  '<span class="subgroup-name">' + esc(pg.name) + '</span>' +
-                  '<span class="subgroup-count">' + pg.items.length + '</span>' +
-                  '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-                '</div>' +
-                '<div class="subgroup-body">' +
-                  pg.items.map(function(txt, i){
-                    return '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-pro-del="' + pi + '" data-idx="' + i + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>';
-                  }).join('') +
-                  '<form class="subgroup-add" data-add-pro="' + pi + '" autocomplete="off"><input type="text" placeholder="添加一句主动消息" maxlength="120"><button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></button></form>' +
-                '</div>' +
-              '</div>';
-    });
-    v.innerHTML = html;
+  var arrowSVG = '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>';
+  var catArrowSVG = '<span class="syscat-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>';
+  var delSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+  var addSVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>';
+
+  function cat(emoji, name, count, inner){
+    return '<div class="syscat-card">' +
+      '<div class="syscat-head" data-syscat-toggle="1">' +
+        '<span class="syscat-emoji">' + emoji + '</span>' +
+        '<span class="syscat-name">' + esc(name) + '</span>' +
+        '<span class="syscat-count">' + count + '</span>' +
+        catArrowSVG +
+      '</div>' +
+      '<div class="syscat-body">' + inner + '</div>' +
+    '</div>';
   }
+  function sub(id, name, arr, delAttr, addAttr, addPh, tip){
+    var s = '<div class="subgroup-card">' +
+      '<div class="subgroup-head" data-sys-toggle="' + id + '">' +
+        '<span class="subgroup-name">' + esc(name) + '</span>' +
+        '<span class="subgroup-count">' + arr.length + '</span>' +
+        arrowSVG +
+      '</div>' +
+      '<div class="subgroup-body">';
+    if(tip) s += '<div style="padding:8px 14px 4px;font-size:11.5px;color:var(--light-text);line-height:1.6;">' + tip + '</div>';
+    arr.forEach(function(txt, i){
+      s += '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" ' + delAttr + '="' + i + '">' + delSVG + '</button></div>';
+    });
+    if(addAttr){
+      s += '<form class="subgroup-add" ' + addAttr + '="1" autocomplete="off"><input type="text" placeholder="' + (addPh || '添加') + '" maxlength="120"><button type="submit">' + addSVG + '</button></form>';
+    }
+    s += '</div></div>';
+    return s;
+  }
+  function subPro(pi, name, arr){
+    var s = '<div class="subgroup-card">' +
+      '<div class="subgroup-head" data-sys-toggle="pro-' + pi + '">' +
+        '<span class="subgroup-name">' + esc(name) + '</span>' +
+        '<span class="subgroup-count">' + arr.length + '</span>' +
+        arrowSVG +
+      '</div>' +
+      '<div class="subgroup-body">';
+    arr.forEach(function(txt, i){
+      s += '<div class="card-item"><span class="card-text">' + esc(txt) + '</span><button class="card-del" data-pro-del="' + pi + '" data-idx="' + i + '">' + delSVG + '</button></div>';
+    });
+    s += '<form class="subgroup-add" data-add-pro="' + pi + '" autocomplete="off"><input type="text" placeholder="添加一句主动消息" maxlength="120"><button type="submit">' + addSVG + '</button></form>';
+    s += '</div></div>';
+    return s;
+  }
+
+  var html = '';
+
+  // 💌 情话
+  html += cat('💌', '情话', 1,
+    sub('love', '今日情话', cards.system.love, 'data-love-del', 'data-add-love', '添加一句情话')
+  );
+
+  // 🧧 红包
+  html += cat('🧧', '红包', 2,
+    sub('rpThanks', '红包致谢', cards.system.rpThanks, 'data-rp-thanks-del', 'data-add-rp-thanks', '添加一句红包致谢', 'TA 领了你的红包之后，会说的话。跟"红包回复"是两回事，别搞混。') +
+    sub('redpacket', '红包回复', cards.system.redpacket, 'data-rp-del', 'data-add-rp', '添加一句红包回复')
+  );
+
+  // 🎭 情绪
+  html += cat('🎭', '情绪', 2,
+    sub('mood', '今日状态', cards.system.mood, 'data-mood-del', 'data-add-mood', '例：有点累 | 短回复,嗯,困', '格式：<code style="background:var(--soft);padding:1px 6px;border-radius:5px;">状态名 | 关键词1,关键词2</code><br>关键词是"去哪抽卡"，比如"短回复"就去找名字带"短回复"的分组。<br>不写竖线 → 只显示不生效。匹配不到 → 正常随机抽卡。') +
+    sub('readback', '已读不回', cards.system.readback, 'data-readback-del', 'data-add-readback', '添加一句被炸出来的台词')
+  );
+
+  // ⏰ 自动回复
+  var autoInner = sub('waitForYou', '等你回来', cards.system.waitForYou, 'data-wait-del', 'data-add-wait', '添加一句等你的话', '你离开一段时间再回来，TA 会一次性补给你一些"在你不在时想你"的话。离开越久，堆得越多。');
+  cards.system.proactive.forEach(function(pg, pi){
+    autoInner += subPro(pi, pg.name, pg.items);
+  });
+  html += cat('⏰', '自动回复', cards.system.proactive.length + 1, autoInner);
+
+  // 📞 通话
+  html += cat('📞', '通话', 2,
+    sub('callReject', '拒接/挂断你电话', cards.system.callReject, 'data-call-reject-del', 'data-add-call-reject', '添加一句拒接台词', 'TA 拒接你电话、或者中途挂断时，会补上这些话。') +
+    sub('callRejectedByMe', '你拒接TA电话', cards.system.callRejectedByMe, 'data-call-rejected-del', 'data-add-call-rejected', '添加一句失落台词', '你拒接了 TA 的电话，TA 失落时会说的话。')
+  );
+
+  // 🎵 一起听
+  html += cat('🎵', '一起听', 2,
+    sub('rejectListen', '婉拒一起听', cards.system.rejectListen, 'data-reject-listen-del', 'data-add-reject-listen', '添加一句婉拒台词') +
+    sub('rejectedByMe', '被拒绝', cards.system.rejectedByMe, 'data-rejected-del', 'data-add-rejected', '添加一句被拒绝后的台词')
+  );
+
+  // 🎮 游戏
+  html += cat('🎮', '游戏', 4,
+    sub('rejectGame', '婉拒一起玩', cards.system.rejectGame, 'data-reject-game-del', 'data-add-reject-game', '添加一句婉拒台词', 'TA 拒绝你的游戏邀请时，会说的话。') +
+    sub('rejectedGame', '被拒绝', cards.system.rejectedGame, 'data-rejected-game-del', 'data-add-rejected-game', '添加一句被拒绝后的台词', '你拒绝 TA 的游戏邀请，TA 失落时会说的话。') +
+    sub('scoreLead', '我领先时夸我', cards.system.scoreLead, 'data-score-lead-del', 'data-add-score-lead', '添加一句夸你的话', '累计比分你领先时，每次下完棋 TA 会从这抽一句话。') +
+    sub('scoreBehind', 'TA 领先时安慰我', cards.system.scoreBehind, 'data-score-behind-del', 'data-add-score-behind', '添加一句安慰你的话', '累计比分 TA 领先（或打平）时，每次下完棋 TA 会从这抽一句话。')
+  );
+
+  v.innerHTML = html;
+}
 
   /* 字卡库事件委托 */
   document.addEventListener('click', function(e){
@@ -3814,7 +4172,47 @@ if(tab){
       return;
     }
 
-    var sysToggle = e.target.closest('[data-sys-toggle]');
+    var syscatToggle = e.target.closest('[data-syscat-toggle]');
+if(syscatToggle){
+  var sc = syscatToggle.closest('.syscat-card');
+  if(sc) sc.classList.toggle('open');
+  return;
+}
+
+var rgDel = e.target.closest('[data-reject-game-del]');
+if(rgDel){
+  var i = parseInt(rgDel.dataset.rejectGameDel, 10);
+  if(!Array.isArray(cards.system.rejectGame)) cards.system.rejectGame = [];
+  cards.system.rejectGame.splice(i, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+var rgmDel = e.target.closest('[data-rejected-game-del]');
+if(rgmDel){
+  var i = parseInt(rgmDel.dataset.rejectedGameDel, 10);
+  if(!Array.isArray(cards.system.rejectedGame)) cards.system.rejectedGame = [];
+  cards.system.rejectedGame.splice(i, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+var slDel = e.target.closest('[data-score-lead-del]');
+if(slDel){
+  var i = parseInt(slDel.dataset.scoreLeadDel, 10);
+  if(!Array.isArray(cards.system.scoreLead)) cards.system.scoreLead = [];
+  cards.system.scoreLead.splice(i, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+var sbDel = e.target.closest('[data-score-behind-del]');
+if(sbDel){
+  var i = parseInt(sbDel.dataset.scoreBehindDel, 10);
+  if(!Array.isArray(cards.system.scoreBehind)) cards.system.scoreBehind = [];
+  cards.system.scoreBehind.splice(i, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+
+var sysToggle = e.target.closest('[data-sys-toggle]');
     if(sysToggle){
       var c = sysToggle.closest('.subgroup-card');
       if(c) c.classList.toggle('open');
@@ -4043,6 +4441,46 @@ if(f.matches('[data-add-rejected]')){
   if(!valRbm) return;
   if(!Array.isArray(cards.system.rejectedByMe)) cards.system.rejectedByMe = [];
   cards.system.rejectedByMe.push(valRbm);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-reject-game]')){
+  e.preventDefault();
+  var inpRG = f.querySelector('input');
+  var valRG = inpRG.value.trim();
+  if(!valRG) return;
+  if(!Array.isArray(cards.system.rejectGame)) cards.system.rejectGame = [];
+  cards.system.rejectGame.push(valRG);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-rejected-game]')){
+  e.preventDefault();
+  var inpRGM = f.querySelector('input');
+  var valRGM = inpRGM.value.trim();
+  if(!valRGM) return;
+  if(!Array.isArray(cards.system.rejectedGame)) cards.system.rejectedGame = [];
+  cards.system.rejectedGame.push(valRGM);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-score-lead]')){
+  e.preventDefault();
+  var inpSL = f.querySelector('input');
+  var valSL = inpSL.value.trim();
+  if(!valSL) return;
+  if(!Array.isArray(cards.system.scoreLead)) cards.system.scoreLead = [];
+  cards.system.scoreLead.push(valSL);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-score-behind]')){
+  e.preventDefault();
+  var inpSB = f.querySelector('input');
+  var valSB = inpSB.value.trim();
+  if(!valSB) return;
+  if(!Array.isArray(cards.system.scoreBehind)) cards.system.scoreBehind = [];
+  cards.system.scoreBehind.push(valSB);
   saveCards(); renderSystemView();
   return;
 }
@@ -4656,6 +5094,9 @@ if(musicPlaylist.length && Math.random() * 100 < (person.taInviteChance || 10)){
 if(Math.random() * 100 < (person.letterChance || 10)){
   setTimeout(function(){ sendTaLetter(); }, 1500 + Math.random() * 2000);
 }
+if(Math.random() * 100 < (person.gameInviteChance || 10)){
+  setTimeout(function(){ taSendGameInvite(); }, 1200 + Math.random() * 1200);
+}
         saveMessages();
         showTyping();
         var gap = 0, sentOne = false;
@@ -5222,9 +5663,9 @@ if($('callBgGrid')){
   var list = $('appIconSettingsList');
 if(list){
   var appNames = {
-    chat:'聊天', cards:'字卡', settings:'设置',
-    music:'一起听', moments:'动态', mailbox:'信箱', wallet:'钱包'
-  };
+  chat:'聊天', cards:'字卡', settings:'设置',
+  music:'一起听', moments:'动态', mailbox:'信箱', wallet:'钱包', game:'小游戏'
+};
   var icons = person.appIcons || {};
   list.innerHTML = Object.keys(appNames).map(function(key){
     var hasCustom = !!icons[key];
@@ -5439,6 +5880,9 @@ if($('beautifyResetBtn')) $('beautifyResetBtn').onclick = function(){
 if($('stepperTaCallVal')) $('stepperTaCallVal').textContent = person.taCallChance || 10;
 if($('stepperTaRejectCallVal')) $('stepperTaRejectCallVal').textContent = person.taRejectCallChance || 20;
 if($('stepperTaHangupVal')) $('stepperTaHangupVal').textContent = person.taHangupChance || 10;
+if($('stepperGameAcceptVal')) $('stepperGameAcceptVal').textContent = person.gameAcceptChance || 70;
+if($('stepperGameInviteVal')) $('stepperGameInviteVal').textContent = person.gameInviteChance || 10;
+if($('stepperGameCooldownVal')) $('stepperGameCooldownVal').textContent = person.gameInviteCooldown || 1;
     if($('stepperMomentFollowVal')) $('stepperMomentFollowVal').textContent = person.momentFollowChance || 60;
 if($('stepperMomentLikeVal')) $('stepperMomentLikeVal').textContent = person.momentLikeBackChance || 50;
 if($('stepperMomentCommentVal')) $('stepperMomentCommentVal').textContent = person.momentCommentBackChance || 70;
@@ -5500,11 +5944,16 @@ else if(w === 'momentAuto'){ k = 'momentAutoPostChance'; step = 5; }
 else if(w === 'taCall'){ k = 'taCallChance'; step = 5; }
 else if(w === 'taRejectCall'){ k = 'taRejectCallChance'; step = 5; }
 else if(w === 'taHangup'){ k = 'taHangupChance'; step = 5; }
+else if(w === 'gameAccept'){ k = 'gameAcceptChance'; step = 5; }
+else if(w === 'gameInvite'){ k = 'gameInviteChance'; step = 5; }
+else if(w === 'gameCooldown'){ k = 'gameInviteCooldown'; step = 1; }
 else return;
       if(isNaN(person[k])) person[k] = 0;
 var v = person[k] + d * step;
       if(w === 'cooldown'){
   if(v < 0) v = 0; if(v > 20) v = 20;
+} else if(w === 'gameCooldown'){
+  if(v < 0) v = 0; if(v > 72) v = 72;
 } else if(w === 'momentHours'){
   if(v < 1) v = 1; if(v > 24) v = 24;
 } else if(w === 'concatCount'){
@@ -5534,14 +5983,27 @@ if($('letterUseDictToggle')){
   });
 }
 
-  if($('replySaveBtn')) $('replySaveBtn').onclick = function(){
+  // 自动保存：数字输入
+['replyMinInput','replyMaxInput','replyCountInput'].forEach(function(id){
+  var el = $(id);
+  if(!el) return;
+  el.addEventListener('change', function(){
     var mn = parseFloat($('replyMinInput').value) || 0;
     var mx = parseFloat($('replyMaxInput').value) || 0;
     if(mn < 0) mn = 0; if(mx < mn) mx = mn;
     person.replyMin = mn; person.replyMax = mx;
     person.replyCount = Math.min(5, Math.max(1, parseInt($('replyCountInput').value, 10) || 3));
-    savePerson(); renderSettingsPreview(); $('replyPage').classList.remove('open');
-  };
+    savePerson();
+  });
+});
+
+// 折叠大分类
+document.addEventListener('click', function(e){
+  var catToggle = e.target.closest('[data-replycat-toggle]');
+  if(!catToggle) return;
+  var cat = catToggle.closest('.reply-cat');
+  if(cat) cat.classList.toggle('open');
+});
 
   /* 锁屏密码页 */
   function renderLockPage(){
@@ -6190,10 +6652,24 @@ else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('ope
     else if(app === 'affection'){ renderAffectionPage(); $('affectionPage').classList.add('open'); }
     else if(app === 'anniversary'){ renderAnniversaryPage(); $('anniversaryPage').classList.add('open'); }
     else if(app === 'wallet'){ renderWalletPage(); $('walletPage').classList.add('open'); }
-    else if(app === 'settings'){ openSettingsPage(); }
+else if(app === 'game'){ window.__gomokuMode = 'solo'; $('gameHallPage').classList.add('open'); }
+else if(app === 'settings'){ openSettingsPage(); }
   });
 });
-  if($('chatBack')) $('chatBack').onclick = function(){
+  if($('gameHallBack')) $('gameHallBack').onclick = function(){ $('gameHallPage').classList.remove('open'); };
+if($('gameGrid')) $('gameGrid').addEventListener('click', function(e){
+  var card = e.target.closest('.game-card[data-game]');
+  if(!card) return;
+  var g = card.dataset.game;
+  if(g === 'gomoku'){
+    if(window.__gomokuMode === 'invite'){
+      if(window.__openGomokuDiff) window.__openGomokuDiff();
+    } else {
+      if(window.__openGomoku) window.__openGomoku();
+    }
+  }
+});
+if($('chatBack')) $('chatBack').onclick = function(){
   $('chatPage').classList.remove('open');
   chatOpenNow = false;
   if(pendingNoReplyTimer){ clearTimeout(pendingNoReplyTimer); pendingNoReplyTimer = null; scheduleReply(); }
@@ -6341,6 +6817,33 @@ if($('chatMusicBack')){
 
 /* 初始化 */
 preloadAllImages().then(function(){
+  // 🚨 第一步：强制清理坏掉的旧图标数据，防止白块和代码报错
+  try{
+    var raw = localStorage.getItem(PERSON_KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(d && d.appIcons && typeof d.appIcons === 'object'){
+        var cleanIcons = {};
+        var needSave = false;
+        for(var ik in d.appIcons){
+          var val = d.appIcons[ik];
+          // 如果检测到是失效的 blob 链接，或者空值，直接丢弃
+          if(!val || val.indexOf('blob:') === 0){
+            needSave = true;
+          } else {
+            cleanIcons[ik] = val;
+          }
+        }
+        if(needSave){
+          d.appIcons = cleanIcons;
+          localStorage.setItem(PERSON_KEY, JSON.stringify(d));
+          console.log("🧹 已自动清理白块图标数据");
+        }
+      }
+    }
+  }catch(e){ console.error('清理异常图标失败', e); }
+
+  // 第二步：正常加载所有数据
   loadPerson();
   loadStats();
   loadProactive();
@@ -6365,6 +6868,9 @@ preloadAllImages().then(function(){
   renderTaPatList();
   renderDict();
   renderHome();
+  
+  // 🚨 第三步：强制更新一次时钟，防止停在00:00
+  updateClock(); 
 });
   var _capEl = $('floatingCapsule');
   if(_capEl){ delete _capEl.dataset.positioned; }
@@ -6725,7 +7231,7 @@ function sendListenInvite(){
   scheduleListenInviteResponse(inviteId);
 }
 
-function pickRejectedByMeReply(){
+function pickListenRejectedReply(){
   var pool = [];
   if(cards && cards.system && Array.isArray(cards.system.rejectedByMe)){
     pool = cards.system.rejectedByMe.filter(function(t){ return t && String(t).trim(); });
@@ -6752,7 +7258,7 @@ function rejectListenInvite(inviteId){
   saveMessages();
   if(chatOpenNow) renderMessages();
   setTimeout(function(){
-    var txt = pickRejectedByMeReply();
+    var txt = pickListenRejectedReply();    
     var cm = { me:false, type:'text', text:txt, time: Date.now(), id: uid('m') };
     messages.push(cm);
     saveMessages();
@@ -7491,8 +7997,6 @@ if($('musicUploadFile')){
     var parts = fullName.split(' - ');
     var songName = parts[0] || '未命名歌曲';
     var artistName = parts[1] || '未知歌手';
-    
-    // 用 IndexedDB 存音频文件（因为文件较大，不能存 localStorage）
     var key = 'music_audio_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
     saveImgToIdb(key, f).then(function(blobUrl){
       musicPlaylist.push({ name: songName, artist: artistName, url: blobUrl, idbKey: key });
@@ -7503,6 +8007,8 @@ if($('musicUploadFile')){
     });
     $('musicUploadFile').value = '';
   });
+}
+   
 }
 if($('musicImportBg')) $('musicImportBg').addEventListener('click', function(e){ if(e.target === $('musicImportBg')) $('musicImportBg').classList.remove('open'); });
 if($('musicImportConfirm')) $('musicImportConfirm').onclick = function(){
@@ -7559,11 +8065,10 @@ if($('musicImportConfirm')) $('musicImportConfirm').onclick = function(){
   if($('musicPlaylistClose')){
     $('musicPlaylistClose').onclick = function(){ $('musicPlaylistBg').classList.remove('open'); };
   }
-  if($('musicPlaylistBg')){
-    $('musicPlaylistBg').addEventListener('click', function(e){
-      if(e.target === $('musicPlaylistBg')) $('musicPlaylistBg').classList.remove('open');
-    });
-  }
+if($('musicPlaylistBg')){
+  $('musicPlaylistBg').addEventListener('click', function(e){
+    if(e.target === $('musicPlaylistBg')) $('musicPlaylistBg').classList.remove('open');
+  });
 }
 
 function openMusicPlaylist(){
@@ -7788,12 +8293,699 @@ musicAudio.addEventListener('ended', refreshChatMusicBanner);
   }
   initMusicEvents();
 
+/* ============ 游戏邀请 ============ */
+window.__gomokuMode = 'solo';
+
+function pickGameRejectReply(){
+  var pool = [];
+  if(cards && cards.system && Array.isArray(cards.system.rejectGame)){
+    pool = cards.system.rejectGame.filter(function(t){ return t && String(t).trim(); });
+  }
+  if(!pool.length) pool = ['下次再玩吧～', '现在有点忙，回头陪你玩。'];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function pickGameRejectedByMeReply(){
+  var pool = [];
+  if(cards && cards.system && Array.isArray(cards.system.rejectedGame)){
+    pool = cards.system.rejectedGame.filter(function(t){ return t && String(t).trim(); });
+  }
+  if(!pool.length) pool = ['好吧，那下次再一起玩。', '那我等你，随时都可以。'];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function sendGameInvite(diff){
+  var inviteId = uid('ginv');
+  var msg = { me:true, type:'game_invite', game:'gomoku', difficulty: diff, status:'pending', inviteId: inviteId, time:Date.now(), read:false, id: uid('m') };
+  messages.push(msg);
+  saveMessages();
+  if(chatOpenNow) appendMessage(msg);
+  else { unreadCount++; renderHome(); }
+  if($('chatPage') && !$('chatPage').classList.contains('open')){
+    $('chatPage').classList.add('open');
+    chatOpenNow = true;
+    unreadCount = 0;
+    renderHome();
+    renderHeader();
+    renderMessages();
+    applyBeautify();
+  }
+  scheduleGameInviteResponse(inviteId);
+}
+window.__sendGameInvite = sendGameInvite;
+
+function taSendGameInvite(){
+  // 冷却检查
+  var lastInv = 0;
+  try{ lastInv = parseInt(localStorage.getItem('gomoku_ta_invite_time_v1') || '0', 10) || 0; }catch(e){}
+  var cdH = person.gameInviteCooldown || 1;
+  if(Date.now() - lastInv < cdH * 3600 * 1000) return;
+  try{ localStorage.setItem('gomoku_ta_invite_time_v1', String(Date.now())); }catch(e){}
+
+  var diffs = ['easy', 'normal', 'hard'];
+  var d = diffs[Math.floor(Math.random() * diffs.length)];
+  var inviteId = uid('ginv');
+  var msg = { me:false, type:'game_invite', game:'gomoku', difficulty: d, status:'pending', inviteId: inviteId, time:Date.now(), id: uid('m') };
+  messages.push(msg);
+  saveMessages();
+  if(chatOpenNow) appendMessage(msg);
+  else { unreadCount++; renderHome(); showNotificationBanner(msg); }
+}
+
+function scheduleGameInviteResponse(inviteId){
+  setTimeout(function(){
+    var idx = -1;
+    for(var i=messages.length-1;i>=0;i--){ if(messages[i].inviteId === inviteId){ idx = i; break; } }
+    if(idx < 0) return;
+    var accepted = Math.random() * 100 < (person.gameAcceptChance || 70);
+    if(accepted){
+      messages[idx].status = 'accepted';
+      saveMessages();
+      if(chatOpenNow) renderMessages();
+      setTimeout(function(){
+        if(window.__openGomoku) window.__openGomoku(messages[idx].difficulty);
+      }, 800);
+    } else {
+      messages[idx].status = 'rejected';
+      saveMessages();
+      if(chatOpenNow) renderMessages();
+      setTimeout(function(){
+        var cm = { me:false, type:'text', text: pickGameRejectReply(), time: Date.now(), id: uid('m') };
+        messages.push(cm);
+        saveMessages();
+        if(chatOpenNow) appendMessage(cm);
+        else { unreadCount++; renderHome(); }
+      }, 600 + Math.random() * 600);
+    }
+  }, 2000 + Math.random() * 2000);
+}
+
+function acceptGameInvite(inviteId){
+  var idx = -1;
+  for(var i=messages.length-1;i>=0;i--){ if(messages[i].inviteId === inviteId){ idx = i; break; } }
+  if(idx < 0) return;
+  messages[idx].status = 'accepted';
+  saveMessages();
+  if(chatOpenNow) renderMessages();
+  setTimeout(function(){
+    if(window.__openGomoku) window.__openGomoku(messages[idx].difficulty);
+  }, 600);
+}
+
+function rejectGameInvite(inviteId){
+  var idx = -1;
+  for(var i=messages.length-1;i>=0;i--){ if(messages[i].inviteId === inviteId){ idx = i; break; } }
+  if(idx < 0) return;
+  messages[idx].status = 'rejected';
+  saveMessages();
+  if(chatOpenNow) renderMessages();
+  setTimeout(function(){
+    var cm = { me:false, type:'text', text: pickGameRejectedByMeReply(), time: Date.now(), id: uid('m') };
+    messages.push(cm);
+    saveMessages();
+    if(chatOpenNow) appendMessage(cm);
+    else { unreadCount++; renderHome(); }
+    // 记录冷却时间
+    try{ localStorage.setItem('gomoku_ta_invite_time_v1', String(Date.now())); }catch(e){}
+  }, 600 + Math.random() * 600);
+}
+
+document.addEventListener('click', function(e){
+  var acc = e.target.closest('[data-game-invite-accept]');
+  if(acc){ acceptGameInvite(acc.dataset.gameInviteAccept); return; }
+  var rej = e.target.closest('[data-game-invite-reject]');
+  if(rej){ rejectGameInvite(rej.dataset.gameInviteReject); return; }
+});
+
+if($('moreMenuGame')){
+  $('moreMenuGame').onclick = function(){
+    $('moreMenuBg').classList.remove('open');
+    window.__gomokuMode = 'invite';
+    $('gameHallPage').classList.add('open');
+  };
+}
+
+/* ============ 五子棋 ============ */
+(function(){
+  var SIZE = 15;
+  var EMPTY = 0, BLACK = 1, WHITE = 2;
+  var ME = BLACK, TA = WHITE;
+
+  var WIN_QUOTES = [
+    '哎哟可以啊，这盘我服了。',
+    '你是不是偷偷练过…',
+    '哼，不服气，再来一局！',
+    '被你杀了个措手不及，厉害。',
+    '好嘛好嘛，这局算你赢～'
+  ];
+  var LOSE_QUOTES = [
+    '别难过啦，已经很厉害了。',
+    '这局我运气好而已，真的。',
+    '抱抱，下一盘你肯定赢。',
+    '嘿嘿，我赢啦，但不许不高兴哦。',
+    '再下一盘嘛，说不定就翻盘了。'
+  ];
+  var DRAW_QUOTES = ['这盘算和棋，再来一盘吧。'];
+
+  var canvas = $('gomokuCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+
+  var board = [], history = [], lastMove = null;
+var SCORE_KEY = 'gomoku_score_v1';
+var score = { me: 0, ta: 0 };
+function loadScore(){
+  try{
+    var raw = localStorage.getItem(SCORE_KEY);
+    if(raw){ var d = JSON.parse(raw); if(d && typeof d === 'object'){ score.me = d.me || 0; score.ta = d.ta || 0; } }
+  }catch(e){}
+}
+function saveScore(){ try{ localStorage.setItem(SCORE_KEY, JSON.stringify(score)); }catch(e){} }
+function updateScoreChip(){
+  var elMe = $('gomokuScoreMe');
+  var elTa = $('gomokuScoreTa');
+  if(elMe) elMe.textContent = score.me;
+  if(elTa) elTa.textContent = score.ta;
+}
+  var difficulty = '';
+  var gameOver = false;
+  var myTurn = true;
+  var undosLeft = 3;
+  var taThinking = false;
+  var cell = 0, pad = 0;
+  var bubbleTimer = null;
+  var resignPending = false;
+  var resignTimer = null;
+
+  function newBoard(){
+    board = [];
+    for(var y=0;y<SIZE;y++){
+      var row = [];
+      for(var x=0;x<SIZE;x++) row.push(EMPTY);
+      board.push(row);
+    }
+    history = [];
+    lastMove = null;
+  }
+
+  function resizeCanvas(){
+    var wrap = canvas.parentNode;
+    var avail = Math.min(wrap.clientWidth, wrap.clientHeight);
+    if(avail <= 0) return;
+    var size = Math.floor(avail);
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    canvas.width = Math.round(size * dpr);
+    canvas.height = Math.round(size * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cell = size / (SIZE + 1);
+    pad = cell;
+    drawBoard();
+  }
+
+  function drawBoard(){
+    if(!canvas.width) return;
+    var w = canvas.width / dpr, h = canvas.height / dpr;
+    var grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#f0e2c4');
+    grad.addColorStop(1, '#e6d4ae');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.strokeStyle = 'rgba(90,70,40,.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(var i=0;i<SIZE;i++){
+      var p = pad + i * cell;
+      ctx.moveTo(pad, p);
+      ctx.lineTo(pad + (SIZE-1)*cell, p);
+      ctx.moveTo(p, pad);
+      ctx.lineTo(p, pad + (SIZE-1)*cell);
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(90,70,40,.6)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(pad, pad, (SIZE-1)*cell, (SIZE-1)*cell);
+
+    var stars = [[3,3],[11,3],[3,11],[11,11],[7,7]];
+    ctx.fillStyle = 'rgba(90,70,40,.7)';
+    stars.forEach(function(s){
+      var x = pad + s[0]*cell, y = pad + s[1]*cell;
+      ctx.beginPath();
+      ctx.arc(x, y, Math.max(2, cell*0.09), 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    for(var y=0;y<SIZE;y++){
+      for(var x=0;x<SIZE;x++){
+        if(board[y] && board[y][x]) drawStone(x, y, board[y][x]);
+      }
+    }
+    if(lastMove){
+      var lx = pad + lastMove.x * cell;
+      var ly = pad + lastMove.y * cell;
+      ctx.beginPath();
+      ctx.arc(lx, ly, cell * 0.12, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(232,74,95,.95)';
+      ctx.lineWidth = Math.max(1.6, cell*0.08);
+      ctx.stroke();
+    }
+  }
+
+  function drawStone(x, y, role){
+    var cx = pad + x * cell, cy = pad + y * cell;
+    var r = cell * 0.42;
+    ctx.beginPath();
+    ctx.arc(cx + 1, cy + 1.5, r, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,.16)';
+    ctx.fill();
+    var grad = ctx.createRadialGradient(cx - r*0.35, cy - r*0.35, r*0.1, cx, cy, r);
+    if(role === BLACK){
+      grad.addColorStop(0, '#5a5a5a');
+      grad.addColorStop(0.5, '#2a2a2a');
+      grad.addColorStop(1, '#0d0d0d');
+    } else {
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.6, '#f2f2f2');
+      grad.addColorStop(1, '#c8c8c8');
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    if(role === WHITE){
+      ctx.strokeStyle = 'rgba(0,0,0,.12)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(cx - r*0.3, cy - r*0.3, r*0.22, 0, Math.PI*2);
+    ctx.fillStyle = role === BLACK ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.9)';
+    ctx.fill();
+  }
+
+  function inBounds(x, y){ return x>=0 && x<SIZE && y>=0 && y<SIZE; }
+
+  function checkWin(x, y, role){
+    var dirs = [[1,0],[0,1],[1,1],[1,-1]];
+    for(var d=0;d<4;d++){
+      var dx = dirs[d][0], dy = dirs[d][1], count = 1;
+      for(var i=1;i<5;i++){
+        var nx = x+dx*i, ny = y+dy*i;
+        if(inBounds(nx,ny) && board[ny][nx] === role) count++; else break;
+      }
+      for(var i=1;i<5;i++){
+        var nx = x-dx*i, ny = y-dy*i;
+        if(inBounds(nx,ny) && board[ny][nx] === role) count++; else break;
+      }
+      if(count >= 5) return true;
+    }
+    return false;
+  }
+
+  function boardFull(){
+    for(var y=0;y<SIZE;y++) for(var x=0;x<SIZE;x++) if(board[y][x] === EMPTY) return false;
+    return true;
+  }
+
+  function scorePattern(count, blocks){
+    if(count >= 5) return 1000000;
+    if(blocks >= 2) return 0;
+    if(count === 4) return blocks === 0 ? 120000 : 12000;
+    if(count === 3) return blocks === 0 ? 9000 : 900;
+    if(count === 2) return blocks === 0 ? 600 : 60;
+    if(count === 1) return blocks === 0 ? 25 : 3;
+    return 0;
+  }
+
+  function evalPoint(x, y, role){
+    var total = 0;
+    var dirs = [[1,0],[0,1],[1,1],[1,-1]];
+    for(var d=0;d<4;d++){
+      var dx = dirs[d][0], dy = dirs[d][1], count = 1, block1 = 0, block2 = 0;
+      for(var i=1;i<5;i++){
+        var nx = x+dx*i, ny = y+dy*i;
+        if(!inBounds(nx,ny)){ block1 = 1; break; }
+        if(board[ny][nx] === role) count++;
+        else if(board[ny][nx] === EMPTY) break;
+        else { block1 = 1; break; }
+      }
+      for(var i=1;i<5;i++){
+        var nx = x-dx*i, ny = y-dy*i;
+        if(!inBounds(nx,ny)){ block2 = 1; break; }
+        if(board[ny][nx] === role) count++;
+        else if(board[ny][nx] === EMPTY) break;
+        else { block2 = 1; break; }
+      }
+      total += scorePattern(count, block1 + block2);
+    }
+    return total;
+  }
+
+  function hasNeighbor(x, y){
+    for(var dy=-2;dy<=2;dy++){
+      for(var dx=-2;dx<=2;dx++){
+        if(dx===0 && dy===0) continue;
+        var nx = x+dx, ny = y+dy;
+        if(inBounds(nx,ny) && board[ny][nx] !== EMPTY) return true;
+      }
+    }
+    return false;
+  }
+
+  function getCandidates(){
+    var list = [];
+    var hasAny = false;
+    for(var y=0;y<SIZE;y++) for(var x=0;x<SIZE;x++) if(board[y][x] !== EMPTY){ hasAny = true; break; }
+    if(!hasAny) return [{x:7, y:7}];
+    for(var y=0;y<SIZE;y++){
+      for(var x=0;x<SIZE;x++){
+        if(board[y][x] !== EMPTY) continue;
+        if(hasNeighbor(x,y)) list.push({x:x, y:y});
+      }
+    }
+    return list;
+  }
+
+  function chooseAiMove(){
+    var cands = getCandidates();
+    if(!cands.length) return null;
+    for(var i=0;i<cands.length;i++){
+      var c = cands[i];
+      board[c.y][c.x] = TA;
+      var win = checkWin(c.x, c.y, TA);
+      board[c.y][c.x] = EMPTY;
+      if(win) return c;
+    }
+    for(var i=0;i<cands.length;i++){
+      var c = cands[i];
+      board[c.y][c.x] = ME;
+      var win = checkWin(c.x, c.y, ME);
+      board[c.y][c.x] = EMPTY;
+      if(win) return c;
+    }
+    if(difficulty === 'easy' && Math.random() < 0.45){
+      return cands[Math.floor(Math.random()*cands.length)];
+    }
+    var wMe, wOp, noise;
+    if(difficulty === 'easy'){ wMe = 1; wOp = 0.35; noise = 700; }
+    else if(difficulty === 'normal'){ wMe = 1; wOp = 0.9; noise = 90; }
+    else { wMe = 1.1; wOp = 1.05; noise = 6; }
+    var best = null, bestScore = -Infinity;
+    for(var i=0;i<cands.length;i++){
+      var c = cands[i];
+      var sMe = evalPoint(c.x, c.y, TA);
+      var sOp = evalPoint(c.x, c.y, ME);
+      var centerBias = 15 - (Math.abs(c.x - 7) + Math.abs(c.y - 7));
+      var score = sMe * wMe + sOp * wOp + centerBias * 2 + Math.random() * noise;
+      if(score > bestScore){ bestScore = score; best = c; }
+    }
+    return best || cands[0];
+  }
+
+  function place(x, y, role){
+    board[y][x] = role;
+    history.push({x:x, y:y, role:role});
+    lastMove = {x:x, y:y, role:role};
+    drawBoard();
+  }
+
+  function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function showTaQuote(text, keep){
+    var el = $('gomokuTaBubble');
+    if(!el) return;
+    el.classList.remove('thinking');
+    el.textContent = text;
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = 'gomokuBubbleIn .25s ease';
+    if(!keep){
+      if(bubbleTimer) clearTimeout(bubbleTimer);
+      bubbleTimer = setTimeout(function(){
+        if(!gameOver) el.textContent = myTurn ? '轮到你了…' : '嗯…让我想想。';
+      }, 3000);
+    }
+  }
+
+  function showThinking(){
+    var el = $('gomokuTaBubble');
+    if(!el) return;
+    el.classList.add('thinking');
+    el.innerHTML = 'TA 正在思考<span class="gm-dot"></span><span class="gm-dot"></span><span class="gm-dot"></span>';
+  }
+
+  function updateTaAvatar(){
+    var av = $('gomokuTaAvatar');
+    if(!av) return;
+    if(person.avatar){ av.innerHTML = '<img src="' + person.avatar + '" alt="">'; av.style.background = 'transparent'; }
+    else { av.innerHTML = DEFAULT_AVATAR_SVG; av.style.background = 'none'; }
+  }
+
+  function myMove(x, y){
+    if(gameOver || !myTurn || taThinking) return;
+    if(!inBounds(x,y) || board[y][x] !== EMPTY) return;
+    place(x, y, ME);
+    if(checkWin(x, y, ME)){ endGame('win'); return; }
+    if(boardFull()){ endGame('draw'); return; }
+    myTurn = false;
+    taTurn();
+  }
+
+  function taTurn(){
+    taThinking = true;
+    showThinking();
+    var delayMap = { easy: 450, normal: 850, hard: 1300 };
+    var delay = (delayMap[difficulty] || 700) + Math.random() * 400;
+    setTimeout(function(){
+      if(gameOver){ taThinking = false; return; }
+      var mv = chooseAiMove();
+      taThinking = false;
+      if(!mv){ if(boardFull()) endGame('draw'); return; }
+      place(mv.x, mv.y, TA);
+      if(checkWin(mv.x, mv.y, TA)){ endGame('lose'); return; }
+      if(boardFull()){ endGame('draw'); return; }
+      myTurn = true;
+      showTaQuote(randomFrom(['轮到你了～', '嗯…该你了。', '该你啦，我等着。']));
+    }, delay);
+  }
+
+  function endGame(result){
+  gameOver = true;
+  if(result === 'win'){ score.me++; saveScore(); updateScoreChip(); }
+  else if(result === 'lose'){ score.ta++; saveScore(); updateScoreChip(); }
+
+  var bg = $('gomokuResultBg');
+  var emoji = $('gomokuResultEmoji');
+  var title = $('gomokuResultTitle');
+  var sub = $('gomokuResultSub');
+  var box = $('gomokuResultBox');
+  var reward = $('gomokuResultReward');
+
+  // 从卡池抽 TA 的台词（按累计比分判断，打平走 scoreBehind）
+  var pool = (score.me > score.ta)
+    ? (cards.system.scoreLead || [])
+    : (cards.system.scoreBehind || []);
+  pool = pool.filter(function(t){ return t && String(t).trim(); });
+  if(!pool.length) pool = ['再来一局吧～'];
+  var taLine = randomFrom(pool);
+
+  if(result === 'win'){
+    emoji.textContent = '🎉';
+    title.textContent = '你赢了！';
+    sub.textContent = 'TA 说：' + taLine;
+    reward.innerHTML = 'TA 给你 <b>¥1.00</b>（红包后续接入）';
+    box.style.display = 'flex';
+    showTaQuote(taLine, true);
+  } else if(result === 'lose'){
+    emoji.textContent = '🌿';
+    title.textContent = 'TA 赢了';
+    sub.textContent = 'TA 说：' + taLine;
+    reward.innerHTML = '你给 TA <b>¥1.00</b>（红包后续接入）';
+    box.style.display = 'flex';
+    showTaQuote(taLine, true);
+  } else {
+    emoji.textContent = '🤝';
+    title.textContent = '和棋';
+    sub.textContent = 'TA 说：' + taLine;
+    box.style.display = 'none';
+    showTaQuote(taLine, true);
+  }
+  setTimeout(function(){ bg.classList.add('open'); }, 400);
+}
+
+  function undo(){
+    if(gameOver || taThinking) return;
+    if(undosLeft <= 0 || history.length < 2) return;
+    var last = history.pop();
+    board[last.y][last.x] = EMPTY;
+    var mine = history.pop();
+    board[mine.y][mine.x] = EMPTY;
+    lastMove = history.length ? history[history.length-1] : null;
+    undosLeft--;
+    $('gomokuUndoCount').textContent = undosLeft;
+    if(undosLeft <= 0) $('gomokuUndoBtn').disabled = true;
+    myTurn = true;
+    drawBoard();
+    showTaQuote('好吧，让你一步。');
+  }
+
+  function openDiffDialog(){
+    Array.prototype.forEach.call(document.querySelectorAll('#gomokuDiffList .gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
+    difficulty = '';
+    $('gomokuDiffConfirm').disabled = true;
+    $('gomokuDiffBg').classList.add('open');
+  }
+
+  function startGame(){
+    $('gomokuDiffBg').classList.remove('open');
+    $('gomokuDiffChip').textContent = '难度: ' + ({easy:'简单', normal:'普通', hard:'困难'})[difficulty];
+    newBoard();
+    gameOver = false;
+    myTurn = true;
+    taThinking = false;
+    undosLeft = 3;
+    $('gomokuUndoCount').textContent = '3';
+    $('gomokuUndoBtn').disabled = false;
+    var rb = $('gomokuResignBtn');
+    rb.textContent = '认输';
+    rb.style.background = '';
+    rb.style.color = '';
+    resignPending = false;
+    if(resignTimer) clearTimeout(resignTimer);
+    setTimeout(resizeCanvas, 50);
+    drawBoard();
+    updateTaAvatar();
+    showTaQuote('我下白棋，你先吧。');
+  }
+
+  window.__openGomoku = function(diff){
+  $('gomokuPage').classList.add('open');
+  updateTaAvatar();
+  setTimeout(function(){
+    resizeCanvas();
+    if(diff){
+      difficulty = diff;
+      startGame();
+    } else {
+      openDiffDialog();
+    }
+  }, 340);
+};
+
+  if($('gomokuBack')) $('gomokuBack').onclick = function(){
+    $('gomokuPage').classList.remove('open');
+    gameOver = true;
+    taThinking = false;
+  };
+
+  canvas.addEventListener('click', function(e){
+    if(gameOver) return;
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var gx = Math.round((mx - pad) / cell);
+    var gy = Math.round((my - pad) / cell);
+    if(!inBounds(gx, gy)) return;
+    var cx = pad + gx * cell, cy = pad + gy * cell;
+    var dist = Math.sqrt((mx-cx)*(mx-cx) + (my-cy)*(my-cy));
+    if(dist > cell * 0.55) return;
+    myMove(gx, gy);
+  });
+
+  if($('gomokuUndoBtn')) $('gomokuUndoBtn').onclick = undo;
+
+  if($('gomokuResignBtn')){
+    $('gomokuResignBtn').onclick = function(){
+      if(gameOver) return;
+      if(!resignPending){
+        resignPending = true;
+        this.textContent = '再点确认';
+        this.style.background = '#e84a5f';
+        this.style.color = '#fff';
+        resignTimer = setTimeout(function(){
+          resignPending = false;
+          var btn = $('gomokuResignBtn');
+          btn.textContent = '认输';
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 3000);
+      } else {
+        clearTimeout(resignTimer);
+        resignPending = false;
+        endGame('lose');
+      }
+    };
+  }
+
+  if($('gomokuRestartBtn')) $('gomokuRestartBtn').onclick = function(){ openDiffDialog(); };
+
+  if($('gomokuDiffList')){
+    $('gomokuDiffList').addEventListener('click', function(e){
+      var card = e.target.closest('.gomoku-diff-card');
+      if(!card) return;
+      Array.prototype.forEach.call(this.querySelectorAll('.gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
+      card.classList.add('selected');
+      difficulty = card.dataset.diff;
+      $('gomokuDiffConfirm').disabled = false;
+    });
+  }
+  window.__openGomokuDiff = function(){ openDiffDialog(); };
+if($('gomokuDiffConfirm')){
+  $('gomokuDiffConfirm').onclick = function(){
+    if(!difficulty) return;
+    if(window.__gomokuMode === 'invite'){
+      $('gomokuDiffBg').classList.remove('open');
+      $('gameHallPage').classList.remove('open');
+      window.__gomokuMode = 'solo';
+      if(window.__sendGameInvite) window.__sendGameInvite(difficulty);
+    } else {
+      startGame();
+    }
+  };
+}
+  if($('gomokuResultClose')) $('gomokuResultClose').onclick = function(){ $('gomokuResultBg').classList.remove('open'); };
+  if($('gomokuResultAgain')) $('gomokuResultAgain').onclick = function(){
+    $('gomokuResultBg').classList.remove('open');
+    openDiffDialog();
+  };
+
+  window.addEventListener('resize', function(){
+    if($('gomokuPage') && $('gomokuPage').classList.contains('open')) resizeCanvas();
+  });
+
+  loadScore();
+  updateScoreChip();
+  newBoard();
+})();
+
 })();
 
 /* ============ 更新提示 ============ */
 (function(){
-  /* 每次发新版，改这里的版本号就行 */
-var APP_VERSION = '1.0.3';
+  /* ========================================================
+     📝 每次发新版，改两处就行：
+     ① 修改下面的 APP_VERSION（版本号 +1）
+     ② 往 UPDATE_LOGS 里加一条，格式见下面
+     ======================================================== */
+var APP_VERSION = '1.0.4';
+
+  var UPDATE_LOGS = {
+    /* 版本号要和上面 APP_VERSION 一致，才会显示 */
+    '1.0.4': [
+      '🎮 新增五子棋，可以和 TA 一起玩',
+      '🎯 系统预设重新整理，7 大分类更清爽',
+      '🧧 下棋赢家可得 ¥1 红包',
+      '📊 五子棋新增累计比分，跨局保存',
+      '⚙️ 聊天回复设置全新折叠排版，9 大分类',
+      '🔧 修复了一些小问题'
+    ],
+
+    /* 下面是示例，以后想加旧版记录就照这个格式加 */
+    // '1.0.3': ['xxx', 'yyy'],
+  };
+
   var VERSION_KEY = 'chat_app_version_v1';
   var lastSeen = '';
   try{ lastSeen = localStorage.getItem(VERSION_KEY) || ''; }catch(e){}
@@ -7811,8 +9003,22 @@ var APP_VERSION = '1.0.3';
   var bg = document.getElementById('updateBg');
   if(!bg) return;
   var vText = document.getElementById('updateVersionText');
-  if(vText) vText.textContent = 'v' + APP_VERSION;
-  bg.classList.add('show');
+if(vText) vText.textContent = 'v' + APP_VERSION;
+
+/* 渲染更新内容列表 */
+var logs = (UPDATE_LOGS && UPDATE_LOGS[APP_VERSION]) ? UPDATE_LOGS[APP_VERSION] : [];
+var logBox = document.getElementById('updateLogBox');
+var logList = document.getElementById('updateLogList');
+if(logs.length && logBox && logList){
+  logList.innerHTML = logs.map(function(txt){
+    return '<div class="update-log-item"><span class="u-dot"></span><span>' + txt + '</span></div>';
+  }).join('');
+  logBox.style.display = 'block';
+} else if(logBox){
+  logBox.style.display = 'none';
+}
+
+bg.classList.add('show');
 
   var nowBtn = document.getElementById('updateNowBtn');
   var laterBtn = document.getElementById('updateLaterBtn');
@@ -7925,6 +9131,39 @@ var APP_VERSION = '1.0.3';
         localStorage.removeItem('chat_backup_snooze_until_v1');
       }catch(e){}
     });
+  }
+})();
+
+/* ============ iOS PWA 键盘修复兜底 ============ */
+(function(){
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isStandalone = (('standalone' in navigator) && navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches;
+  if(!isIOS) return;
+
+  // 兜底一：iOS PWA 下，点击 input/textarea 强制 focus
+  document.addEventListener('touchend', function(e){
+    var el = e.target;
+    if(!el) return;
+    if(el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') return;
+    if(document.activeElement === el) return;
+    setTimeout(function(){
+      try{
+        el.focus();
+        if(el.setSelectionRange && typeof el.value === 'string'){
+          el.setSelectionRange(el.value.length, el.value.length);
+        }
+      }catch(err){}
+    }, 50);
+  }, false);
+
+  // 兜底二：PWA 模式下，body 上临时解锁键盘相关样式
+  if(isStandalone){
+    document.documentElement.style.setProperty('-webkit-user-select', 'auto');
+    document.documentElement.style.setProperty('user-select', 'auto');
+    document.body.style.setProperty('overflow', 'visible');
+    document.body.style.setProperty('position', 'fixed');
+    document.body.style.setProperty('width', '100%');
+    document.body.style.setProperty('height', '100%');
   }
 })();
 
