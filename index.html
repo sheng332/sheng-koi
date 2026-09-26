@@ -988,6 +988,18 @@ html,body{height:100%;margin:0;padding:0}
 .game-card-name{font-size:14.5px;font-weight:600;color:var(--text)}
 .game-card-desc{font-size:11.5px;color:var(--light-text);margin-top:-2px}
 
+/* 跳一跳 */
+.jump-wrap{flex:1 1 auto;min-height:0;position:relative;background:linear-gradient(180deg,#e6f2f7 0%,#f5f0ea 100%);overflow:hidden}
+#jumpCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.jump-picker-emoji{text-align:center;font-size:38px;line-height:1;margin-bottom:6px}
+.jump-picker-btns{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.jump-picker-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--line);border-radius:14px;background:var(--soft);font-family:inherit;text-align:left;cursor:pointer;transition:all .15s ease;width:100%}
+.jump-picker-btn:active{transform:scale(.98);background:#e6eef1;border-color:var(--primary)}
+.jump-picker-icon{flex:0 0 auto;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#e8f0f3,#d2e6ec);display:grid;place-items:center;font-size:22px}
+.jump-picker-info{flex:1;min-width:0}
+.jump-picker-name{font-size:14.5px;font-weight:600;color:var(--primary)}
+.jump-picker-desc{font-size:11.5px;color:var(--light-text);margin-top:2px}
+
 /* 更新提示卡片 */
 .update-bg{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
 
@@ -1851,11 +1863,18 @@ html,body{height:100%;margin:0;padding:0}
         <div class="game-card-name">五子棋</div>
         <div class="game-card-desc">和 TA 来一盘</div>
       </button>
-      <div class="game-card disabled">
-        <div class="game-card-icon" style="font-size:22px;">🔒</div>
-        <div class="game-card-name">敬请期待</div>
-        <div class="game-card-desc">更多游戏开发中</div>
-      </div>
+      <button class="game-card" data-game="jump">
+  <div class="game-card-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v6"/><path d="M8 11l4-2 4 2"/><path d="M8 20l4-6 4 6"/></svg>
+  </div>
+  <div class="game-card-name">跳一跳</div>
+  <div class="game-card-desc">长按蓄力，跳远一点</div>
+</button>
+<div class="game-card disabled">
+  <div class="game-card-icon" style="font-size:22px;">🔒</div>
+  <div class="game-card-name">敬请期待</div>
+  <div class="game-card-desc">更多游戏开发中</div>
+</div>
       <div class="game-card disabled">
         <div class="game-card-icon" style="font-size:22px;">🔒</div>
         <div class="game-card-name">敬请期待</div>
@@ -1934,6 +1953,14 @@ html,body{height:100%;margin:0;padding:0}
         <div class="gomoku-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
       </div>
     </div>
+    <div style="margin-top:14px;text-align:left;">
+      <div style="font-size:12.5px;color:var(--light-text);margin-bottom:8px;">一次玩几局？</div>
+      <div class="font-grid" id="gomokuGamesGrid" style="padding:0;gap:8px;">
+        <button class="font-chip active" data-games="1">1 局</button>
+        <button class="font-chip" data-games="3">3 局</button>
+        <button class="font-chip" data-games="5">5 局</button>
+      </div>
+    </div>
     <div class="dialog-btns" style="margin-top:14px;border-top:0;">
       <button class="dialog-btn primary" id="gomokuDiffConfirm" disabled>开始下棋</button>
     </div>
@@ -1952,6 +1979,40 @@ html,body{height:100%;margin:0;padding:0}
     <div class="dialog-btns">
       <button class="dialog-btn" id="gomokuResultClose">看看棋盘</button>
       <button class="dialog-btn primary" id="gomokuResultAgain">再来一局</button>
+    </div>
+  </div>
+</div>
+
+<section class="page" id="jumpPage">
+  <header class="page-header">
+    <button class="icon-btn" id="jumpBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">跳一跳</div>
+  </header>
+  <div class="jump-wrap">
+    <canvas id="jumpCanvas"></canvas>
+  </div>
+</section>
+
+<div class="dialog-bg" id="jumpModeBg">
+  <div class="dialog">
+    <div class="jump-picker-emoji">🐰</div>
+    <div class="dialog-title">跳一跳</div>
+    <div class="dialog-body">选个模式开始吧～</div>
+    <div class="jump-picker-btns">
+      <button class="jump-picker-btn" data-jump-mode="solo">
+        <div class="jump-picker-icon">🎯</div>
+        <div class="jump-picker-info">
+          <div class="jump-picker-name">单人玩</div>
+          <div class="jump-picker-desc">TA 在旁边看着你</div>
+        </div>
+      </button>
+      <button class="jump-picker-btn" data-jump-mode="duo">
+        <div class="jump-picker-icon">🐇</div>
+        <div class="jump-picker-info">
+          <div class="jump-picker-name">和 TA 轮流</div>
+          <div class="jump-picker-desc">一人一步，看看谁跳得远</div>
+        </div>
+      </button>
     </div>
   </div>
 </div>
@@ -2914,6 +2975,7 @@ if(isDictEmpty){
 if(!Array.isArray(d.system.rejectedByMe) || d.system.rejectedByMe.length === 0) d.system.rejectedByMe = DEFAULT_REJECTED_BY_ME_REPLIES.slice();
 if(!Array.isArray(d.system.callReject) || d.system.callReject.length === 0) d.system.callReject = ['现在有点忙，晚点再打给你', '在忙，等我一下', '现在不太方便，稍后回你'];
 if(!Array.isArray(d.system.callRejectedByMe) || d.system.callRejectedByMe.length === 0) d.system.callRejectedByMe = ['好吧，那下次再打给你', '那我等你', '嗯…那我先挂了'];
+    if(!Array.isArray(d.system.quitGame) || d.system.quitGame.length === 0) d.system.quitGame = ['怎么下到一半就跑啦？', '诶？人呢…', '好吧，那我自己练练。', '哼，下次要陪我下完哦。'];
 if(!Array.isArray(d.system.waitForYou) || d.system.waitForYou.length === 0) d.system.waitForYou = ['宝宝，你怎么还没来找我', '你怎么还不出现呀', '宝宝，不要玩手机啦！快来陪陪我', '你再不来我就生气了哦', '好想你，快点回来嘛', '喂，你在忙吗？想你了', '我在这里等你哦', '忙完了记得找我', '刚刚一直在想你', '再不回来我就自己玩啦'];
 if(!Array.isArray(d.system.rpThanks) || d.system.rpThanks.length === 0) d.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
     if(!Array.isArray(d.system.mood)) d.system.mood = DEFAULT_MOODS.slice();
@@ -3627,8 +3689,14 @@ if(m.type === 'invite'){
          '</div>';
 }
 if(m.type === 'game_invite'){
-  var gName = m.game === 'gomoku' ? '五子棋' : '游戏';
-  var dName = ({easy:'简单', normal:'普通', hard:'困难'})[m.difficulty] || '';
+  var gName = m.game === 'gomoku' ? '五子棋' : (m.game === 'jump' ? '跳一跳' : '游戏');
+  var dName = '';
+  if(m.game === 'gomoku'){
+    dName = ({easy:'简单', normal:'普通', hard:'困难'})[m.difficulty] || '';
+    if(dName) dName = '难度：' + dName;
+  } else if(m.game === 'jump'){
+    dName = '轮流跳';
+  }
   var gHeadText = m.me ? ('邀请 TA · ' + gName) : ((person.name || 'TA') + ' · 邀请你玩 ' + gName);
   var gStatusText = '';
   var gStatusCls = 'pending';
@@ -3652,8 +3720,8 @@ if(m.type === 'game_invite'){
     '<div class="game-invite-card">' +
       '<div class="game-invite-head">🎮 ' + esc(gHeadText) + '</div>' +
       '<div class="game-invite-body">' + esc(gName) +
-        (dName ? '<div class="game-invite-diff">难度：' + dName + '</div>' : '') +
-      '</div>' +
+  (dName ? '<div class="game-invite-diff">' + dName + '</div>' : '') +
+'</div>' +
       '<div class="game-invite-status ' + gStatusCls + '">' + esc(gStatusText) + '</div>' +
       gBtns +
     '</div>' +
@@ -4047,12 +4115,13 @@ content.innerHTML = html;
   );
 
   // 🎮 游戏
-  html += cat('🎮', '游戏', 4,
-    sub('rejectGame', '婉拒一起玩', cards.system.rejectGame, 'data-reject-game-del', 'data-add-reject-game', '添加一句婉拒台词', 'TA 拒绝你的游戏邀请时，会说的话。') +
-    sub('rejectedGame', '被拒绝', cards.system.rejectedGame, 'data-rejected-game-del', 'data-add-rejected-game', '添加一句被拒绝后的台词', '你拒绝 TA 的游戏邀请，TA 失落时会说的话。') +
-    sub('scoreLead', '我领先时夸我', cards.system.scoreLead, 'data-score-lead-del', 'data-add-score-lead', '添加一句夸你的话', '累计比分你领先时，每次下完棋 TA 会从这抽一句话。') +
-    sub('scoreBehind', 'TA 领先时安慰我', cards.system.scoreBehind, 'data-score-behind-del', 'data-add-score-behind', '添加一句安慰你的话', '累计比分 TA 领先（或打平）时，每次下完棋 TA 会从这抽一句话。')
-  );
+html += cat('🎮', '游戏', 5,
+  sub('rejectGame', '婉拒一起玩', cards.system.rejectGame, 'data-reject-game-del', 'data-add-reject-game', '添加一句婉拒台词', 'TA 拒绝你的游戏邀请时，会说的话。') +
+  sub('rejectedGame', '被拒绝', cards.system.rejectedGame, 'data-rejected-game-del', 'data-add-rejected-game', '添加一句被拒绝后的台词', '你拒绝 TA 的游戏邀请，TA 失落时会说的话。') +
+  sub('scoreLead', '我领先时夸我', cards.system.scoreLead, 'data-score-lead-del', 'data-add-score-lead', '添加一句夸你的话', '累计比分你领先时，每次下完棋 TA 会从这抽一句话。') +
+  sub('scoreBehind', 'TA 领先时安慰我', cards.system.scoreBehind, 'data-score-behind-del', 'data-add-score-behind', '添加一句安慰你的话', '累计比分 TA 领先（或打平）时，每次下完棋 TA 会从这抽一句话。') +
+  sub('quitGame', '中途退出', cards.system.quitGame, 'data-quit-game-del', 'data-add-quit-game', '添加一句「你怎么跑了」的话', '你下到一半点退出时，TA 会从这抽一句话。')
+);
 
   v.innerHTML = html;
 }
@@ -4203,6 +4272,15 @@ if(rgmDel){
   saveCards(); renderSystemView();
   return;
 }
+var qgDel = e.target.closest('[data-quit-game-del]');
+if(qgDel){
+  var i = parseInt(qgDel.dataset.quitGameDel, 10);
+  if(!Array.isArray(cards.system.quitGame)) cards.system.quitGame = [];
+  cards.system.quitGame.splice(i, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+
 var slDel = e.target.closest('[data-score-lead-del]');
 if(slDel){
   var i = parseInt(slDel.dataset.scoreLeadDel, 10);
@@ -4469,6 +4547,16 @@ if(f.matches('[data-add-rejected-game]')){
   if(!valRGM) return;
   if(!Array.isArray(cards.system.rejectedGame)) cards.system.rejectedGame = [];
   cards.system.rejectedGame.push(valRGM);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-quit-game]')){
+  e.preventDefault();
+  var inpQG = f.querySelector('input');
+  var valQG = inpQG.value.trim();
+  if(!valQG) return;
+  if(!Array.isArray(cards.system.quitGame)) cards.system.quitGame = [];
+  cards.system.quitGame.push(valQG);
   saveCards(); renderSystemView();
   return;
 }
@@ -6675,6 +6763,14 @@ if($('gameGrid')) $('gameGrid').addEventListener('click', function(e){
     } else {
       if(window.__openGomoku) window.__openGomoku();
     }
+  } else if(g === 'jump'){
+    if(window.__gomokuMode === 'invite'){
+      window.__gomokuMode = 'solo';
+      $('gameHallPage').classList.remove('open');
+      if(window.__sendGameInvite) window.__sendGameInvite('jump');
+    } else {
+      if(window.__openJump) window.__openJump();
+    }
   }
 });
 if($('chatBack')) $('chatBack').onclick = function(){
@@ -8321,9 +8417,15 @@ function pickGameRejectedByMeReply(){
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function sendGameInvite(diff){
+function sendGameInvite(game, diff){
+  /* 兼容旧调用：只传了难度（easy/normal/hard），说明是五子棋 */
+  if(game === 'easy' || game === 'normal' || game === 'hard'){
+    diff = game;
+    game = 'gomoku';
+  }
+  game = game || 'gomoku';
   var inviteId = uid('ginv');
-  var msg = { me:true, type:'game_invite', game:'gomoku', difficulty: diff, status:'pending', inviteId: inviteId, time:Date.now(), read:false, id: uid('m') };
+  var msg = { me:true, type:'game_invite', game: game, difficulty: diff, status:'pending', inviteId: inviteId, time:Date.now(), read:false, id: uid('m') };
   messages.push(msg);
   saveMessages();
   if(chatOpenNow) appendMessage(msg);
@@ -8370,8 +8472,13 @@ function scheduleGameInviteResponse(inviteId){
       saveMessages();
       if(chatOpenNow) renderMessages();
       setTimeout(function(){
-        if(window.__openGomoku) window.__openGomoku(messages[idx].difficulty);
-      }, 800);
+  var mm = messages[idx];
+  if(mm.game === 'jump'){
+    if(window.__openJump) window.__openJump('duo');
+  } else {
+    if(window.__openGomoku) window.__openGomoku(mm.difficulty);
+  }
+}, 800);
     } else {
       messages[idx].status = 'rejected';
       saveMessages();
@@ -8395,8 +8502,13 @@ function acceptGameInvite(inviteId){
   saveMessages();
   if(chatOpenNow) renderMessages();
   setTimeout(function(){
-    if(window.__openGomoku) window.__openGomoku(messages[idx].difficulty);
-  }, 600);
+  var mm = messages[idx];
+  if(mm.game === 'jump'){
+    if(window.__openJump) window.__openJump('duo');
+  } else {
+    if(window.__openGomoku) window.__openGomoku(mm.difficulty);
+  }
+}, 600);
 }
 
 function rejectGameInvite(inviteId){
@@ -8476,10 +8588,13 @@ function updateScoreChip(){
   if(elTa) elTa.textContent = score.ta;
 }
   var difficulty = '';
-  var gameOver = false;
-  var myTurn = true;
-  var undosLeft = 3;
-  var taThinking = false;
+var gameOver = false;
+var myTurn = true;
+var undosLeft = 3;
+var taThinking = false;
+var gamesTotal = 1;      // 本轮共几局
+var gamesPlayed = 0;     // 已完成几局
+var roundWins = { me: 0, ta: 0 };  // 本轮比分
   var cell = 0, pad = 0;
   var bubbleTimer = null;
   var resignPending = false;
@@ -8781,8 +8896,15 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
 
   function endGame(result){
   gameOver = true;
+
+  /* 累计比分（跨轮保存） */
   if(result === 'win'){ score.me++; saveScore(); updateScoreChip(); }
   else if(result === 'lose'){ score.ta++; saveScore(); updateScoreChip(); }
+
+  /* 本轮比分 */
+  if(result === 'win'){ roundWins.me++; }
+  else if(result === 'lose'){ roundWins.ta++; }
+  gamesPlayed++;
 
   var bg = $('gomokuResultBg');
   var emoji = $('gomokuResultEmoji');
@@ -8790,8 +8912,9 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
   var sub = $('gomokuResultSub');
   var box = $('gomokuResultBox');
   var reward = $('gomokuResultReward');
+  var againBtn = $('gomokuResultAgain');
 
-  // 从卡池抽 TA 的台词（按累计比分判断，打平走 scoreBehind）
+  /* 从卡池抽 TA 的台词（按累计比分判断，打平走 scoreBehind） */
   var pool = (score.me > score.ta)
     ? (cards.system.scoreLead || [])
     : (cards.system.scoreBehind || []);
@@ -8799,27 +8922,102 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
   if(!pool.length) pool = ['再来一局吧～'];
   var taLine = randomFrom(pool);
 
-  if(result === 'win'){
-    emoji.textContent = '🎉';
-    title.textContent = '你赢了！';
-    sub.textContent = 'TA 说：' + taLine;
-    reward.innerHTML = 'TA 给你 <b>¥1.00</b>（红包后续接入）';
-    box.style.display = 'flex';
-    showTaQuote(taLine, true);
-  } else if(result === 'lose'){
-    emoji.textContent = '🌿';
-    title.textContent = 'TA 赢了';
-    sub.textContent = 'TA 说：' + taLine;
-    reward.innerHTML = '你给 TA <b>¥1.00</b>（红包后续接入）';
-    box.style.display = 'flex';
-    showTaQuote(taLine, true);
-  } else {
-    emoji.textContent = '🤝';
-    title.textContent = '和棋';
-    sub.textContent = 'TA 说：' + taLine;
-    box.style.display = 'none';
-    showTaQuote(taLine, true);
+  /* 本局胜负 */
+  if(result === 'win'){ emoji.textContent = '🎉'; title.textContent = '你赢了！'; }
+  else if(result === 'lose'){ emoji.textContent = '🌿'; title.textContent = 'TA 赢了'; }
+  else { emoji.textContent = '🤝'; title.textContent = '和棋'; }
+
+  /* 本轮信息行（只有多局制才显示） */
+  var roundInfo = '';
+  if(gamesTotal > 1){
+    roundInfo = '第 ' + gamesPlayed + '/' + gamesTotal + ' 局 · 本轮 你 ' + roundWins.me + ' : ' + roundWins.ta + ' TA';
   }
+
+  /* 本轮是否打完 */
+  var isRoundEnd = (gamesPlayed >= gamesTotal);
+  var roundEndLine = '';
+  var netMoney = 0;  // 正数=我净赢，负数=我净输
+
+  if(isRoundEnd){
+    var net = roundWins.me - roundWins.ta;
+    if(net > 0){
+      /* 我赢了这一轮，TA 给我 net 块钱 */
+      netMoney = net;
+      walletTa.balance = Math.round((walletTa.balance - net) * 100) / 100;
+      walletMe.balance = Math.round((walletMe.balance + net) * 100) / 100;
+      walletMe.records.push({ type:'in', amount: net, time: Date.now(), note: (person.name || 'TA') + '·五子棋' });
+      saveWalletMe(); saveWalletTa();
+    } else if(net < 0){
+      /* 我输了这一轮，给 TA loss 块钱 */
+      var loss = -net;
+      netMoney = -loss;
+      walletMe.balance = Math.round((walletMe.balance - loss) * 100) / 100;
+      walletTa.balance = Math.round((walletTa.balance + loss) * 100) / 100;
+      walletMe.records.push({ type:'out', amount: loss, time: Date.now(), note: '五子棋输给 ' + (person.name || 'TA') });
+      saveWalletMe(); saveWalletTa();
+    }
+    /* 本轮总结文案 */
+    var finalLine = '本轮结束 · 你 ' + roundWins.me + ' : ' + roundWins.ta + ' TA';
+    if(net > 0) finalLine += ' · 你赢了这一轮！';
+    else if(net < 0) finalLine += ' · TA 赢了这一轮';
+    else finalLine += ' · 打平';
+    roundEndLine = finalLine;
+  }
+
+  /* 红包 box 显示 */
+  if(isRoundEnd){
+    if(netMoney > 0){
+      box.style.display = 'flex';
+      reward.innerHTML = 'TA 给你 <b>¥' + netMoney.toFixed(2) + '</b>';
+    } else if(netMoney < 0){
+      box.style.display = 'flex';
+      reward.innerHTML = '你给 TA <b>¥' + Math.abs(netMoney).toFixed(2) + '</b>';
+    } else {
+      box.style.display = 'flex';
+      reward.innerHTML = '本轮打平，没有输赢';
+    }
+  } else {
+    /* 还有下一局 */
+    if(result === 'draw'){
+      box.style.display = 'none';
+    } else {
+      box.style.display = 'flex';
+      reward.innerHTML = (result === 'win' ? 'TA 本局欠你 ' : '你本局欠 TA ') + '<b>¥1.00</b>';
+    }
+  }
+
+  /* 副标题 */
+  var taLineHTML = '<span style="color:var(--light-text);font-size:12px;">TA 说：' + esc(taLine) + '</span>';
+  if(isRoundEnd){
+    if(gamesTotal > 1){
+      sub.innerHTML = esc(roundEndLine) + '<br>' + taLineHTML;
+    } else {
+      sub.innerHTML = taLineHTML;
+    }
+    if(againBtn) againBtn.textContent = '再来一轮';
+  } else {
+    sub.innerHTML = esc(roundInfo) + '<br>' + taLineHTML;
+    if(againBtn) againBtn.textContent = '下一局';
+  }
+
+  /* 本轮结束：TA 在聊天里发一条消息 */
+  if(isRoundEnd){
+    var pushText = taLine;
+    if(netMoney > 0){
+      pushText = taLine + '（红包 ¥' + netMoney.toFixed(2) + '，已到账）';
+    } else if(netMoney < 0){
+      pushText = taLine + '（你输了 ¥' + Math.abs(netMoney).toFixed(2) + '）';
+    } else {
+      pushText = taLine + '（这轮打平）';
+    }
+    var cm = { me:false, type:'text', text: pushText, time: Date.now(), id: uid('m') };
+    messages.push(cm);
+    saveMessages();
+    if(typeof renderHome === 'function') renderHome();
+    if(!chatOpenNow && typeof showNotificationBanner === 'function') showNotificationBanner(cm);
+  }
+
+  showTaQuote(taLine, true);
   setTimeout(function(){ bg.classList.add('open'); }, 400);
 }
 
@@ -8840,20 +9038,32 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
   }
 
   function openDiffDialog(){
-    Array.prototype.forEach.call(document.querySelectorAll('#gomokuDiffList .gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
-    difficulty = '';
-    $('gomokuDiffConfirm').disabled = true;
-    $('gomokuDiffBg').classList.add('open');
-  }
+  Array.prototype.forEach.call(document.querySelectorAll('#gomokuDiffList .gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
+  difficulty = '';
+  $('gomokuDiffConfirm').disabled = true;
+  /* 重置局数选择，默认 1 局 */
+  Array.prototype.forEach.call(document.querySelectorAll('#gomokuGamesGrid .font-chip'), function(b){
+    b.classList.toggle('active', b.dataset.games === '1');
+  });
+  gamesTotal = 1;
+  gamesPlayed = 0;
+  roundWins = { me: 0, ta: 0 };
+  $('gomokuDiffBg').classList.add('open');
+}
 
-  function startGame(){
-    $('gomokuDiffBg').classList.remove('open');
-    $('gomokuDiffChip').textContent = '难度: ' + ({easy:'简单', normal:'普通', hard:'困难'})[difficulty];
-    newBoard();
-    gameOver = false;
-    myTurn = true;
-    taThinking = false;
-    undosLeft = 3;
+  function startGame(isNextRound){
+  $('gomokuDiffBg').classList.remove('open');
+  $('gomokuDiffChip').textContent = '难度: ' + ({easy:'简单', normal:'普通', hard:'困难'})[difficulty];
+  newBoard();
+  gameOver = false;
+  myTurn = true;
+  taThinking = false;
+  undosLeft = 3;
+  /* isNextRound 为 true 表示「下一局」，不清空本轮统计 */
+  if(!isNextRound){
+    gamesPlayed = 0;
+    roundWins = { me: 0, ta: 0 };
+  }
     $('gomokuUndoCount').textContent = '3';
     $('gomokuUndoBtn').disabled = false;
     var rb = $('gomokuResignBtn');
@@ -8883,10 +9093,36 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
 };
 
   if($('gomokuBack')) $('gomokuBack').onclick = function(){
-    $('gomokuPage').classList.remove('open');
-    gameOver = true;
-    taThinking = false;
-  };
+  /* 本轮还没结束（还有局没打完，或当前局没下完）才提示 */
+  var midRound = (gamesPlayed < gamesTotal) && !gameOver;
+  var hasProgress = (gamesPlayed > 0) || (history && history.length > 0);
+  if(midRound && hasProgress){
+    showDialog('要退出吗？', '这局还没下完，退出的话本轮就结束了哦。', [
+      { text:'继续下', primary:true },
+      { text:'退出', danger:true, onClick:function(){
+        /* TA 说一句「你怎么跑了」 */
+        var pool = [];
+        if(cards && cards.system && Array.isArray(cards.system.quitGame)){
+          pool = cards.system.quitGame.filter(function(t){ return t && String(t).trim(); });
+        }
+        if(!pool.length) pool = ['怎么下到一半就跑啦？', '诶？人呢…', '好吧，那我自己练练。'];
+        var line = pool[Math.floor(Math.random() * pool.length)];
+        var cm = { me:false, type:'text', text: line, time: Date.now(), id: uid('m') };
+        messages.push(cm);
+        saveMessages();
+        if(typeof renderHome === 'function') renderHome();
+        if(typeof showNotificationBanner === 'function') showNotificationBanner(cm);
+        $('gomokuPage').classList.remove('open');
+        gameOver = true;
+        taThinking = false;
+      }}
+    ]);
+    return;
+  }
+  $('gomokuPage').classList.remove('open');
+  gameOver = true;
+  taThinking = false;
+};
 
   canvas.addEventListener('click', function(e){
     if(gameOver) return;
@@ -8929,17 +9165,28 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
 
   if($('gomokuRestartBtn')) $('gomokuRestartBtn').onclick = function(){ openDiffDialog(); };
 
-  if($('gomokuDiffList')){
-    $('gomokuDiffList').addEventListener('click', function(e){
-      var card = e.target.closest('.gomoku-diff-card');
-      if(!card) return;
-      Array.prototype.forEach.call(this.querySelectorAll('.gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
-      card.classList.add('selected');
-      difficulty = card.dataset.diff;
-      $('gomokuDiffConfirm').disabled = false;
-    });
-  }
-  window.__openGomokuDiff = function(){ openDiffDialog(); };
+if($('gomokuDiffList')){
+  $('gomokuDiffList').addEventListener('click', function(e){
+    var card = e.target.closest('.gomoku-diff-card');
+    if(!card) return;
+    Array.prototype.forEach.call(this.querySelectorAll('.gomoku-diff-card'), function(c){ c.classList.remove('selected'); });
+    card.classList.add('selected');
+    difficulty = card.dataset.diff;
+    $('gomokuDiffConfirm').disabled = false;
+  });
+}
+
+if($('gomokuGamesGrid')){
+  $('gomokuGamesGrid').addEventListener('click', function(e){
+    var chip = e.target.closest('[data-games]');
+    if(!chip) return;
+    Array.prototype.forEach.call(this.querySelectorAll('.font-chip'), function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    gamesTotal = parseInt(chip.dataset.games, 10) || 1;
+  });
+}
+
+window.__openGomokuDiff = function(){ openDiffDialog(); };
 if($('gomokuDiffConfirm')){
   $('gomokuDiffConfirm').onclick = function(){
     if(!difficulty) return;
@@ -8955,9 +9202,15 @@ if($('gomokuDiffConfirm')){
 }
   if($('gomokuResultClose')) $('gomokuResultClose').onclick = function(){ $('gomokuResultBg').classList.remove('open'); };
   if($('gomokuResultAgain')) $('gomokuResultAgain').onclick = function(){
-    $('gomokuResultBg').classList.remove('open');
+  $('gomokuResultBg').classList.remove('open');
+  if(gamesPlayed < gamesTotal){
+    /* 还有下一局，直接开，不用重选难度 */
+    startGame(true);
+  } else {
+    /* 本轮结束，回难度选择（可能要换难度） */
     openDiffDialog();
-  };
+  }
+};
 
   window.addEventListener('resize', function(){
     if($('gomokuPage') && $('gomokuPage').classList.contains('open')) resizeCanvas();
@@ -8966,6 +9219,565 @@ if($('gomokuDiffConfirm')){
   loadScore();
   updateScoreChip();
   newBoard();
+})();
+
+/* ============ 跳一跳 ============ */
+(function(){
+  var canvas = $('jumpCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W, H, DPR;
+  var GROUND_Y = 0;
+  var BLOCK_H = 42;
+  var PLAYER_W = 28;
+  var PLAYER_H = 36;
+  var COLORS = ['#5a7fa3', '#7a9a7a', '#b67a7a', '#8a7aa3', '#4a9a8a', '#b08a5a', '#c48a9a'];
+
+  var mode = null;
+  var state = 'idle';
+  var blocks = [];
+  var currentIdx = 0;
+  var score = 0;
+  var bestScore = 0;
+  var mySteps = 0;
+  var taSteps = 0;
+  var turn = 'me';
+  var taThinking = false;
+  var taDelayTimer = null;
+  var currentJumpBy = 'me';
+  var playerX = 0;
+  var playerVisualY = 0;
+  var jumpAnim = null;
+  var chargePower = 0;
+  var chargeStart = 0;
+  var MAX_CHARGE_MS = 800;
+  var MAX_JUMP = 320;
+  var camX = 0;
+  var camTargetX = 0;
+  var landBounce = 0;
+  var taLine = '';
+  var taLineTimer = 0;
+  var taAvatarImg = null;
+
+  function resizeJump() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var wrap = canvas.parentNode;
+    W = wrap.clientWidth;
+    H = wrap.clientHeight;
+    if (W <= 0 || H <= 0) return;
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    GROUND_Y = Math.floor(H * 0.62);
+  }
+  window.addEventListener('resize', function(){
+    if($('jumpPage') && $('jumpPage').classList.contains('open')) resizeJump();
+  });
+
+  function loadTaAvatar(cb) {
+    if (!person.avatar) { taAvatarImg = null; cb(); return; }
+    var img = new Image();
+    img.onload = function(){ taAvatarImg = img; cb(); };
+    img.onerror = function(){ taAvatarImg = null; cb(); };
+    img.src = person.avatar;
+  }
+
+  function pickColor() { return COLORS[Math.floor(Math.random() * COLORS.length)]; }
+
+  function makeBlock(prev) {
+    var diff = Math.min(score / 20, 1);
+    var gap = 40 + diff * 60 + Math.random() * (40 + diff * 40);
+    var w = 100 - diff * 40 + Math.random() * 20;
+    return { x: prev.x + prev.w + gap, w: w, color: pickColor() };
+  }
+
+  function initGame() {
+    if (taDelayTimer) { clearTimeout(taDelayTimer); taDelayTimer = null; }
+    taThinking = false;
+    blocks = [{ x: 80, w: 100, color: pickColor() }];
+    for (var i = 0; i < 6; i++) blocks.push(makeBlock(blocks[blocks.length - 1]));
+    currentIdx = 0;
+    playerX = blocks[0].x + blocks[0].w / 2;
+    score = 0;
+    mySteps = 0;
+    taSteps = 0;
+    turn = 'me';
+    state = 'idle';
+    chargePower = 0;
+    playerVisualY = 0;
+    jumpAnim = null;
+    landBounce = 0;
+    camX = playerX - W * 0.4;
+    camTargetX = camX;
+    taLine = '';
+    taLineTimer = 0;
+
+    if (mode === 'duo') sayTa('你先跳吧～', 2500);
+    else sayTa('加油！', 2000);
+  }
+
+  function handleJumpDown(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!mode) return;
+    if (state === 'gameover') {
+      $('jumpModeBg').classList.add('open');
+      mode = null;
+      state = 'idle';
+      return;
+    }
+    if (state !== 'idle') return;
+    if (mode === 'duo' && turn === 'ta') return;
+    state = 'charging';
+    chargeStart = performance.now();
+    chargePower = 0;
+  }
+
+  function handleJumpUp(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (state !== 'charging') return;
+    var dist = chargePower * MAX_JUMP;
+    startJump(dist, 'me');
+    chargePower = 0;
+  }
+
+  canvas.addEventListener('touchstart', handleJumpDown, { passive: false });
+  canvas.addEventListener('touchend', handleJumpUp, { passive: false });
+  canvas.addEventListener('mousedown', handleJumpDown);
+  canvas.addEventListener('mouseup', handleJumpUp);
+
+  function startJump(dist, by) {
+    state = 'jumping';
+    currentJumpBy = by || 'me';
+    jumpAnim = {
+      startX: playerX,
+      endX: playerX + dist,
+      startT: performance.now(),
+      duration: 380,
+      height: 90
+    };
+  }
+
+  function scheduleTaJump() {
+    taThinking = true;
+    sayTa('让我看看…', 3000);
+    if (taDelayTimer) clearTimeout(taDelayTimer);
+    taDelayTimer = setTimeout(function() {
+      taThinking = false;
+      taDelayTimer = null;
+      performTaJump();
+    }, 3000);
+  }
+
+  function performTaJump() {
+    if (state === 'gameover') return;
+    if (mode !== 'duo' || turn !== 'ta') return;
+    var next = blocks[currentIdx + 1];
+    if (!next) { endGame(); return; }
+    var targetCenter = next.x + next.w / 2;
+    var dist = targetCenter - playerX;
+    var err = (Math.random() - 0.5) * next.w * 0.7;
+    dist += err;
+    if (dist < 30) dist = 30;
+    if (dist > MAX_JUMP) dist = MAX_JUMP;
+    startJump(dist, 'ta');
+  }
+
+  function checkLanding() {
+    var next = blocks[currentIdx + 1];
+    if (!next) { endGame(); return; }
+    if (playerX >= next.x && playerX <= next.x + next.w) {
+      currentIdx++;
+      score++;
+      landBounce = 1;
+      blocks.push(makeBlock(blocks[blocks.length - 1]));
+
+      if (currentJumpBy === 'me') mySteps++;
+      else if (currentJumpBy === 'ta') taSteps++;
+
+      if (mode === 'duo') {
+        turn = (turn === 'me') ? 'ta' : 'me';
+        state = 'idle';
+        if (turn === 'ta') scheduleTaJump();
+        else sayTa(pickPraise());
+      } else {
+        state = 'idle';
+        if (Math.random() < 0.25 && score > 0) sayTa(pickPraise());
+      }
+    } else {
+      endGame();
+    }
+  }
+
+  function pickPraise() {
+    var pool = ['好棒！', '稳住！', '好厉害～', '继续！', '手感不错嘛', '加油加油'];
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function sayTa(text, dur) {
+    taLine = text;
+    taLineTimer = dur || 2500;
+  }
+
+  function endGame() {
+    state = 'gameover';
+    if (score > bestScore) bestScore = score;
+    if (mode === 'solo') {
+      sayTa(score === 0 ? '没事没事，再来一次～' : '差一点点！', 4000);
+    } else {
+      sayTa(currentJumpBy === 'me' ? '你怎么掉下去啦～' : '诶…没跳好', 4000);
+    }
+  }
+
+  var lastTime = performance.now();
+  function updateJump(now) {
+    var dt = now - lastTime;
+    lastTime = now;
+
+    if (state === 'charging') {
+      chargePower = Math.min(1, (now - chargeStart) / MAX_CHARGE_MS);
+    }
+
+    if (state === 'jumping' && jumpAnim) {
+      var t = (now - jumpAnim.startT) / jumpAnim.duration;
+      if (t >= 1) t = 1;
+      playerX = jumpAnim.startX + (jumpAnim.endX - jumpAnim.startX) * t;
+      playerVisualY = -4 * jumpAnim.height * t * (1 - t);
+      if (t >= 1) {
+        playerVisualY = 0;
+        jumpAnim = null;
+        checkLanding();
+      }
+    }
+
+    if (landBounce > 0) {
+      landBounce -= dt / 180;
+      if (landBounce < 0) landBounce = 0;
+    }
+
+    if (state === 'gameover') playerVisualY += dt * 0.6;
+
+    if (taLineTimer > 0) {
+      taLineTimer -= dt;
+      if (taLineTimer <= 0) { taLine = ''; taLineTimer = 0; }
+    }
+
+    camTargetX = playerX - W * 0.4;
+    camX += (camTargetX - camX) * 0.09;
+  }
+
+  function jRoundRect(x, y, w, h, r) {
+    if (w < r * 2) r = w / 2;
+    if (h < r * 2) r = h / 2;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawEar(baseX, baseY, tilt) {
+    ctx.save();
+    ctx.translate(baseX, baseY);
+    ctx.rotate(tilt);
+    ctx.fillStyle = '#fdfaf5';
+    ctx.strokeStyle = 'rgba(150,120,120,.25)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.ellipse(0, -9, 4, 11, 0, 0, Math.PI * 2);
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#f5c8cf';
+    ctx.beginPath();
+    ctx.ellipse(0, -8, 2, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPlayer() {
+    var pxs = playerX - camX;
+    var squat = 0;
+    if (state === 'charging') squat = chargePower * 8;
+    var baseY = GROUND_Y - PLAYER_H + playerVisualY + squat;
+    var baseH = PLAYER_H - squat;
+
+    var shadowAlpha = 0.18 - Math.max(0, -playerVisualY) / 500;
+    if (shadowAlpha < 0.05) shadowAlpha = 0.05;
+    var shadowScale = 1 - Math.max(0, -playerVisualY) / 300;
+    if (shadowScale < 0.4) shadowScale = 0.4;
+    ctx.fillStyle = 'rgba(0,0,0,' + shadowAlpha + ')';
+    ctx.beginPath();
+    ctx.ellipse(pxs, GROUND_Y - 2, PLAYER_W * 0.5 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    var earTilt = 0;
+    if (state === 'charging') earTilt = chargePower * 0.28;
+    if (state === 'jumping') earTilt = 0.2;
+    if (state === 'gameover') earTilt = 0.45;
+
+    drawEar(pxs - 7, baseY, -0.18 - earTilt * 0.7);
+    drawEar(pxs + 7, baseY,  0.18 + earTilt * 0.7);
+
+    var grad = ctx.createLinearGradient(pxs, baseY, pxs, baseY + baseH);
+    grad.addColorStop(0, '#fdfaf5');
+    grad.addColorStop(1, '#ecdcd0');
+    ctx.fillStyle = grad;
+    jRoundRect(pxs - PLAYER_W / 2, baseY, PLAYER_W, baseH, 10);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    jRoundRect(pxs - PLAYER_W / 2 + 3, baseY + 3, PLAYER_W - 6, 6, 3);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(245,200,207,.7)';
+    ctx.beginPath();
+    ctx.arc(pxs - 7, baseY + 22, 2.6, 0, Math.PI * 2);
+    ctx.arc(pxs + 7, baseY + 22, 2.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#3a3a3a';
+    ctx.beginPath();
+    ctx.arc(pxs - 5, baseY + 14, 2.2, 0, Math.PI * 2);
+    ctx.arc(pxs + 5, baseY + 14, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.beginPath();
+    ctx.arc(pxs - 5 + 0.7, baseY + 13.3, 0.7, 0, Math.PI * 2);
+    ctx.arc(pxs + 5 + 0.7, baseY + 13.3, 0.7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#e88a96';
+    ctx.beginPath();
+    ctx.arc(pxs, baseY + 20, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawChargeBar() {
+    var barW = W * 0.55;
+    var barX = (W - barW) / 2;
+    var barY = H - 50;
+    ctx.fillStyle = 'rgba(31,95,108,.1)';
+    jRoundRect(barX, barY, barW, 8, 4);
+    ctx.fill();
+    var grad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+    grad.addColorStop(0, '#7a9fc0');
+    grad.addColorStop(1, '#1f5f6c');
+    ctx.fillStyle = grad;
+    jRoundRect(barX, barY, Math.max(8, barW * chargePower), 8, 4);
+    ctx.fill();
+  }
+
+  function drawScore() {
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(31,95,108,.95)';
+    ctx.font = 'bold 46px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillText(String(score), W - 20, 60);
+    ctx.font = '12px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillStyle = 'rgba(138,138,138,.8)';
+    ctx.fillText('最高 ' + bestScore, W - 20, 80);
+  }
+
+  function drawTaHeader() {
+    var avX = 16, avY = 16, avR = 17;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avX + avR, avY + avR, avR, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = '#e8ecef';
+    ctx.fillRect(avX, avY, avR * 2, avR * 2);
+    if (taAvatarImg) {
+      ctx.drawImage(taAvatarImg, avX, avY, avR * 2, avR * 2);
+    } else {
+      ctx.strokeStyle = '#b8c0c7';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.arc(avX + avR, avY + avR - 4, 4.2, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(avX + avR, avY + avR + 8.5, 7.5, Math.PI * 1.18, Math.PI * 1.82);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    if (!taLine) return;
+    var padding = 12;
+    ctx.font = '13px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    var m = ctx.measureText(taLine);
+    var bubbleH = 30;
+    var bubbleW = m.width + padding * 2;
+    var bubbleX = avX + avR * 2 + 8;
+    var bubbleY = avY + avR - bubbleH / 2;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    var r = 12;
+    ctx.moveTo(bubbleX + r, bubbleY);
+    ctx.lineTo(bubbleX + bubbleW - r, bubbleY);
+    ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY, bubbleX + bubbleW, bubbleY + r);
+    ctx.lineTo(bubbleX + bubbleW, bubbleY + bubbleH - r);
+    ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY + bubbleH, bubbleX + bubbleW - r, bubbleY + bubbleH);
+    ctx.lineTo(bubbleX + 4, bubbleY + bubbleH);
+    ctx.lineTo(bubbleX - 4, bubbleY + bubbleH / 2);
+    ctx.lineTo(bubbleX + 4, bubbleY);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(31,95,108,.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = '#5a5a5a';
+    ctx.textAlign = 'left';
+    ctx.fillText(taLine, bubbleX + padding, bubbleY + bubbleH / 2 + 5);
+  }
+
+  function drawTurnIndicator() {
+    if (mode !== 'duo') return;
+    if (state === 'gameover') return;
+    ctx.textAlign = 'center';
+    var txt, color;
+    if (turn === 'me') { txt = '轮到你了'; color = 'rgba(31,95,108,.7)'; }
+    else { txt = 'TA 在思考…'; color = 'rgba(196,124,138,.9)'; }
+    ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillStyle = color;
+    ctx.fillText(txt, W / 2, H - 76);
+  }
+
+  function drawGameOver() {
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1f5f6c';
+    ctx.font = 'bold 22px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillText('掉下去了～', W / 2, H * 0.3);
+
+    ctx.font = 'bold 60px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#1f5f6c';
+    ctx.fillText(String(score), W / 2, H * 0.41);
+
+    ctx.font = '14px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#8a8a8a';
+    var sub = mode === 'duo' ? ('你 ' + mySteps + ' 步 · TA ' + taSteps + ' 步') : ('最高记录 ' + bestScore);
+    ctx.fillText(sub, W / 2, H * 0.47);
+
+    ctx.fillStyle = '#1f5f6c';
+    jRoundRect(W / 2 - 80, H * 0.56, 160, 46, 23);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '15px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+    ctx.fillText('再来一次', W / 2, H * 0.56 + 30);
+  }
+
+  function renderJump() {
+    if (!W || !H) return;
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+    bgGrad.addColorStop(0, '#e6f2f7');
+    bgGrad.addColorStop(1, '#f5f0ea');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    for (var i = 0; i < blocks.length; i++) {
+      var b = blocks[i];
+      var sx = b.x - camX;
+      if (sx + b.w < -40 || sx > W + 40) continue;
+
+      ctx.fillStyle = 'rgba(31,95,108,.08)';
+      jRoundRect(sx + 4, GROUND_Y + BLOCK_H, b.w - 4, 6, 3);
+      ctx.fill();
+
+      var bounce = (i === currentIdx && landBounce > 0) ? landBounce * 4 : 0;
+
+      ctx.fillStyle = b.color;
+      jRoundRect(sx, GROUND_Y + bounce, b.w, BLOCK_H, 10);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255,255,255,.28)';
+      jRoundRect(sx + 4, GROUND_Y + bounce + 3, b.w - 8, 5, 3);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255,255,255,.1)';
+      jRoundRect(sx + 4, GROUND_Y + bounce + BLOCK_H - 8, b.w - 8, 4, 2);
+      ctx.fill();
+    }
+
+    drawPlayer();
+    if (state === 'charging') drawChargeBar();
+
+    drawScore();
+    drawTaHeader();
+    drawTurnIndicator();
+
+    if (state === 'idle' && score === 0 && mode === 'solo') {
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(138,138,138,.9)';
+      ctx.font = '14px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+      ctx.fillText('长按屏幕蓄力，松开跳跃', W / 2, H - 22);
+    }
+
+    if (state === 'gameover') drawGameOver();
+  }
+
+  function loopJump(now) {
+    updateJump(now);
+    renderJump();
+    if ($('jumpPage').classList.contains('open')) requestAnimationFrame(loopJump);
+  }
+
+  /* 打开游戏：从大厅/邀请进来时调用 */
+  window.__openJump = function(forcedMode){
+  $('jumpPage').classList.add('open');
+  setTimeout(function(){
+    resizeJump();
+    lastTime = performance.now();
+    if(forcedMode === 'duo'){
+      mode = 'duo';
+      $('jumpModeBg').classList.remove('open');
+      loadTaAvatar(function(){
+        resizeJump();
+        initGame();
+        lastTime = performance.now();
+        requestAnimationFrame(loopJump);
+      });
+    } else {
+      mode = null;
+      state = 'idle';
+      $('jumpModeBg').classList.add('open');
+    }
+  }, 340);
+};
+
+  /* 模式选择按钮 */
+  if ($('jumpModeBg')) {
+    $('jumpModeBg').addEventListener('click', function(e){
+      var btn = e.target.closest('[data-jump-mode]');
+      if (!btn) return;
+      mode = btn.dataset.jumpMode;
+      $('jumpModeBg').classList.remove('open');
+      loadTaAvatar(function(){
+        resizeJump();
+        initGame();
+        lastTime = performance.now();
+        requestAnimationFrame(loopJump);
+      });
+    });
+  }
+
+  /* 返回按钮 */
+  if ($('jumpBack')) {
+    $('jumpBack').onclick = function(){
+      $('jumpPage').classList.remove('open');
+      if (taDelayTimer) { clearTimeout(taDelayTimer); taDelayTimer = null; }
+    };
+  }
 })();
 
 })();
@@ -8977,21 +9789,20 @@ if($('gomokuDiffConfirm')){
      ① 修改下面的 APP_VERSION（版本号 +1）
      ② 往 UPDATE_LOGS 里加一条，格式见下面
      ======================================================== */
-var APP_VERSION = '1.0.4';
+var APP_VERSION = '1.0.5';
 
   var UPDATE_LOGS = {
     /* 版本号要和上面 APP_VERSION 一致，才会显示 */
-    '1.0.4': [
-      '🎮 新增五子棋，可以和 TA 一起玩',
-      '🎯 系统预设重新整理，7 大分类更清爽',
-      '🧧 下棋赢家可得 ¥1 红包',
-      '📊 五子棋新增累计比分，跨局保存',
-      '⚙️ 聊天回复设置全新折叠排版，9 大分类',
+    '1.0.5': [
+      '🐰 新增跳一跳，可以一个人玩，也可以和 TA 轮流跳',
+      '🎮 游戏大厅新增入口，五子棋 + 跳一跳',
+      '💌 可以邀请 TA 一起玩跳一跳',
+      '🧧 五子棋本轮结算后，奖励直接进钱包',
       '🔧 修复了一些小问题'
     ],
 
     /* 下面是示例，以后想加旧版记录就照这个格式加 */
-    // '1.0.3': ['xxx', 'yyy'],
+    // '1.0.4': ['xxx', 'yyy'],
   };
 
   var VERSION_KEY = 'chat_app_version_v1';
