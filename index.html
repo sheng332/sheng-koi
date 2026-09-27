@@ -3485,12 +3485,15 @@ function switchPersona(id){
   if(!id || id === window.__ACTIVE_PERSONA_ID){ closePersonaModal(); return; }
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
-  // 修复：切换梦角时，先强制清空内存数据，防止旧数据被带到新梦角
-  window.__ACTIVE_PERSONA_ID = id;
-  messages = [];
-  person = {};
+  // 关键：告诉浏览器现在要用新梦角
   try{ window.__RawLS.set('chat_active_persona_v1', id); }catch(e){}
-  setTimeout(function(){ location.reload(); }, 80);
+  // 智能刷新：网络环境用 ?t= 防缓存，本地文件直接 reload
+  if(window.location.protocol === 'http:' || window.location.protocol === 'https:'){
+    var baseUrl = window.location.href.split('?')[0];
+    window.location.href = baseUrl + '?t=' + Date.now();
+  } else {
+    window.location.reload();
+  }
 }
 
 function createPersona(){
@@ -3504,12 +3507,15 @@ function createPersona(){
   savePersonas();
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
-  // 修复：创建新梦角时，先清空内存数据，防止旧数据被带入新梦角
-  window.__ACTIVE_PERSONA_ID = newId;
-  messages = [];
-  person = {};
+  // 关键：告诉浏览器现在要用新创建的梦角
   try{ window.__RawLS.set('chat_active_persona_v1', newId); }catch(e){}
-  setTimeout(function(){ location.reload(); }, 80);
+  // 智能刷新：网络环境用 ?t= 防缓存，本地文件直接 reload
+  if(window.location.protocol === 'http:' || window.location.protocol === 'https:'){
+    var baseUrl = window.location.href.split('?')[0];
+    window.location.href = baseUrl + '?t=' + Date.now();
+  } else {
+    window.location.reload();
+  }
 }
 
 function deletePersona(id){
