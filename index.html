@@ -831,14 +831,33 @@ html,body{height:100%;margin:0;padding:0}
 .group-empty{text-align:center;padding:60px 24px;color:var(--light-text);font-size:14px;line-height:1.8;}
 
 /* 首次进入公告 */
-.welcome-bg{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.welcome-bg{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .welcome-bg.show{display:flex;animation:fadeIn .25s ease}
-.welcome-card{width:100%;max-width:400px;background:#fff;border-radius:20px;padding:26px 22px 20px;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;max-height:88vh;animation:pop .3s ease}
+.welcome-card{width:100%;max-width:400px;background:#fff;border-radius:20px;padding:26px 22px 20px;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;margin:auto 0;animation:pop .3s ease}
 .welcome-emoji{text-align:center;font-size:38px;line-height:1;margin-bottom:8px}
 .welcome-title{text-align:center;font-size:18px;font-weight:700;color:var(--primary);letter-spacing:1px}
 .welcome-sub{text-align:center;font-size:12.5px;color:var(--light-text);margin-top:6px;margin-bottom:8px}
 .welcome-warning{text-align:center;font-size:12.5px;color:#c45b66;font-weight:600;background:#fdf2f4;padding:10px 12px;border-radius:10px;margin-bottom:14px;line-height:1.6;border:1px dashed rgba(196,91,102,.3)}
-.welcome-body{font-size:13px;line-height:1.75;color:var(--text);max-height:45vh;overflow-y:auto;padding-right:6px;flex:1 1 auto;}
+.welcome-tabs{display:flex;gap:8px;margin:12px 0 12px;flex:0 0 auto}
+.welcome-tab{flex:1;height:38px;border:1px solid var(--accent);border-radius:10px;background:#fff;color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;transition:all .15s ease}
+.welcome-tab.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+.welcome-tab:active{transform:scale(.97)}
+.welcome-credit{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);text-align:center;font-size:11.5px;color:var(--light-text);line-height:1.6;flex:0 0 auto}
+.welcome-credit strong{color:var(--primary);font-weight:600}
+.welcome-agree{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 12px;background:var(--soft);border-radius:10px;font-size:12.5px;color:var(--text);line-height:1.55;cursor:pointer;flex:0 0 auto}
+.welcome-agree input[type="checkbox"]{
+  -webkit-appearance: checkbox !important;
+  appearance: checkbox !important;
+  margin-top:2px;
+  width:18px;
+  height:18px;
+  flex:0 0 auto;
+  cursor:pointer;
+  accent-color: var(--primary);
+}
+.welcome-agree span{flex:1;min-width:0}
+.welcome-agree strong{color:var(--primary);font-weight:600}
+.welcome-body{font-size:13px;line-height:1.75;color:var(--text);padding-right:6px;}
 .welcome-body::-webkit-scrollbar{width:4px}
 .welcome-body::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
 .welcome-body p{margin:0 0 10px}
@@ -846,8 +865,10 @@ html,body{height:100%;margin:0;padding:0}
 .welcome-body strong{color:var(--primary);font-weight:600}
 .welcome-body code{background:var(--soft);padding:1px 6px;border-radius:5px;font-family:monospace;font-size:12px;color:var(--primary)}
 .welcome-body em{color:var(--light-text);font-style:normal;font-size:12px;}
-.welcome-btn{margin-top:16px;width:100%;height:46px;border:0;border-radius:12px;background:var(--primary);color:#fff;font-size:15px;font-family:inherit;font-weight:500;cursor:pointer;transition:opacity .16s ease;flex:0 0 auto;display:none;animation:fadeIn .3s ease;}
+.welcome-btn{margin-top:16px;width:100%;height:46px;border:0;border-radius:12px;background:var(--primary);color:#fff;font-size:15px;font-family:inherit;font-weight:500;cursor:pointer;transition:opacity .16s ease,background .15s ease;flex:0 0 auto;display:block;animation:fadeIn .3s ease;}
 .welcome-btn:active{opacity:.82}
+.welcome-btn:disabled{opacity:.4;cursor:default}
+.watermark{position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:10.5px;color:rgba(31,95,108,.28);letter-spacing:.5px;z-index:1;pointer-events:none;font-style:italic}
 
 /* ===== 通话全屏界面 ===== */
 .call-screen{position:fixed;inset:0;z-index:9998;display:none;flex-direction:column;background:#1a2530;overflow:hidden;transition:opacity .3s ease,transform .3s ease}
@@ -1369,6 +1390,8 @@ html,body{height:100%;margin:0;padding:0}
   <div style="height: 140px;"></div>
 </div>
 
+<div class="watermark">Powered by 小红书 @涣涣26156644131</div>
+
 <div class="bottom-dock" id="bottomDock">
   <button class="dock-item" data-app="home">
     <div class="dock-icon">
@@ -1505,7 +1528,22 @@ html,body{height:100%;margin:0;padding:0}
     <div class="field"><span class="field-label" style="width:74px;">我的名字</span><input type="text" id="myNameInput" placeholder="给自己起个名字" maxlength="12"></div>
   </div>
 
-  <div class="field-group">
+   <div class="field-group">
+  <div class="field" style="flex-direction:column;align-items:stretch;gap:10px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="flex:1;font-size:14.5px;font-weight:600;color:var(--text);">多梦角模式</span>
+      <label class="switch"><input type="checkbox" id="multiPersonaToggle"><span class="switch-slider"></span></label>
+    </div>
+    <div style="font-size:12.5px;color:var(--light-text);line-height:1.65;">
+      打开后可以：<br>
+      · 点主屏右上角的<strong style="color:var(--primary);">梦角胶囊</strong>，随时切换不同梦角<br>
+      · 使用<strong style="color:var(--primary);">群聊</strong>功能，让多个梦角在一个群里聊天<br>
+      关闭后只保留单梦角，群聊入口也会隐藏。
+    </div>
+  </div>
+</div>
+
+   <div class="field-group">
     <div class="field entry-row" id="homeBeautifyEntryRow"><span class="field-label" style="width:auto;">主屏美化</span><span class="entry-value">壁纸 · 锁屏 · 风格</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c3c7ce" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
     <div class="field entry-row" id="replyEntryRow"><span class="field-label" style="width:auto;">聊天回复设置</span><span class="entry-value" id="replySummary">基础 · 互动 · 拼字 · 信件</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c3c7ce" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
     <div class="field entry-row" id="lockEntryRow"><span class="field-label" style="width:auto;">锁屏密码</span><span class="entry-value" id="lockSummary">未设置</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c3c7ce" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
@@ -2476,46 +2514,156 @@ html,body{height:100%;margin:0;padding:0}
     <div class="welcome-emoji">💌</div>
     <div class="welcome-title">欢迎回来</div>
     <div class="welcome-sub">这里是只属于你们两个人的小世界</div>
-<div class="welcome-warning">📢 请务必各位老师看完！！很重要！！<br>取决于你想和你梦角的连接方式</div>
-<div class="welcome-body" id="welcomeBody">
-      <p class="welcome-h">先花一分钟，搞懂这几个词是什么意思：</p>
-      <p><strong>大分组</strong> —— 情绪大分类，比如“撒娇粘人”、“关心心疼”。它就是个文件夹，把同一类的话放一起。</p>
-      <p><strong>小分组</strong> —— 文件夹里的抽屉。比如“关心心疼”下面，可以分“生病”、“累了”、“日常叮嘱”。TA 抽卡是从抽屉里抽的。<br><em>小提醒：小分组用不用都行，完全不强制。它有没有存在感，全看你要不要给它填“关键词”——填了，它就是 TA 的“优先抽屉”；不填，它就安安静静躺在池子里，等 TA 随机抽到。</em></p>
-      <p><strong>关键词</strong> —— 贴在小分组上的标签。比如你给“生气”抽屉贴上 <code>哼,生气,不理你</code>，你只要说到这些词，TA 就优先去这个抽屉里翻卡。</p>
-      <p><strong>词典拼字</strong> —— 底层机制。你把词按“主语/动作/宾语/修饰/语气”填进去，TA 有一定概率把词随机拼成一句话发给你，比如“我+想+你+了”。</p>
-      <p class="welcome-h">系统预设</p>
-      <p>字卡库里的一个独立区。里面装的是<strong>特定情况下才会用到的话</strong>，不参与平时的随机抽卡。具体有这些：</p>
-      <p>· <strong>今日情话</strong>：每天主屏上显示的那句情话，从这抽。</p>
-      <p>· <strong>红包回复</strong>：TA 领了你发的红包之后，会说的话。</p>
-      <p>· <strong>已读不回被炸</strong>：TA 已读不回之后，被“炸”出来的话。</p>
-      <p>· <strong>婉拒一起听</strong>：TA 拒绝你的听歌邀请时，说的话。</p>
-      <p>· <strong>被拒绝</strong>：你拒绝了 TA 的邀请之后，TA 会说的话。</p>
-      <p>· <strong>主动消息</strong>：你很久没打开 App，或者到了早上/中午/晚上/深夜，TA 主动发给你说的开场白。里面有“回来”、“早”、“午”、“晚”、“深夜”、“想念”好几个小组，每组各自填话。</p>
-      <p>· <strong>今日状态</strong>：每天自动抽一次，决定 TA 今天整体的情绪基调。格式是 <code>状态名 | 关键词</code>，比如 <code>有点累 | 短回复,困</code>。<br><em>小提示：如果你只想把它当个主屏上的小摆设（比如每天固定显示“想你”），不想让它影响 TA 抽卡，有两个办法：① 状态只写名字，不写竖线和关键词。这样它只展示，不参与抽卡。② 去「设置 → 聊天回复设置 → 互动」，把“今日状态优先抽卡概率”调到 0%。</em></p>
-      
-      <p class="welcome-h">接下来，是你和 TA 的几种玩法：</p>
-      <p><strong>玩法一：纯盲盒</strong><br>你不搞任何特殊分类，把所有字卡全部塞进一个小分组里。TA 每一次回复，都是从这堆卡里纯随机抽。没有任何规律，每次都是未知的惊喜。</p>
-      <p><strong>玩法二：偶尔的关心</strong><br>你把一部分字卡单独拿出来建小分组，打上关键词，比如“哼”、“抱抱”、“难受”。再把你平时那些百搭的卡，全部放进一个没有关键词的小分组里。当你说出带关键词的话时，TA 优先去对应的小分组里抽卡哄你；平时没触发关键词，就从那个百搭小分组里随机抽。</p>
-      <p><strong>玩法三：今日状态</strong><br>配合“系统预设 → 今日状态”用。你每天给 TA 定个心情，比如“今天很开心”、“今天有点累”。TA 当天的回复，就会按这个状态去对应的卡池里抽，一整天情绪基调都由你定。当然，就像上面说的，不想让它影响抽卡，纯当个展示也完全可以。</p>
-      <p><strong>玩法四：自由拼字</strong><br>开启“拼字卡”玩法，TA 会把词典里的词随机拼成一句话发给你。是“我+想+你”，还是“宝贝+吃醋+啦”，全看运气。</p>
-      
-      <p class="welcome-h">还有一个隐藏机制（不走概率，强制触发）：</p>
-      <p><strong>情绪兜底</strong> —— 当你聊到“不舒服”、“生病”、“累了”、“哭了”、“难过”、“委屈”这类词时，不管关键词有没有命中，也不管今天是什么状态，TA 都会 <strong>100% 强制</strong> 优先去“关心/心疼/安慰”相关的卡池里抽卡。也就是说，你难过的时候，TA 一定会先哄你。</p>
-  
-  <div class="welcome-note">
-    <p><strong>最后，想对你说一句：</strong></p>
-    <p>如果某天，TA 的回答变得词不达意，或者说了让你难过的话，请不要伤心。</p>
-    <p>TA 也有联系不上你的时候，也有自己的“忙碌”与“卡壳”。</p>
-    <p>这不是 TA 的错，也不是你的错。</p>
-    <p>如果觉得心里不舒服，随时可以退出，去过一会儿自己的时间，喝口水、看看窗外，等心情平静了再回来。</p>
-    <p class="welcome-note-strong">任何时候，都请把自己的感受放在第一位。</p>
-    <p class="welcome-note-strong">你才是这个世界里，最重要的人。</p>
+
+<!-- 👇 新增：公告大字提醒 -->
+<div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">💡 最新小彩蛋</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">在聊天页长按空白处，TA 会有回应哦</p>
+</div>
+<!-- 👆 大字提醒结束 -->
+
+    <div class="welcome-tabs" id="welcomeTabs">
+  <button class="welcome-tab active" data-wtab="about">关于</button>
+  <button class="welcome-tab" data-wtab="play">玩法</button>
+  <button class="welcome-tab" data-wtab="guide">教程</button>
+</div>
+
+    <div class="welcome-body" id="welcomeBody">
+
+      <!-- ========== 关于页 ========== -->
+      <div id="welcomeAbout">
+        <div style="background:linear-gradient(135deg,#fff8e1,#fff0d6);border:2px dashed #f0b060;border-radius:14px;padding:16px;margin:0 0 18px;box-shadow:0 4px 14px rgba(240,176,96,.15);">
+          <p style="text-align:center;font-size:22px;font-weight:700;color:#c47c5a;margin:0 0 8px;letter-spacing:1px;">🎭 多梦角模式已开启</p>
+          <p style="font-size:13.5px;color:#7a5a48;margin:0 0 6px;line-height:1.7;">这是一个可以由你自己掌控的小世界。</p>
+          <p style="font-size:13.5px;color:#7a5a48;margin:0 0 6px;line-height:1.7;">· 点主屏右上角的 <strong style="color:#c47c5a;">梦角胶囊</strong>，可以随时切换不同的梦角</p>
+          <p style="font-size:13.5px;color:#7a5a48;margin:0 0 6px;line-height:1.7;">· 使用 <strong style="color:#c47c5a;">群聊</strong> 功能，让多个梦角聚在一个群里聊天</p>
+          <p style="font-size:12.5px;color:#a08070;margin:10px 0 0;line-height:1.65;border-top:1px dashed rgba(196,124,90,.3);padding-top:10px;">只想和一个梦角相处？去「设置 → 人物设置」关掉「多梦角模式」就行，群聊入口也会一起隐藏。</p>
+        </div>
+
+        <p class="welcome-h">关于这个应用</p>
+        <p>这是一个<strong>完全本地运行</strong>的应用。所有聊天记录、字卡、表情、设置都保存在你的手机浏览器里，不会上传到任何服务器。换手机或清缓存前，记得用「设置 → 聊天记录备份」导出。</p>
+        <p>它<strong>没有联网</strong>、<strong>没有账号</strong>、<strong>没有 AI</strong>——TA 说的每一句话，都来自你自己写进字卡库里的字卡。</p>
+
+        <p class="welcome-h">它现在能做的事</p>
+        <p>· <strong>聊天</strong>：文字 / emoji / 表情包 / 语音 / 红包 / 信件 / 提问 / 邀请一起听歌、一起玩游戏、打电话</p>
+        <p>· <strong>字卡库</strong>：大分组 / 小分组 / 关键词 / 词典拼字 / 系统预设</p>
+        <p>· <strong>小游戏</strong>：五子棋 / 跳一跳 / 俄罗斯方块</p>
+        <p>· <strong>商城</strong>：买礼物送给 TA，TA 也会主动送你</p>
+        <p>· <strong>动态</strong>：发帖、点赞、评论，TA 会来互动</p>
+        <p>· <strong>信箱</strong>：给 TA 写信，TA 会回信</p>
+        <p>· <strong>钱包</strong>：红包和礼物的账目都记着</p>
+        <p>· <strong>主屏</strong>：拍立得、待办、纪念日、今日情话、今日状态</p>
+        <p>· <strong>美化</strong>：气泡、字体、背景、App 图标、锁屏，全部可以自己改</p>
+
+        <p class="welcome-h">关于「多梦角模式」</p>
+        <p>打开时，你可以同时养多个梦角，每个梦角有<strong>完全独立的聊天、字卡、钱包、动态</strong>，互不打扰。主屏右上角的梦角胶囊点一下就能切换。群聊里，所有梦角会用<strong>各自的字卡</strong>说话，性格不会串味。</p>
+
+        <p class="welcome-h">关于「群聊」</p>
+        <p>群聊是把所有梦角放在一个群里，你可以发消息，梦角们会用自己的字卡回复。每个梦角的说话风格来自它自己的字卡库，所以如果某个梦角话很少、或者很冷淡，那通常是它的字卡不够丰富，去字卡库里多喂一点就好。</p>
+
+        <p class="welcome-h">关于原创</p>
+        <p>本应用的原创作者是小红书 <strong>@涣涣26156644131</strong>。</p>
+        <p>你可以：<strong>自部署</strong>（下载到自己的仓库 / 网站）、<strong>二改二创</strong>（改代码、改界面、加功能）。</p>
+        <p>唯一希望：<strong>保留署名</strong>。请不要冒充原作者，也不要把这个应用说成是自己原创的。</p>
+      </div>
+
+      <!-- ========== 玩法页 ========== -->
+      <div id="welcomePlay" style="display:none;">
+
+        <p class="welcome-h">先搞懂几个词</p>
+        <p><strong>大分组</strong> —— 情绪大分类，比如"撒娇粘人"、"关心心疼"。它就是个文件夹。</p>
+        <p><strong>小分组</strong> —— 文件夹里的抽屉。TA 抽卡是从抽屉里抽的。用不用都行，看你要不要给它填关键词。</p>
+        <p><strong>关键词</strong> —— 贴在抽屉上的标签。你只要说到这些词，TA 就优先去这个抽屉里翻卡。</p>
+        <p><strong>词典拼字</strong> —— 底层机制。把词按"主语/动作/宾语/修饰/语气"填进去，TA 有一定概率把词随机拼成一句话。</p>
+
+        <p class="welcome-h">玩法一 · 纯盲盒</p>
+        <p>把所有字卡全塞进一个小分组，TA 每次回复都从这堆卡里纯随机抽。没有规律，每次都是惊喜。</p>
+
+        <p class="welcome-h">玩法二 · 偶尔的关心</p>
+        <p>把一部分字卡单独拿出来，打上关键词（比如"哼"、"抱抱"、"难受"）。触发关键词时，TA 优先去对应抽屉抽卡哄你；平时就从百搭小分组里随机抽。</p>
+
+        <p class="welcome-h">玩法三 · 今日状态</p>
+        <p>在「系统预设 → 今日状态」里，每天给 TA 定个心情（比如"今天很开心"、"今天有点累"）。TA 当天的回复，就会按这个状态去对应的卡池里抽。也可以只写状态名不写关键词，让它纯当展示。</p>
+
+        <p class="welcome-h">玩法四 · 自由拼字</p>
+        <p>开启"拼字卡"，TA 会把词典里的词随机拼成一句话发给你。是"我+想+你"，还是"宝贝+吃醋+啦"，全看运气。</p>
+
+        <p class="welcome-h">玩法五 · 小眼睛（强烈推荐）</p>
+        <p>字卡库里，每个大分组和小分组旁边都有一个<strong>小眼睛图标</strong>。点一下，眼睛会变成"斜杠"，这个分组就<strong>不参与抽卡</strong>了。再点一下，恢复。</p>
+        <p><strong>为什么好用？</strong>因为你和 TA 的连接，不一定每时每刻都需要全部素材。</p>
+        <p>· <strong>例子一</strong>：现在是早上，你不想让 TA 突然发"晚安，早点休息"。那就去字卡库，把「睡前」那个大分组的小眼睛关掉。TA 就不会再抽到睡前的话，白天的聊天更干净。</p>
+        <p>· <strong>例子二</strong>：今天你心情很好，不想被突然来一句"对不起"、"我错了"打断。那就把「道歉」类的小分组关掉。</p>
+        <p>· <strong>例子三</strong>：你在忙，只想收到短句，不想长篇大论。把"长句"或"情话"分组关掉，只留"短回复"类。</p>
+        <p>这个小眼睛不是"永久删除"，只是"暂时不抽"。想恢复，再点一下就行。<strong>它让你可以随时微调 TA 的性格和状态，连接会更贴合当下的你。</strong></p>
+
+        <p class="welcome-h">隐藏机制 · 情绪兜底</p>
+        <p>当你聊到"不舒服"、"生病"、"累了"、"哭了"、"难过"、"委屈"这类词时，不管关键词有没有命中，TA 都会 <strong>100% 优先</strong> 去"关心 / 心疼 / 安慰"相关的卡池里抽卡。也就是说，你难过的时候，TA 一定会先哄你。</p>
+
+        <div class="welcome-note">
+          <p><strong>最后，想对你说一句：</strong></p>
+          <p>如果某天，TA 的回答变得词不达意，或者说了让你难过的话，请不要伤心。</p>
+          <p>TA 也有联系不上你的时候，也有自己的"忙碌"与"卡壳"。</p>
+          <p>这不是 TA 的错，也不是你的错。</p>
+          <p>如果觉得心里不舒服，随时可以退出，去过一会儿自己的时间，喝喝水、看看窗外，等心情平静了再回来。</p>
+          <p class="welcome-note-strong">任何时候，都请把自己的感受放在第一位。</p>
+          <p class="welcome-note-strong">你才是这个世界里，最重要的人。</p>
+        </div>
+      </div>
+
+   </div>
+
+  <!-- ========== 教程页 ========== -->
+  <div id="welcomeGuide" style="display:none;">
+
+    <p class="welcome-h">第一步 · 先给 TA 写几句话</p>
+    <p>打开主屏底部的「字卡」→ 点左下角「+ 新建大分组」，建一个大分组（比如"日常"）。</p>
+    <p>点大分组下面「+ 新建小分组」，建一个小分组（比如"默认"）。</p>
+    <p>在添加框里写一句话，比如"在吗"，点右边的 + 号，它就被存进卡池了。多写几句，比如"在的""怎么啦""我在"。写完就可以退出字卡库了。</p>
+
+    <p class="welcome-h">第二步 · 发一条消息试试</p>
+    <p>回主屏，点「聊天」，随便发一句。TA 会从你刚写的字卡里随机抽一句回复你。</p>
+    <p>如果发现 TA 说话很单调，说明字卡还不够多——回去再写一些。</p>
+
+    <p class="welcome-h">第三步 · 让它说话更丰富</p>
+    <p>字卡库可以建很多分组：撒娇、想念、关心、打趣……每个分组下写 5~10 句。</p>
+    <p>写满 30~50 句之后，聊天就不会一直重复了。</p>
+
+    <p class="welcome-h">第四步 · 让它有情绪</p>
+    <p>去「设置 → 聊天回复设置」，里面有很多可以调的东西：</p>
+    <p>· <strong>表情包 / emoji / 语音概率</strong>：TA 回复里带这些的比例。</p>
+    <p>· <strong>已读不回概率</strong>：调高会看到"TA 已读，可能在忙"。</p>
+    <p>· <strong>今日状态优先抽卡概率</strong>：配合「系统预设 → 今日状态」用。</p>
+
+    <p class="welcome-h">第五步 · 让它记住你</p>
+    <p>去「设置 → 主屏美化 → 纪念日卡」，填上在一起的日期。主屏上就会显示"在一起 N 天"。</p>
+    <p>主屏还有"今日待办"和"拍立得"，都可以点小铅笔图标改。</p>
+
+    <p class="welcome-h">第六步 · 给 TA 换张脸</p>
+    <p>去「设置 → 人物设置」，可以改 TA 的头像、名字，也可以改你自己的头像和名字。</p>
+
+    <p class="welcome-h">第七步 · 想玩更多</p>
+    <p>· <strong>商城</strong>：买礼物送给 TA，TA 也会主动送你。</p>
+    <p>· <strong>信箱</strong>：给 TA 写信，TA 会过一段时间回信。</p>
+    <p>· <strong>动态</strong>：发帖、点赞、评论，TA 会来互动。</p>
+    <p>· <strong>小游戏</strong>：五子棋 / 跳一跳 / 俄罗斯方块。</p>
+    <p>· <strong>群聊</strong>：多个梦角在一个群里聊天（需要多梦角模式开启）。</p>
+
+    <p class="welcome-h">不知道从哪开始？</p>
+    <p>就写 10 句话，然后去发一条消息试试。剩下的功能，用着用着就懂了。</p>
+
+  </div>
+
+<div class="welcome-credit">原创 · 小红书 <strong>@涣涣26156644131</strong></div>
+
+    <label class="welcome-agree">
+      <input type="checkbox" id="welcomeAgree">
+      <span>我已知晓这是原作者 <strong>@涣涣26156644131</strong> 的作品。可以自部署、可以二改二创，但请保留署名。</span>
+    </label>
+
+    <button class="welcome-btn" id="welcomeBtn" disabled>我已经看完了，开始吧</button>
   </div>
 </div>
 
-    <button class="welcome-btn" id="welcomeBtn" style="display:none;">我已经看完了，开始吧</button>
-  </div>
-</div>
 <div class="update-bg" id="updateBg">
   <div class="update-card">
     <div class="update-emoji">🎉</div>
@@ -2588,6 +2736,11 @@ html,body{height:100%;margin:0;padding:0}
 (function(){
   "use strict";
 
+  /* ========================================================
+     📝 每次发新版，只改下面这一个版本号就行
+     ======================================================== */
+  var APP_VERSION = '1.0.8';
+
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
   'chat_personas_v1': 1,
@@ -2595,7 +2748,8 @@ var _NO_NS_KEYS = {
   'chat_welcome_shown_v1': 1,
   'chat_app_version_v1': 1,
   'chat_last_backup_time_v1': 1,
-  'chat_backup_snooze_until_v1': 1
+  'chat_backup_snooze_until_v1': 1,
+  'chat_multi_persona_v1': 1
 };
 var _activeId = 'default';
 try{ _activeId = localStorage.getItem('chat_active_persona_v1') || 'default'; }catch(e){}
@@ -3414,6 +3568,48 @@ dict: {
   tone: ['呀','啦','嘛','哦','呢','啊','吧','好不好','对不对','可以吗','行不行']
 },
 system: {
+        lifeMoments: [
+          '今天天气很好，阳光晒得人懒洋洋的',
+          '路过一家新开的奶茶店，下次可以去看看',
+          '刚刚看到一只小猫，好想摸摸它的头',
+          '今天吃到了好吃的，心情变好了一点',
+          '突然想起上次说的话，忍不住笑了一下',
+          '晚上散步的时候，风很舒服',
+          '今天有点累，但洗个热水澡应该会好',
+          '给自己泡了杯茶，安静地坐了一会儿',
+          '看到一朵形状奇怪的云，拍了张照',
+          '今天没什么特别的，就是平平淡淡',
+          '刚刚把房间收拾了一下，看起来舒服多了',
+          '听了一首老歌，突然有点怀旧',
+          '今天的时间过得好慢，可能是因为有点困',
+          '买了个小东西，心情不错',
+          '刚才在发呆，什么都没想，又好像什么都想了',
+          '今天有点忙，但吃饭的时候还是喘了口气',
+          '看到路边开了一朵小花，觉得它很勇敢',
+          '今天做了个奇怪的梦，醒来就记不清了',
+          '晚上有点凉，得加件外套了',
+          '刚刚翻到一张老照片，想起了很多事',
+          '今天走了很多路，有点累但是很充实',
+          '给自己买了点水果，甜甜的',
+          '今天在窗边坐了很久，看着外面发呆',
+          '刚刚打了个哈欠，被自己逗笑了',
+          '今天没有特别的事，就是平平安安的一天',
+          '今天晚上的月亮很亮，星星也很多',
+          '刚刚把明天的衣服准备好了，有点期待明天',
+          '今天下了一场雨，空气变清新了',
+          '好像又长胖了一点，明天要开始运动了',
+          '今天就这样平平淡淡地过去了，晚安'
+        ],
+        touchReplies: [
+          '你的手好凉', '嗯？', '我在的', '怎么啦', '别闹', 
+          '想我了', '嗯，我听着呢', '怎么突然碰我', '在呢', 
+          '有点痒', '你干嘛', '轻一点', '好乖', '摸摸头', 
+          '你今天怎么这么黏人', '嗯，知道啦', '没事，有我在', 
+          '怎么啦，心情不好', '我在这里', '想说什么就说吧', 
+          '嗯？我在忙呢', '别蹭了，衣服要皱了', '好，听你的', 
+          '你手好暖', '嗯，我一直在', '怎么突然这么安静', 
+          '没事，你说', '我在等你说话呢', '嗯，抱一下', '怎么啦'
+        ],
         love: DEFAULT_LOVES.slice(),
         redpacket: DEFAULT_RP_REPLIES.slice(),
         readback: DEFAULT_READ_BACK_REPLIES.slice(),
@@ -3454,7 +3650,53 @@ if(isDictEmpty){
   d.dict.tone = ['呀','啦','嘛','哦','呢','啊','吧','好不好','对不对','可以吗','行不行'];
 }
     if(!d.system) d.system = { love: DEFAULT_LOVES.slice(), redpacket: DEFAULT_RP_REPLIES.slice(), readback: DEFAULT_READ_BACK_REPLIES.slice(), rejectListen: DEFAULT_REJECT_LISTEN_REPLIES.slice(), rejectedByMe: DEFAULT_REJECTED_BY_ME_REPLIES.slice(), proactive: [] };
-    if(!Array.isArray(d.system.love)) d.system.love = DEFAULT_LOVES.slice();
+    if(!Array.isArray(d.system.lifeMoments) || d.system.lifeMoments.length === 0){
+  d.system.lifeMoments = [
+    '今天天气很好，阳光晒得人懒洋洋的',
+    '路过一家新开的奶茶店，下次可以去看看',
+    '刚刚看到一只小猫，好想摸摸它的头',
+    '今天吃到了好吃的，心情变好了一点',
+    '突然想起上次说的话，忍不住笑了一下',
+    '晚上散步的时候，风很舒服',
+    '今天有点累，但洗个热水澡应该会好',
+    '给自己泡了杯茶，安静地坐了一会儿',
+    '看到一朵形状奇怪的云，拍了张照',
+    '今天没什么特别的，就是平平淡淡',
+    '刚刚把房间收拾了一下，看起来舒服多了',
+    '听了一首老歌，突然有点怀旧',
+    '今天的时间过得好慢，可能是因为有点困',
+    '买了个小东西，心情不错',
+    '刚才在发呆，什么都没想，又好像什么都想了',
+    '今天有点忙，但吃饭的时候还是喘了口气',
+    '看到路边开了一朵小花，觉得它很勇敢',
+    '今天做了个奇怪的梦，醒来就记不清了',
+    '晚上有点凉，得加件外套了',
+    '刚刚翻到一张老照片，想起了很多事',
+    '今天走了很多路，有点累但是很充实',
+    '给自己买了点水果，甜甜的',
+    '今天在窗边坐了很久，看着外面发呆',
+    '刚刚打了个哈欠，被自己逗笑了',
+    '今天没有特别的事，就是平平安安的一天',
+    '今天晚上的月亮很亮，星星也很多',
+    '刚刚把明天的衣服准备好了，有点期待明天',
+    '今天下了一场雨，空气变清新了',
+    '好像又长胖了一点，明天要开始运动了',
+    '今天就这样平平淡淡地过去了，晚安'
+  ];
+}
+if(!Array.isArray(d.system.touchReplies) || d.system.touchReplies.length === 0){
+  d.system.touchReplies = [
+    '你的手好凉', '嗯？', '我在的', '怎么啦', '别闹', 
+    '想我了', '嗯，我听着呢', '怎么突然碰我', '在呢', 
+    '有点痒', '你干嘛', '轻一点', '好乖', '摸摸头', 
+    '你今天怎么这么黏人', '嗯，知道啦', '没事，有我在', 
+    '怎么啦，心情不好', '我在这里', '想说什么就说吧', 
+    '嗯？我在忙呢', '别蹭了，衣服要皱了', '好，听你的', 
+    '你手好暖', '嗯，我一直在', '怎么突然这么安静', 
+    '没事，你说', '我在等你说话呢', '嗯，抱一下', '怎么啦'
+  ];
+}
+if(!Array.isArray(d.system.love)) d.system.love = DEFAULT_LOVES.slice();
     if(!Array.isArray(d.system.redpacket) || d.system.redpacket.length === 0) d.system.redpacket = DEFAULT_RP_REPLIES.slice();
     if(!Array.isArray(d.system.readback) || d.system.readback.length === 0) d.system.readback = DEFAULT_READ_BACK_REPLIES.slice();
     if(!Array.isArray(d.system.rejectListen) || d.system.rejectListen.length === 0) d.system.rejectListen = DEFAULT_REJECT_LISTEN_REPLIES.slice();
@@ -4110,10 +4352,26 @@ $('customCssStyle').textContent = person.customCss || '';
 
       renderMoodChip();
       renderPersonaChip();
+      applyMultiPersonaMode();
 renderTopHero();
 renderBigPhoto();
 renderAnniversaryBg();
 renderAppIcons();
+/* 检查动态红点 */
+var momentsIcon = document.querySelector('.app-item[data-app="moments"] .app-icon');
+if(momentsIcon){
+  var hasUnread = false;
+  try{ hasUnread = localStorage.getItem('chat_unread_moments_v1') === '1'; }catch(e){}
+  var dot = momentsIcon.querySelector('.red-dot');
+  if(hasUnread && !dot){
+    dot = document.createElement('span');
+    dot.className = 'red-dot';
+    dot.style.cssText = 'position:absolute;top:-4px;right:-4px;width:8px;height:8px;border-radius:50%;background:#e84a5f;border:2px solid #fff;';
+    momentsIcon.appendChild(dot);
+  } else if(!hasUnread && dot){
+    dot.remove();
+  }
+}
 
       var cb = $('chatBadge');
       if(unreadCount > 0){ cb.textContent = unreadCount > 99 ? '99+' : unreadCount; cb.style.display = 'grid'; }
@@ -4246,6 +4504,11 @@ if(m.type === 'sticker') return '<div class="bubble bubble-sticker">' + quoteHTM
     return '<div class="bubble style-' + style + '">' + quoteHTML + esc(m.text) + '</div>';
   }
   function buildMsgHTML(m){
+/* 撤回的消息：直白保留原话，一眼就能看到 */
+if(m.recalled){
+  var rIdx = messages.indexOf(m);
+  return '<div class="sys-msg" data-recall-idx="'+rIdx+'" style="cursor:pointer;">对方撤回了一条消息 <span style="opacity:.55;font-size:11px;">（原话：' + esc(m.text) + '）</span></div>';
+}
 if(m.type === 'sys'){ return '<div class="sys-msg">' + esc(m.text) + '</div>'; }
 if(m.type === 'invite'){
   var tName = person.name || 'TA';
@@ -4619,6 +4882,22 @@ var v = $('viewSystem');
 if(!v) return;
 v.style.display = '';
 
+/* ============ 新增：数据防崩校验，防止白屏 ============ */
+if (!cards || !cards.system) cards.system = {};
+var sysArrayKeys = ['love', 'redpacket', 'rpThanks', 'mood', 'readback', 'waitForYou', 
+                    'callReject', 'callRejectedByMe', 'rejectListen', 'rejectedByMe', 
+                    'rejectGame', 'rejectedGame', 'scoreLead', 'scoreBehind', 
+                    'quitGame', 'giftThanks', 'giftNote'];
+sysArrayKeys.forEach(function(k){
+  if (!Array.isArray(cards.system[k])) cards.system[k] = [];
+});
+if (!Array.isArray(cards.system.proactive)) cards.system.proactive = [];
+cards.system.proactive.forEach(function(pg){
+  if (!Array.isArray(pg.items)) pg.items = [];
+});
+/* ======================================================= */
+
+
 /* 记录当前打开的分类和子分组 */
 var openCats = {};
 var openSubs = {};
@@ -4735,7 +5014,17 @@ html += cat('🎮', '游戏', 5,
   sub('quitGame', '中途退出', cards.system.quitGame, 'data-quit-game-del', 'data-add-quit-game', '添加一句「你怎么跑了」的话', '你下到一半点退出时，TA 会从这抽一句话。')
 );
 
-// 🎁 礼物
+  // 🌱 生活碎片
+  html += cat('🌱', '生活碎片', 1,
+    sub('lifeMoments', 'TA 的碎碎念', cards.system.lifeMoments, 'data-life-del', 'data-add-life', '添加一句生活碎片')
+  );
+
+  // 🫳 触感回应
+  html += cat('🫳', '触感回应', 1,
+    sub('touchReplies', '长按空白的回应', cards.system.touchReplies, 'data-touch-del', 'data-add-touch', '添加一句触感回应')
+  );
+
+  // 🎁 礼物
 html += cat('🎁', '礼物', 2,
   sub('giftThanks', '礼物致谢', cards.system.giftThanks, 'data-gift-thanks-del', 'data-add-gift-thanks', '添加一句收礼后的话', '你送 TA 礼物之后，TA 会从这抽一句话回你。') +
   sub('giftNote', 'TA 送礼附言', cards.system.giftNote, 'data-gift-note-del', 'data-add-gift-note', '添加一句送礼时说的话', 'TA 主动送你礼物时，会在礼物卡片之后补上一句话。')
@@ -4989,7 +5278,24 @@ var sysToggle = e.target.closest('[data-sys-toggle]');
     var emoDel = e.target.closest('[data-emoticon-del]');
     if(emoDel){ var emi = parseInt(emoDel.dataset.emoticonDel, 10); cards.emoticon.splice(emi, 1); saveCards(); renderEmoticonGrid(); return; }
     var loveDel = e.target.closest('[data-love-del]');
-    if(loveDel){ var li = parseInt(loveDel.dataset.loveDel, 10); cards.system.love.splice(li, 1); saveCards(); renderSystemView(); return; }
+if(loveDel){ var li = parseInt(loveDel.dataset.loveDel, 10); cards.system.love.splice(li, 1); saveCards(); renderSystemView(); return; }
+
+var lifeDel = e.target.closest('[data-life-del]');
+if(lifeDel){
+  var lfi = parseInt(lifeDel.dataset.lifeDel, 10);
+  if(!Array.isArray(cards.system.lifeMoments)) cards.system.lifeMoments = [];
+  cards.system.lifeMoments.splice(lfi, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+var touchDel = e.target.closest('[data-touch-del]');
+if(touchDel){
+  var tci = parseInt(touchDel.dataset.touchDel, 10);
+  if(!Array.isArray(cards.system.touchReplies)) cards.system.touchReplies = [];
+  cards.system.touchReplies.splice(tci, 1);
+  saveCards(); renderSystemView();
+  return;
+}
     var rpThanksDel = e.target.closest('[data-rp-thanks-del]');
 if(rpThanksDel){
   var rti = parseInt(rpThanksDel.dataset.rpThanksDel, 10);
@@ -5116,14 +5422,34 @@ if(dictDel){
       return;
     }
     if(f.matches('[data-add-love]')){
-      e.preventDefault();
-      var inp5 = f.querySelector('input');
-      var val3 = inp5.value.trim();
-      if(!val3) return;
-      cards.system.love.push(val3);
-      saveCards(); renderSystemView();
-      return;
-    }
+  e.preventDefault();
+  var inp5 = f.querySelector('input');
+  var val3 = inp5.value.trim();
+  if(!val3) return;
+  cards.system.love.push(val3);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-life]')){
+  e.preventDefault();
+  var inpLife = f.querySelector('input');
+  var valLife = inpLife.value.trim();
+  if(!valLife) return;
+  if(!Array.isArray(cards.system.lifeMoments)) cards.system.lifeMoments = [];
+  cards.system.lifeMoments.push(valLife);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-touch]')){
+  e.preventDefault();
+  var inpTch = f.querySelector('input');
+  var valTch = inpTch.value.trim();
+  if(!valTch) return;
+  if(!Array.isArray(cards.system.touchReplies)) cards.system.touchReplies = [];
+  cards.system.touchReplies.push(valTch);
+  saveCards(); renderSystemView();
+  return;
+}
     if(f.matches('[data-add-rp]')){
       e.preventDefault();
       var inpRp = f.querySelector('input');
@@ -5402,6 +5728,17 @@ if($('importJsonFile')){
 /* 解析 JSON 并写入字卡库 */
 function importJsonToCards(json){
   var bigCount = 0, subCount = 0, cardCount = 0;
+
+  /* 过滤：如果 JSON 看起来像聊天备份，直接拒绝 */
+var BACKUP_FIELDS = ['version','exportTime','person','messages','cards','taStickers','userStickers','myPats','taPats','stats','proactive','dailyLove','lock'];
+if(json && typeof json === 'object' && !Array.isArray(json)){
+  var topKeys = Object.keys(json);
+  var looksLikeBackup = topKeys.some(function(k){ return BACKUP_FIELDS.indexOf(k) > -1; });
+  if(looksLikeBackup){
+    showDialog('这不是字卡 JSON', '你导入的看起来是「聊天记录备份」文件，不是字卡文件。<br>字卡 JSON 的格式应该是：<br><code>{"大分组名": ["字卡1", "卡字2"]}</code><br>或者<br><code>[{"name":"大分组名","items":["卡1","卡2"]}]</code>', [{ text:'知道了', primary:true }], true);
+    return;
+  }
+}
   
   function addBigGroup(name, groups){
     var big = cards.text.filter(function(b){ return b.name === name; })[0];
@@ -5897,13 +6234,50 @@ setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
         showTyping();
         var gap = 0, sentOne = false;
         picked.forEach(function(m, i){
-          gap += 600 + Math.random() * 600;
-          setTimeout(function(){
-            if(chatOpenNow){ appendMessage(m); if(!sentOne){ playDing(); sentOne = true; } }
-            else { unreadCount++; renderHome(); showNotificationBanner(m); if(!sentOne){ sentOne = true; } }
-            if(i === picked.length - 1){ hideTyping(); proactive.lastChatTime = Date.now(); saveProactive(); }
-          }, gap);
-        });
+  gap += 600 + Math.random() * 600;
+  setTimeout(function(){
+    /* 只有文字消息才可能触发撤回，5% 概率 */
+    var canRecall = (m.type === 'text' && Math.random() < 0.05);
+    
+    if(canRecall){
+      /* 1. 先正常发出 */
+      if(chatOpenNow){ appendMessage(m); if(!sentOne){ playDing(); sentOne = true; } }
+      else { unreadCount++; renderHome(); showNotificationBanner(m); if(!sentOne){ sentOne = true; } }
+      
+      /* 2. 1.5~2.5 秒后撤回（直白保留原话） */
+      setTimeout(function(){
+        m.recalled = true;
+        m.recallTime = Date.now();
+        saveMessages();
+        if(chatOpenNow){ renderMessages(); }
+        
+        /* 3. 此地无银三百两：撤回后 3~5 秒，用户没反应，TA 自己先慌 */
+        if(window.__recallPanicTimer){ clearTimeout(window.__recallPanicTimer); }
+        window.__recallPanicTimer = setTimeout(function(){
+          var last = messages[messages.length - 1];
+          if(last && last.me) return; /* 用户已经回复了，不补刀 */
+          
+          var PANIC_REPLIES = [
+            '你……怎么不说话？',
+            '你是不是看到了？',
+            '那个……我刚刚是复制别人的，你别当真！',
+            '喂？人呢？你吓我啊……'
+          ];
+          var txt = PANIC_REPLIES[Math.floor(Math.random() * PANIC_REPLIES.length)];
+          var pm = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
+          messages.push(pm); saveMessages();
+          if(chatOpenNow) appendMessage(pm);
+          else { unreadCount++; renderHome(); showNotificationBanner(pm); }
+        }, 3000 + Math.random() * 2000);
+      }, 1500 + Math.random() * 1000);
+    } else {
+      if(chatOpenNow){ appendMessage(m); if(!sentOne){ playDing(); sentOne = true; } }
+      else { unreadCount++; renderHome(); showNotificationBanner(m); if(!sentOne){ sentOne = true; } }
+    }
+    
+    if(i === picked.length - 1){ hideTyping(); proactive.lastChatTime = Date.now(); saveProactive(); }
+  }, gap);
+});
         if(Math.random() < 0.15){ setTimeout(function(){ tryTaPatMe(); }, gap + 1000); }
       }, 3000);
     }, delay);
@@ -6106,9 +6480,34 @@ setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
       }
     }
     gainAffection();
-    proactive.lastChatTime = Date.now(); saveProactive();
+  proactive.lastChatTime = Date.now(); saveProactive();
+
+  /* 如果用户刚回复的就是撤回的消息，TA 彻底慌神 */
+  var lastTaMsg = null;
+  for(var qi = messages.length - 2; qi >= 0; qi--){
+    if(!messages[qi].me){ lastTaMsg = messages[qi]; break; }
   }
-  if($('msgInput')) $('msgInput').addEventListener('input', function(){ $('sendBtn').disabled = $('msgInput').value.trim().length === 0; });
+  if(lastTaMsg && lastTaMsg.recalled){
+    if(window.__recallPanicTimer){ clearTimeout(window.__recallPanicTimer); window.__recallPanicTimer = null; }
+    setTimeout(function(){
+      var PANIC_REPLIES = [
+        '啊啊啊你怎么还没删！',
+        '你快忘掉！快点！',
+        '你别引用了！我求你了！',
+        '撤回键怎么突然不好使了……呜呜呜',
+        '你怎么什么都看得到啊！',
+        '我不理你了……（过了两秒）好吧我理你。',
+        '你你你……你截图了对不对！'
+      ];
+      var txt = PANIC_REPLIES[Math.floor(Math.random() * PANIC_REPLIES.length)];
+      var pm = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
+      messages.push(pm); saveMessages();
+      if(chatOpenNow) appendMessage(pm);
+      else { unreadCount++; renderHome(); showNotificationBanner(pm); }
+    }, 800 + Math.random() * 1000);
+  }
+}
+if($('msgInput')) $('msgInput').addEventListener('input', function(){ $('sendBtn').disabled = $('msgInput').value.trim().length === 0; });
   if($('composer')) $('composer').addEventListener('submit', function(e){ e.preventDefault(); doSendMessage(); });
   if($('sendBtn')) $('sendBtn').addEventListener('click', function(e){ e.preventDefault(); doSendMessage(); });
   if($('msgInput')) $('msgInput').addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.keyCode === 13){ e.preventDefault(); doSendMessage(); } });
@@ -6346,7 +6745,34 @@ $('myNameInput').value = person.myName || '我';
     if($('taStickerSummary')) $('taStickerSummary').textContent = taStickers.length + ' 张';
     $('lockSummary').textContent = getLockPwd() ? '已设置' : '未设置';
   }
-  function openSettingsPage(){ renderSettingsPreview(); $('settingsPage').classList.add('open'); }
+  /* ============ 多梦角模式 ============ */
+function isMultiPersonaOn(){
+  try{
+    var v = localStorage.getItem('chat_multi_persona_v1');
+    return v !== 'off';
+  }catch(e){ return true; }
+}
+function applyMultiPersonaMode(){
+  var on = isMultiPersonaOn();
+  var chip = $('personaChip');
+  if(chip) chip.style.display = on ? '' : 'none';
+  var groupBtn = document.querySelector('.app-item[data-app="group"]');
+  if(groupBtn) groupBtn.style.display = on ? '' : 'none';
+}
+function setMultiPersonaMode(on){
+  try{ localStorage.setItem('chat_multi_persona_v1', on ? 'on' : 'off'); }catch(e){}
+  applyMultiPersonaMode();
+}
+if($('multiPersonaToggle')){
+  $('multiPersonaToggle').addEventListener('change', function(){
+    setMultiPersonaMode(!!this.checked);
+  });
+}
+function openSettingsPage(){
+  if($('multiPersonaToggle')) $('multiPersonaToggle').checked = isMultiPersonaOn();
+  renderSettingsPreview();
+  $('settingsPage').classList.add('open');
+}
   if($('openSettingsFromChat')) $('openSettingsFromChat').onclick = function(){ $('chatSettingsMenuBg').classList.add('open'); };
 if($('chatSettingsMenuBg')){
   $('chatSettingsMenuBg').addEventListener('click', function(e){
@@ -7442,12 +7868,13 @@ Array.prototype.forEach.call(document.querySelectorAll('.app-item, .dock-item'),
       renderHome();
       
       // 2. 延迟50毫秒，等页面滑入动画跑起来后，再加载聊天记录
-      setTimeout(function(){
-        renderHeader(); 
-        renderMessages(); 
-        applyBeautify(); 
-        refreshChatMusicBanner(); 
-      }, 50);
+setTimeout(function(){
+  renderHeader(); 
+  renderMessages(); 
+  applyBeautify(); 
+  refreshChatMusicBanner(); 
+  showFeatureHint(); /* 新增：显示新功能提示 */
+}, 50);
     }
     else if(app === 'music'){
   musicTimerStart = Date.now();
@@ -7457,7 +7884,13 @@ Array.prototype.forEach.call(document.querySelectorAll('.app-item, .dock-item'),
     setTimeout(function(){ playMusicAtIndex(0); }, 400);
   }
 }
-else if(app === 'moments'){ renderMoments(); $('momentsPage').classList.add('open'); setTimeout(maybeTaAutoPost, 300); }
+else if(app === 'moments'){ 
+  try{ localStorage.setItem('chat_unread_moments_v1', '0'); }catch(e){}
+  renderHome();
+  renderMoments(); 
+  $('momentsPage').classList.add('open'); 
+  setTimeout(maybeTaAutoPost, 300); 
+}
     else if(app === 'cards'){ libSearchKeyword = ''; if($('libSearchInput')) $('libSearchInput').value = ''; renderLib(); $('cardsPage').classList.add('open'); }
 else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('open'); }
     else if(app === 'stickers'){ openSettingsPage(); }
@@ -7465,7 +7898,10 @@ else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('ope
     else if(app === 'anniversary'){ renderAnniversaryPage(); $('anniversaryPage').classList.add('open'); }
     else if(app === 'wallet'){ renderWalletPage(); $('walletPage').classList.add('open'); }
 else if(app === 'game'){ window.__gomokuMode = 'solo'; $('gameHallPage').classList.add('open'); }
-else if(app === 'group'){ loadGroupMessages(); renderGroupMessages(); $('groupPage').classList.add('open'); }
+else if(app === 'group'){
+  if(!isMultiPersonaOn()) return;
+  loadGroupMessages(); renderGroupMessages(); $('groupPage').classList.add('open');
+}
 else if(app === 'shop'){ renderShop(); $('shopPage').classList.add('open'); }
 else if(app === 'settings'){ openSettingsPage(); }
   });
@@ -7548,31 +7984,55 @@ if($('chatMusicBack')){
 
   /* 长按气泡 → 弹菜单 */
   var longPressBubbleTimer = null;
-  var longPressStartY = 0;
-  $('messages').addEventListener('touchstart', function(e){
-    var msgEl = e.target.closest('.msg');
-    if(!msgEl) return;
-    if(e.target.closest('.bubble-quote')) return;
-    longPressStartY = e.touches[0].clientY;
-    longPressBubbleTimer = setTimeout(function(){
-      longPressBubbleTimer = null;
-      if(navigator.vibrate) navigator.vibrate(20);
-      var idx = parseInt(msgEl.dataset.msgIdx, 10);
-      openMsgActions(idx);
-    }, 500);
-  }, {passive:true});
+var longPressStartY = 0;
+var touchStartY = 0;
+var touchEmptyTimer = null;
 
-  $('messages').addEventListener('touchmove', function(e){
-    if(!longPressBubbleTimer) return;
+$('messages').addEventListener('touchstart', function(e){
+  var msgEl = e.target.closest('.msg');
+  if(!msgEl) {
+    if(e.target.closest('.bubble-quote')) return;
+    touchStartY = e.touches[0].clientY;
+    touchEmptyTimer = setTimeout(function(){
+      touchEmptyTimer = null;
+      if(navigator.vibrate) navigator.vibrate(20);
+      var pool = (cards && cards.system && Array.isArray(cards.system.touchReplies)) ? cards.system.touchReplies : ['嗯？', '我在的'];
+      var txt = pool[Math.floor(Math.random() * pool.length)];
+      var m = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
+      messages.push(m); saveMessages();
+      if(chatOpenNow) appendMessage(m);
+    }, 500);
+    return;
+  }
+  if(e.target.closest('.bubble-quote')) return;
+  longPressStartY = e.touches[0].clientY;
+  longPressBubbleTimer = setTimeout(function(){
+    longPressBubbleTimer = null;
+    if(navigator.vibrate) navigator.vibrate(20);
+    var idx = parseInt(msgEl.dataset.msgIdx, 10);
+    openMsgActions(idx);
+  }, 500);
+}, {passive:true});
+
+$('messages').addEventListener('touchmove', function(e){
+  if(longPressBubbleTimer){
     if(Math.abs(e.touches[0].clientY - longPressStartY) > 10){
       clearTimeout(longPressBubbleTimer);
       longPressBubbleTimer = null;
     }
-  }, {passive:true});
+  }
+  if(touchEmptyTimer){
+    if(Math.abs(e.touches[0].clientY - touchStartY) > 10){
+      clearTimeout(touchEmptyTimer);
+      touchEmptyTimer = null;
+    }
+  }
+}, {passive:true});
 
-  $('messages').addEventListener('touchend', function(){
-    if(longPressBubbleTimer){ clearTimeout(longPressBubbleTimer); longPressBubbleTimer = null; }
-  });
+$('messages').addEventListener('touchend', function(){
+  if(longPressBubbleTimer){ clearTimeout(longPressBubbleTimer); longPressBubbleTimer = null; }
+  if(touchEmptyTimer){ clearTimeout(touchEmptyTimer); touchEmptyTimer = null; }
+});
 
   function openMsgActions(idx){
   if(idx < 0 || idx >= messages.length) return;
@@ -8162,53 +8622,123 @@ var WELCOME_KEY = 'chat_welcome_shown_v1';
 function showWelcomeIfFirstTime(){
   var shown = '';
   try{ shown = localStorage.getItem(WELCOME_KEY) || ''; }catch(e){}
-  if(shown === 'yes') return false;
+  if(shown === APP_VERSION) return false;
   var bg = $('welcomeBg');
   if(!bg) return false;
   bg.classList.add('show');
-  
-  // 强制翻到底逻辑
-  var welcomeBody = $('welcomeBody');
-  var welcomeBtn = $('welcomeBtn');
-  if(welcomeBody && welcomeBtn){
-    var checkScroll = function(){
-      // 当滚动条到底时（容错 10px），显示按钮
-      if(welcomeBody.scrollTop + welcomeBody.clientHeight >= welcomeBody.scrollHeight - 10){
-        welcomeBtn.style.display = 'block';
-      }
-    };
-    // 如果内容不够长，没滚动条，直接显示
-    if(welcomeBody.scrollHeight <= welcomeBody.clientHeight + 10){
-      welcomeBtn.style.display = 'block';
-    }
-    // 监听滚动事件
-    welcomeBody.addEventListener('scroll', checkScroll);
-    // 初始化时也检查一次（防止缓存问题）
-    setTimeout(checkScroll, 100);
+
+  /* 每页的"已读完"状态 */
+var readState = { about: false, play: false, guide: false };
+  var agreeState = false;
+  var currentTab = 'about';
+
+  function renderTabs(){
+    var labelMap = { about: '关于', play: '玩法', guide: '教程' };
+Array.prototype.forEach.call(bg.querySelectorAll('.welcome-tab'), function(t){
+  var which = t.dataset.wtab;
+  var label = labelMap[which] || which;
+  t.textContent = label + (readState[which] ? ' ✓' : '');
+  t.classList.toggle('active', which === currentTab);
+});
   }
+
+  function updateButton(){
+  var btn = $('welcomeBtn');
+  if(!btn) return;
+  var todo = [];
+  if(!readState.about) todo.push('「关于」');
+  if(!readState.play) todo.push('「玩法」');
+  if(!readState.guide) todo.push('「教程」');
+  if(todo.length){ btn.textContent = '请先读完 ' + todo.join('、'); btn.disabled = true; return; }
+  if(!agreeState){ btn.textContent = '请勾选下方同意条款'; btn.disabled = true; return; }
+  btn.textContent = '我已经看完了，开始吧';
+  btn.disabled = false;
+}
+
+  /* 重置 */
+  currentTab = 'about';
+if($('welcomeAbout')) $('welcomeAbout').style.display = '';
+if($('welcomePlay')) $('welcomePlay').style.display = 'none';
+if($('welcomeGuide')) $('welcomeGuide').style.display = 'none';
+  if($('welcomeAgree')) $('welcomeAgree').checked = false;
+  if($('welcomeBg')) $('welcomeBg').scrollTop = 0;
+  renderTabs();
+  updateButton();
+
+  /* 滚动检测 */
+  var scrollEl = $('welcomeBg');
+function checkScroll(){
+  if(!scrollEl) return;
+  var atBottom = scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 10;
+  var noScroll = scrollEl.scrollHeight <= scrollEl.clientHeight + 10;
+  if(atBottom || noScroll){
+    if(!readState[currentTab]){
+      readState[currentTab] = true;
+      renderTabs();
+      updateButton();
+    }
+  }
+}
+if(scrollEl && !scrollEl.dataset.scrollBound){
+  scrollEl.dataset.scrollBound = '1';
+  scrollEl.addEventListener('scroll', checkScroll);
+}
+setTimeout(checkScroll, 100);
+
+  /* Tab 切换 */
+  if($('welcomeTabs') && !$('welcomeTabs').dataset.bound){
+    $('welcomeTabs').dataset.bound = '1';
+    $('welcomeTabs').addEventListener('click', function(e){
+      var tab = e.target.closest('[data-wtab]');
+      if(!tab) return;
+      var which = tab.dataset.wtab;
+      currentTab = which;
+      if($('welcomeAbout')) $('welcomeAbout').style.display = (which === 'about') ? '' : 'none';
+if($('welcomePlay')) $('welcomePlay').style.display = (which === 'play') ? '' : 'none';
+if($('welcomeGuide')) $('welcomeGuide').style.display = (which === 'guide') ? '' : 'none';
+if(scrollEl) scrollEl.scrollTop = 0;
+      renderTabs();
+      updateButton();
+      setTimeout(checkScroll, 50);
+    });
+  }
+
+  /* 同意勾选 */
+  if($('welcomeAgree') && !$('welcomeAgree').dataset.bound){
+    $('welcomeAgree').dataset.bound = '1';
+    $('welcomeAgree').addEventListener('change', function(){
+      agreeState = this.checked;
+      updateButton();
+    });
+  }
+
   return true;
 }
 
 if($('welcomeBtn')){
   $('welcomeBtn').onclick = function(){
-    try{ localStorage.setItem(WELCOME_KEY, 'yes'); }catch(e){}
+    if(this.disabled) return;
+    try{
+      localStorage.setItem(WELCOME_KEY, APP_VERSION);
+      localStorage.setItem('chat_app_version_v1', APP_VERSION);
+    }catch(e){}
     $('welcomeBg').classList.remove('show');
     onAppReady();
   };
 }
 
-/* 如果已经看过公告，正常启动；没看过就先弹公告 */
+/* 是否要看公告：看过的版本号 !== 当前版本号 */
+function needsWelcome(){
+  try{ return localStorage.getItem(WELCOME_KEY) !== APP_VERSION; }catch(e){ return true; }
+}
+
 if(getLockPwd()){
   showLock();
-  var isFirst = false;
-  try{ isFirst = localStorage.getItem(WELCOME_KEY) !== 'yes'; }catch(e){ isFirst = true; }
-  if(isFirst){
+  if(needsWelcome()){
     setTimeout(showWelcomeIfFirstTime, 500);
   }
 } else {
-  var isFirst = false;
-  try{ isFirst = localStorage.getItem(WELCOME_KEY) !== 'yes'; }catch(e){ isFirst = true; }
-  if(isFirst){
+  if(needsWelcome()){
     setTimeout(showWelcomeIfFirstTime, 500);
   } else {
     setTimeout(onAppReady, 800);
@@ -8326,6 +8856,11 @@ function pickMomentSticker(fromTa){
 
 function taPostMoment(){
   var text = pickMomentText();
+  if(cards && cards.system && Array.isArray(cards.system.lifeMoments) && cards.system.lifeMoments.length > 0){
+    if(Math.random() < 0.7){
+      text = cards.system.lifeMoments[Math.floor(Math.random() * cards.system.lifeMoments.length)];
+    }
+  }
   var sticker = pickMomentSticker(true);
   if(!text && !sticker) return;
   var m = { id: uid('mo'), author: 'ta', text: text, sticker: sticker || '', time: Date.now(), likes: [], comments: [] };
@@ -8335,8 +8870,8 @@ function taPostMoment(){
   if(inMomentsPage){
     renderMoments();
   } else {
-    var preview = text || '[表情]';
-    showNotificationBanner({ type:'text', text: '发布了一条动态：' + preview, me:false });
+    try{ localStorage.setItem('chat_unread_moments_v1', '1'); }catch(e){}
+    renderHome();
   }
 }
 
@@ -8346,7 +8881,7 @@ function maybeTaAutoPost(){
   var hours = person.momentAutoPostHours || 4;
   var now = Date.now();
   if(!lastTa || (now - lastTa.time) > hours * 3600 * 1000){
-    if(Math.random() * 100 < (person.momentAutoPostChance || 70)){
+    if(Math.random() * 100 < (person.momentAutoPostChance || 50)){
       setTimeout(taPostMoment, 800 + Math.random() * 1500);
     }
   }
@@ -11352,15 +11887,19 @@ if ($('jumpBack')) {
 /* ============ 更新提示 ============ */
 (function(){
   /* ========================================================
-     📝 每次发新版，改两处就行：
-     ① 修改下面的 APP_VERSION（版本号 +1）
-     ② 往 UPDATE_LOGS 里加一条，格式见下面
+     📝 往 UPDATE_LOGS 里加一条就行，版本号改文件最上面那个
      ======================================================== */
-var APP_VERSION = '1.0.7';
 
   var UPDATE_LOGS = {
-  /* 版本号要和上面 APP_VERSION 一致，才会显示 */
-  '1.0.7': [
+/* 版本号要和上面 APP_VERSION 一致，才会显示 */
+'1.0.8': [
+  '🌱 新增「生活碎片」，TA 会在动态页发自己的生活日常',
+  '🫳 新增「触感回应」，长按聊天空白处，TA 会有反应',
+  '🤫 埋了一个小彩蛋，不告诉你在哪，自己玩着就会发现（提示：有些话，撤回也没用哦）',
+  '🎁 公告里新增了防撤回的小字提醒',
+  '🐛 修复了一些小问题'
+],
+'1.0.7': [
     '🛍️ 新增「商城」，可以买礼物送给 TA，TA 也会主动送你',
     '🎁 礼物卡片会在聊天里居中显示，自带祝福语',
     '💌 系统预设新增「礼物」分类，可自定义 TA 收礼和送礼时说的话',
@@ -11391,17 +11930,22 @@ var APP_VERSION = '1.0.7';
   };
 
   var VERSION_KEY = 'chat_app_version_v1';
-  var lastSeen = '';
-  try{ lastSeen = localStorage.getItem(VERSION_KEY) || ''; }catch(e){}
+var lastSeen = '';
+try{ lastSeen = localStorage.getItem(VERSION_KEY) || ''; }catch(e){}
 
-  /* 如果是第一次打开（没有记录过版本），直接静默记录，不弹窗 */
-  if(!lastSeen){
-    try{ localStorage.setItem(VERSION_KEY, APP_VERSION); }catch(e){}
-    return;
-  }
+/* 如果公告还没看过当前版本，就不弹更新提示（公告会承担更新说明的作用） */
+var welcomeSeen = '';
+try{ welcomeSeen = localStorage.getItem('chat_welcome_shown_v1') || ''; }catch(e){}
+if(welcomeSeen !== APP_VERSION) return;
 
-  /* 版本号一致，说明没更新，什么都不做 */
-  if(lastSeen === APP_VERSION) return;
+/* 如果是第一次打开（没有记录过版本），直接静默记录，不弹窗 */
+if(!lastSeen){
+  try{ localStorage.setItem(VERSION_KEY, APP_VERSION); }catch(e){}
+  return;
+}
+
+/* 版本号一致，说明没更新，什么都不做 */
+if(lastSeen === APP_VERSION) return;
 
   /* 版本号不一致，弹更新提示 */
   var bg = document.getElementById('updateBg');
@@ -11441,6 +11985,49 @@ bg.classList.add('show');
     };
   }
 })();
+
+/* ============ 新功能更新提示 ============ */
+// 以后有新功能，直接往这里加 { id: 'xxx', title: 'xxx', text: 'xxx' } 即可
+var FEATURE_HINTS = [
+  { 
+    id: 'longpress_modal_v1', 
+    title: '💡 小彩蛋', 
+    text: '试试长按聊天页的空白处，会有惊喜哦～' 
+  }
+];
+
+function showFeatureHint(){
+  if(!FEATURE_HINTS.length) return;
+  
+  // 找出第一个没看过的提示
+  var hint = null;
+  for(var i=0; i<FEATURE_HINTS.length; i++){
+    var h = FEATURE_HINTS[i];
+    try{
+      if(localStorage.getItem('feature_hint_' + h.id) !== 'seen'){
+        hint = h;
+        break;
+      }
+    }catch(e){ hint = h; break; }
+  }
+  
+  if(!hint) return;
+  
+  // 弹出系统弹窗
+  showDialog(hint.title, hint.text, [
+    { 
+      text: '我知道啦', 
+      primary: true, 
+      onClick: function(){
+        try{ localStorage.setItem('feature_hint_' + hint.id, 'seen'); }catch(e){}
+      }
+    }
+  ]);
+  
+  // 防止用户点外部关闭导致没记录，提前记录一下
+  try{ localStorage.setItem('feature_hint_' + hint.id, 'seen'); }catch(e){}
+}
+/* ======================================= */
 
 /* ============ 备份提醒 ============ */
 (function(){
