@@ -1842,6 +1842,14 @@ html,body{height:100%;margin:0;padding:0}
         <div class="stepper-row"><span class="stepper-label">TA 主动来电<span class="sub">TA 主动给你打电话的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaCallVal">10</span><button class="stepper-btn" data-step="taCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
         <div class="stepper-row"><span class="stepper-label">TA 拒接<span class="sub">你打过去，TA 不接的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taRejectCall" data-dir="-1">−</button><span class="stepper-value" id="stepperTaRejectCallVal">20</span><button class="stepper-btn" data-step="taRejectCall" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
         <div class="stepper-row"><span class="stepper-label">TA 中途挂断<span class="sub">接通后，TA 有事先挂的概率</span></span><div class="stepper-ctrl"><button class="stepper-btn" data-step="taHangup" data-dir="-1">−</button><span class="stepper-value" id="stepperTaHangupVal">10</span><button class="stepper-btn" data-step="taHangup" data-dir="1">+</button><span class="stepper-unit">%</span></div></div>
+<div class="color-row">
+  <span class="color-row-label">拨号铃声<span class="sub">留空则用默认拨号音（自带舒缓感）</span></span>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <button class="btn-ghost" id="callRingtoneUploadBtn" style="width:auto; padding:4px 10px; height:30px; font-size:12px;">上传音乐</button>
+    <button class="btn-ghost" id="callRingtoneClearBtn" style="width:auto; padding:4px 10px; height:30px; font-size:12px;">清除</button>
+  </div>
+</div>
+<input type="file" id="callRingtoneFile" accept="audio/*" style="display:none;">
       </div>
     </div>
 
@@ -2517,8 +2525,8 @@ html,body{height:100%;margin:0;padding:0}
 
 <!-- 👇 新增：公告大字提醒 -->
 <div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
-  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">💡 最新小彩蛋</p>
-  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">在聊天页长按空白处，TA 会有回应哦</p>
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🌟 新增字卡权重</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">去字卡库给分组调个权重，让 TA 的性格更贴合你的心意</p>
 </div>
 <!-- 👆 大字提醒结束 -->
 
@@ -2596,7 +2604,14 @@ html,body{height:100%;margin:0;padding:0}
         <p>· <strong>例子三</strong>：你在忙，只想收到短句，不想长篇大论。把"长句"或"情话"分组关掉，只留"短回复"类。</p>
         <p>这个小眼睛不是"永久删除"，只是"暂时不抽"。想恢复，再点一下就行。<strong>它让你可以随时微调 TA 的性格和状态，连接会更贴合当下的你。</strong></p>
 
-        <p class="welcome-h">隐藏机制 · 情绪兜底</p>
+        <p class="welcome-h">玩法六 · 权重（决定 TA 更爱说什么）</p>
+<p>字卡库里，大分组和小分组的名字旁边现在多了一个 <strong style="color:var(--primary);">⭐权重</strong> 按钮。</p>
+<p>点一下就可以给它打分（1~5星）。权重越高，这个分组里的字卡抽中的概率就越大。</p>
+<p>· <strong>例子一</strong>：你希望 TA 经常哄你，那就把「关心/心疼」分组设为 <strong>5星</strong>，「日常闲聊」设为 <strong>1星</strong>。TA 说话就会变成温柔黏人的风格。</p>
+<p>· <strong>例子二</strong>：今天你只想听短句，就把「长句」分组设为 <strong>1星</strong>，「短回复」设为 <strong>5星</strong>。TA 就不会长篇大论了。</p>
+<p>权重越高，TA 在这方面的特征就越明显。1星是偶尔提一嘴，5星是常挂嘴边。这是让 TA 变成“你专属的 TA”的最好办法。</p>
+
+<p class="welcome-h">隐藏机制 · 情绪兜底</p>
         <p>当你聊到"不舒服"、"生病"、"累了"、"哭了"、"难过"、"委屈"这类词时，不管关键词有没有命中，TA 都会 <strong>100% 优先</strong> 去"关心 / 心疼 / 安慰"相关的卡池里抽卡。也就是说，你难过的时候，TA 一定会先哄你。</p>
 
         <div class="welcome-note">
@@ -2739,7 +2754,7 @@ html,body{height:100%;margin:0;padding:0}
   /* ========================================================
      📝 每次发新版，只改下面这一个版本号就行
      ======================================================== */
-  var APP_VERSION = '1.0.8';
+  var APP_VERSION = '1.0.9';
 
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
@@ -2791,7 +2806,7 @@ var IDB_IMG_DB = null;
 var IDB_IMG_STORE = 'blobs';
 var imgBlobToKey = {};
 var imgKeyToBlob = {};
-var IMG_FIELDS = ['avatar','myAvatar','bgImage','homeBgImage','lockBgImage','momentsCover','topHeroImage','bigHomeImage'];
+var IMG_FIELDS = ['avatar','myAvatar','bgImage','homeBgImage','lockBgImage','momentsCover','topHeroImage','bigHomeImage','callRingtone'];
 
 function idbOpen(){
   return new Promise(function(resolve, reject){
@@ -2886,23 +2901,19 @@ function preloadAllImages(){
       var store = tx.objectStore(IDB_IMG_STORE);
       var req = store.openCursor();
       req.onsuccess = function(e){
-  var cursor = e.target.result;
-  if(cursor){
-    var key = cursor.key;
-    var blob = cursor.value;
-    var _pfx = 'p_' + window.__ACTIVE_PERSONA_ID + '__';
-    var _isMine = (typeof key === 'string' && (
-      key.indexOf(_pfx) === 0 ||
-      (window.__ACTIVE_PERSONA_ID === 'default' && key.indexOf('p_') !== 0)
-    ));
-    if(_isMine && blob instanceof Blob && !imgKeyToBlob[key]){
-      var url = URL.createObjectURL(blob);
-      imgKeyToBlob[key] = url;
-      imgBlobToKey[url] = key;
-    }
-    cursor.continue();
-  } else { resolve(); }
-};
+        var cursor = e.target.result;
+        if(cursor){
+          var key = cursor.key;
+          var blob = cursor.value;
+          /* 修复：加载所有梦角的图片，确保群聊里能显示别人的头像 */
+          if(blob instanceof Blob && !imgKeyToBlob[key]){
+            var url = URL.createObjectURL(blob);
+            imgKeyToBlob[key] = url;
+            imgBlobToKey[url] = key;
+          }
+          cursor.continue();
+        } else { resolve(); }
+      };
       req.onerror = function(e){ reject(e.target.error); };
     });
   }).catch(function(err){
@@ -3095,7 +3106,8 @@ gameInviteChance: 10,
 gameInviteCooldown: 1,
     callBg: '',
 callBgImage: '',
-callCapsuleColor: 'rgba(28,28,30,.9)'
+callCapsuleColor: 'rgba(28,28,30,.9)',
+callRingtone: ''
   };
   var stats = { affection: 0, lastChatDate: '', startDate: '' };
   var proactive = { lastOpenTime: 0, lastPeriod: '', lastProactiveTime: 0, lastChatTime: 0 };
@@ -3473,6 +3485,10 @@ function switchPersona(id){
   if(!id || id === window.__ACTIVE_PERSONA_ID){ closePersonaModal(); return; }
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
+  // 修复：切换梦角时，先强制清空内存数据，防止旧数据被带到新梦角
+  window.__ACTIVE_PERSONA_ID = id;
+  messages = [];
+  person = {};
   try{ window.__RawLS.set('chat_active_persona_v1', id); }catch(e){}
   setTimeout(function(){ location.reload(); }, 80);
 }
@@ -3488,6 +3504,10 @@ function createPersona(){
   savePersonas();
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
+  // 修复：创建新梦角时，先清空内存数据，防止旧数据被带入新梦角
+  window.__ACTIVE_PERSONA_ID = newId;
+  messages = [];
+  person = {};
   try{ window.__RawLS.set('chat_active_persona_v1', newId); }catch(e){}
   setTimeout(function(){ location.reload(); }, 80);
 }
@@ -3721,10 +3741,14 @@ if(!Array.isArray(d.system.proactive)) d.system.proactive = [];
       if(typeof b.keyword !== 'string') b.keyword = '';
       if(typeof b.enabled !== 'boolean') b.enabled = true;
       if(!Array.isArray(b.groups)){
-        var items = Array.isArray(b.items) ? b.items : [];
-        b.groups = [{ id: uid('sg'), name: '默认', items: items }];
-        delete b.items;
-      }
+  var items = Array.isArray(b.items) ? b.items : [];
+  b.groups = [{ id: uid('sg'), name: '默认', items: items }];
+  delete b.items;
+}
+if(typeof b.weight !== 'number') b.weight = 1; // 大分组权重默认 1
+b.groups.forEach(function(sg){
+  if(typeof sg.weight !== 'number') sg.weight = 1; // 小分组权重默认 1
+});
       b.groups.forEach(function(sg){
         if(!sg.id) sg.id = uid('sg');
         if(!sg.name) sg.name = '默认';
@@ -3901,13 +3925,24 @@ else if(type === 'tetris_over'){
 
 /* 通话拨号音（循环"嘟……嘟……"） */
 var dialToneTimer = null;
+var dialToneAudio = null;
 function startDialTone(){
   stopDialTone();
-  playGameSound('dial');
-  dialToneTimer = setInterval(function(){ playGameSound('dial'); }, 2200);
+  if(person.callRingtone && typeof person.callRingtone === 'string'){
+    /* 播放用户自定义的舒缓音乐 */
+    dialToneAudio = new Audio(person.callRingtone);
+    dialToneAudio.loop = true;
+    dialToneAudio.volume = 0.5;
+    dialToneAudio.play().catch(function(e){ console.warn('播放自定义铃声失败', e); });
+  } else {
+    /* 回退到默认的“嘟嘟”声 */
+    playGameSound('dial');
+    dialToneTimer = setInterval(function(){ playGameSound('dial'); }, 2200);
+  }
 }
 function stopDialTone(){
   if(dialToneTimer){ clearInterval(dialToneTimer); dialToneTimer = null; }
+  if(dialToneAudio){ dialToneAudio.pause(); dialToneAudio = null; }
 }
 
 /* 弹窗 */
@@ -4757,6 +4792,7 @@ var musicTag = m.music ? '<span class="music-tag">🎵</span>' : '';
 html += '<div class="content-title">' +
           '<span class="title-name">' + esc(big.name) + '</span>' +
           '<span class="title-actions">' +
+            '<button data-weight-big="' + big.id + '">⭐权重:' + (big.weight || 1) + '</button>' +
             '<button data-rename-big="' + big.id + '">重命名</button>' +
             '<button data-del-big="' + big.id + '">删除</button>' +
           '</span>' +
@@ -4787,8 +4823,8 @@ var sgEyeIcon = (sg.enabled === false)
   : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
 html += '<div class="subgroup-card' + (isOpen ? ' open' : '') + sgOffCls + '" data-sub="' + sg.id + '" data-big="' + big.id + '">' +
           '<div class="subgroup-head" data-toggle="' + sg.id + '">' +
-            '<span class="subgroup-name" data-rename-sub="' + sg.id + '" data-big-id="' + big.id + '">' + esc(sg.name) + '</span>' +
-            '<span class="subgroup-count">' + items.length + '</span>' +
+  '<span class="subgroup-name" data-rename-sub="' + sg.id + '" data-big-id="' + big.id + '">' + esc(sg.name) + '</span>' +
+  '<span class="subgroup-count" data-weight-sub="' + sg.id + '" data-big-id="' + big.id + '" style="cursor:pointer;background:var(--secondary);">⭐权重:' + (sg.weight || 1) + '</span>' +
             '<span class="toggle" data-toggle-sub="' + sg.id + '" data-big-id="' + big.id + '">' + sgEyeIcon + '</span>' +
             '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
           '</div>' +
@@ -5094,19 +5130,51 @@ document.addEventListener('click', function(e){
       return;
     }
 
-    var renameBig = e.target.closest('[data-rename-big]');
-    if(renameBig){
-      var rBid = renameBig.dataset.renameBig;
-      var rBig = cards.text.filter(function(b){ return b.id === rBid; })[0];
-      if(!rBig) return;
-      var newName = window.prompt('大分组新名字：', rBig.name);
-      if(newName === null) return;
-      newName = newName.trim();
-      if(!newName) return;
-      rBig.name = newName;
-      saveCards(); renderBigGroups();
-      return;
-    }
+    var weightBig = e.target.closest('[data-weight-big]');
+if(weightBig){
+  var wBid = weightBig.dataset.weightBig;
+  var wBig = cards.text.filter(function(b){ return b.id === wBid; })[0];
+  if(!wBig) return;
+  var newW = window.prompt('设置大分组权重（1~5星，数字越大抽中概率越高）：', wBig.weight || 1);
+  if(newW === null) return;
+  newW = parseInt(newW, 10);
+  if(isNaN(newW) || newW < 1) newW = 1;
+  if(newW > 5) newW = 5;
+  wBig.weight = newW;
+  saveCards(); renderBigGroups();
+  return;
+}
+
+var weightSub = e.target.closest('[data-weight-sub]');
+if(weightSub){
+  var wSid = weightSub.dataset.weightSub, wBid2 = weightSub.dataset.bigId;
+  var wBig2 = cards.text.filter(function(b){ return b.id === wBid2; })[0];
+  if(!wBig2) return;
+  var wSg = wBig2.groups.filter(function(g){ return g.id === wSid; })[0];
+  if(!wSg) return;
+  var newWS = window.prompt('设置小分组权重（1~5星，数字越大抽中概率越高）：', wSg.weight || 1);
+  if(newWS === null) return;
+  newWS = parseInt(newWS, 10);
+  if(isNaN(newWS) || newWS < 1) newWS = 1;
+  if(newWS > 5) newWS = 5;
+  wSg.weight = newWS;
+  saveCards(); renderBigGroups();
+  return;
+}
+
+var renameBig = e.target.closest('[data-rename-big]');
+if(renameBig){
+  var rBid = renameBig.dataset.renameBig;
+  var rBig = cards.text.filter(function(b){ return b.id === rBid; })[0];
+  if(!rBig) return;
+  var newName = window.prompt('大分组新名字：', rBig.name);
+  if(newName === null) return;
+  newName = newName.trim();
+  if(!newName) return;
+  rBig.name = newName;
+  saveCards(); renderBigGroups();
+  return;
+}
 
     var delBigH = e.target.closest('[data-del-big]');
     if(delBigH){
@@ -5842,21 +5910,30 @@ if($('importConfirmBtn')) $('importConfirmBtn').onclick = function(){
 
   /* 抽卡 */
   function pickFromArray(arr){ if(!arr.length) return null; return arr[Math.floor(Math.random() * arr.length)]; }
-  function allTextCards(){
-    var pool = [];
-    cards.text.forEach(function(b){
-      if(b.enabled === false) return;
-      b.groups.forEach(function(sg){
-  if(sg.enabled === false) return;
-  sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); });
-});
+function allTextCards(){
+  var pool = [];
+  cards.text.forEach(function(b){
+    if(b.enabled === false) return;
+    var bigWeight = b.weight || 1; // 大分组权重
+    b.groups.forEach(function(sg){
+      if(sg.enabled === false) return;
+      var subWeight = sg.weight || 1; // 小分组权重
+      var weight = Math.min(10, Math.max(1, bigWeight * subWeight)); // 乘法叠加，最高10倍
+      sg.items.forEach(function(it){ 
+        if(it && String(it).trim()){ 
+          var text = String(it).trim();
+          /* 权重越高，在池子里复制越多份，抽中的概率越大 */
+          for(var k=0; k<weight; k++){ pool.push(text); }
+        } 
+      });
     });
-    if(person.cardCooldown > 0 && recentCards.length){
-      var filtered = pool.filter(function(t){ return recentCards.indexOf(t) === -1; });
-      if(filtered.length > 0) pool = filtered;
-    }
-    return pool;
+  });
+  if(person.cardCooldown > 0 && recentCards.length){
+    var filtered = pool.filter(function(t){ return recentCards.indexOf(t) === -1; });
+    if(filtered.length > 0) pool = filtered;
   }
+  return pool;
+}
 
   function markRecent(txt){
     if(!txt) return;
@@ -9527,6 +9604,28 @@ if($('callBgFile')){
 if($('callBgClearBtn')) $('callBgClearBtn').onclick = function(){
   person.callBgImage = ''; person.callBg = ''; savePerson(); setCallBg(); renderHomeBeautify();
 };
+/* 拨号铃声设置事件 */
+if($('callRingtoneUploadBtn')) $('callRingtoneUploadBtn').onclick = function(){ $('callRingtoneFile').click(); };
+if($('callRingtoneFile')){
+  $('callRingtoneFile').addEventListener('change', function(){
+    var f = $('callRingtoneFile').files && $('callRingtoneFile').files[0];
+    if(!f) return;
+    var key = 'ringtone_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    saveImgToIdb(key, f).then(function(url){
+      person.callRingtone = url;
+      savePerson();
+      showDialog('铃声设置成功', '下次打电话时，就会播放你自定义的铃声啦！', [{ text:'好的', primary:true }]);
+    }).catch(function(e){
+      showDialog('上传失败', '请确保文件格式是音频，并且文件大小不要太大。', [{ text:'知道了', primary:true }]);
+    });
+    $('callRingtoneFile').value = '';
+  });
+}
+if($('callRingtoneClearBtn')) $('callRingtoneClearBtn').onclick = function(){
+  person.callRingtone = '';
+  savePerson();
+  showDialog('已清除', '恢复为默认的嘟嘟拨号音。', [{ text:'好的', primary:true }]);
+};
 
 /* 通话胶囊颜色 */
 function applyCallCapsuleColor(){
@@ -11892,6 +11991,16 @@ if ($('jumpBack')) {
 
   var UPDATE_LOGS = {
 /* 版本号要和上面 APP_VERSION 一致，才会显示 */
+'1.0.9': [
+  '⚖️ 新增「字卡权重」：大小分组都能设置 1~5 星，TA 说话侧重点由你定',
+  '🌱 新增「生活碎片」：TA 会在动态页发自己的日常碎碎念',
+  '🫳 新增「触感回应」：长按聊天空白处，TA 会回应你',
+  '🪄 新增「拨号铃声」：电话铃声可以自定义了，选一首舒缓的曲子',
+  '🤫 藏了一个小彩蛋，自己去玩着发现吧（提示：有些话撤回也没用哦）',
+  '🐛 修复了 iOS Safari 切换多梦角时数据串台的问题',
+  '🐛 修复了群聊不显示梦角头像的问题',
+  '🔧 优化了多处体验细节'
+],
 '1.0.8': [
   '🌱 新增「生活碎片」，TA 会在动态页发自己的生活日常',
   '🫳 新增「触感回应」，长按聊天空白处，TA 会有反应',
