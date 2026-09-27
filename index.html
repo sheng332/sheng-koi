@@ -160,8 +160,8 @@ html,body{height:100%;margin:0;padding:0}
   .messages::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
   .msg{display:flex;align-items:flex-start;gap:8px;max-width:100%}
   .msg.out{flex-direction:row-reverse}
-  .msg-avatar{flex:0 0 auto;width:36px;height:36px;border-radius:50%;overflow:hidden;background:#e8ecef;display:grid;place-items:center;color:#b8c0c7;background-size:cover;background-position:center}
-  .msg-avatar svg{width:20px;height:20px}
+  .msg-avatar{flex:0 0 auto;width:44px;height:44px;border-radius:50%;overflow:hidden;background:#e8ecef;display:grid;place-items:center;color:#b8c0c7;background-size:cover;background-position:center}
+.msg-avatar svg{width:24px;height:24px}
   .msg-avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .bubble-wrap{display:flex;flex-direction:column;max-width:76%;min-width:0}
   .msg.out .bubble-wrap{align-items:flex-end}
@@ -303,7 +303,7 @@ html,body{height:100%;margin:0;padding:0}
   .send-btn svg{width:18px;height:18px;margin-left:2px}
   .send-btn:disabled{opacity:.3;cursor:default}
   .send-btn:not(:disabled):active{transform:scale(.92)}
-  .sticker-panel{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--panel);border-top-left-radius:18px;border-top-right-radius:18px;box-shadow:0 -6px 24px rgba(0,0,0,.12);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1),height .2s ease;height:50vh;min-height:30vh;max-height:80vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .sticker-panel{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--panel);border-top-left-radius:18px;border-top-right-radius:18px;box-shadow:0 -6px 24px rgba(0,0,0,.12);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1),height .2s ease;height:50vh;min-height:30vh;max-height:80vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px);overflow:hidden}
 .sticker-panel.open{transform:translateY(0)}
 .sticker-panel-drag-handle{padding:8px 0 4px;display:flex;justify-content:center;cursor:grab;touch-action:none;}
 .sticker-panel-drag-handle .drag-bar{width:36px;height:4px;background:var(--accent);border-radius:2px;}
@@ -318,7 +318,8 @@ html,body{height:100%;margin:0;padding:0}
   .sticker-actions{display:flex;gap:8px;padding:0 16px 10px}
   .sticker-actions button{flex:1;height:34px;border:1px solid var(--accent);border-radius:9px;background:#fff;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;transition:background .15s ease}
   .sticker-actions button:active{background:var(--soft)}
-  .sticker-grid-scroll{flex:1;min-height:0;overflow-y:auto;padding:0 16px 16px}
+  #stabSticker, #stabPat{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.sticker-grid-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 16px 16px}
   .sticker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .sticker-cell{position:relative;aspect-ratio:1/1;border-radius:10px;background:var(--soft);overflow:hidden;cursor:pointer;transition:transform .14s ease}
   .sticker-cell:active{transform:scale(.94)}
@@ -407,9 +408,14 @@ html,body{height:100%;margin:0;padding:0}
   .subgroup-head:active{background:var(--soft)}
   .subgroup-name{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .subgroup-count{flex:0 0 auto;font-size:11.5px;color:var(--light-text);background:var(--soft);padding:1px 8px;border-radius:9px}
-  .subgroup-arrow{flex:0 0 auto;color:var(--accent);transition:transform .22s ease}
-  .subgroup-card.open .subgroup-arrow{transform:rotate(90deg)}
-  .subgroup-body{display:none;border-top:1px solid var(--line);padding:4px 0 10px;background:var(--panel)}
+.subgroup-arrow{flex:0 0 auto;color:var(--accent);transition:transform .22s ease}
+.subgroup-head .toggle{flex:0 0 auto;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--light-text);transition:background .15s ease}
+.subgroup-head .toggle:active{background:var(--soft)}
+.subgroup-head .toggle svg{width:14px;height:14px}
+.subgroup-card.off .subgroup-name{color:#c0c8cd}
+.subgroup-card.off .subgroup-count{opacity:.5}
+.subgroup-card.open .subgroup-arrow{transform:rotate(90deg)}
+.subgroup-body{display:none;border-top:1px solid var(--line);padding:4px 0 10px;background:var(--panel)}
   .subgroup-card.open .subgroup-body{display:block}
   .dict-grid{display:flex;flex-wrap:wrap;gap:8px;padding:6px 0}
   .dict-item{position:relative;padding:6px 24px 6px 12px;background:#e3ebee;border-radius:8px;font-size:14px;color:var(--text);line-height:1.3}
@@ -1012,7 +1018,60 @@ html,body{height:100%;margin:0;padding:0}
 .jump-picker-icon{flex:0 0 auto;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#e8f0f3,#d2e6ec);display:grid;place-items:center;font-size:22px}
 .jump-picker-info{flex:1;min-width:0}
 .jump-picker-name{font-size:14.5px;font-weight:600;color:var(--primary)}
-.jump-picker-desc{font-size:11.5px;color:var(--light-text);margin-top:2px}
+/* 俄罗斯方块 */
+.tetris-wrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);gap:8px}
+.tetris-board-wrap{flex:1 1 auto;min-height:0;position:relative}
+#tetrisCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:12px;box-shadow:0 8px 28px rgba(31,95,108,.15);display:block;touch-action:manipulation}
+.tetris-controls{flex:0 0 auto;display:flex;gap:8px}
+.tetris-ctrl{flex:1;height:52px;border:0;border-radius:13px;background:rgba(255,255,255,.9);color:var(--text);font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(31,95,108,.06);transition:transform .1s ease,background .15s ease;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.tetris-ctrl:active{transform:scale(.95);background:#fff}
+
+/* 商城 */
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:14px}
+.shop-card{background:#fff;border-radius:14px;padding:16px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(31,95,108,.06);cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;position:relative}
+.shop-card:active{transform:scale(.96);box-shadow:0 1px 4px rgba(31,95,108,.08)}
+.shop-card-emoji{font-size:38px;line-height:1;margin-bottom:2px}
+.shop-card-name{font-size:14px;font-weight:600;color:var(--text);text-align:center}
+.shop-card-price{font-size:13px;color:#d97757;font-weight:600}
+.shop-card-del{position:absolute;top:6px;right:6px;width:22px;height:22px;display:grid;place-items:center;border:0;border-radius:50%;background:rgba(0,0,0,.04);color:var(--light-text);cursor:pointer;font-size:14px}
+.shop-card-del:active{background:#f7eaea;color:var(--highlight)}
+.shop-add-card{background:rgba(255,255,255,.7);border:1px dashed var(--accent);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;min-height:130px;color:var(--light-text);font-size:13px;padding:16px}
+.shop-add-card:active{background:var(--soft)}
+.shop-add-card svg{width:28px;height:28px}
+.shop-empty{text-align:center;padding:60px 24px;color:var(--light-text);font-size:14px;line-height:1.8}
+.gift-record{margin:0 14px 10px;background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 8px rgba(31,95,108,.05);display:flex;gap:12px;align-items:flex-start}
+.gift-record-emoji{font-size:32px;line-height:1;flex:0 0 auto;width:48px;height:48px;display:grid;place-items:center;background:var(--soft);border-radius:12px}
+.gift-record-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.gift-record-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gift-record-name{font-size:14.5px;font-weight:600;color:var(--text)}
+.gift-record-price{font-size:13px;font-weight:600;color:#d97757}
+.gift-record-price.out{color:var(--light-text)}
+.gift-record-bless{font-size:12.5px;color:var(--light-text);line-height:1.5;word-break:break-word}
+.gift-record-time{font-size:11.5px;color:var(--light-text);margin-top:2px}
+.gift-send-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center;padding:24px}
+.gift-send-bg.open{display:flex;animation:fadeIn .18s ease}
+.gift-send-card{width:100%;max-width:340px;background:#fff;border-radius:18px;padding:22px 20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:14px}
+.gift-send-emoji{font-size:56px;line-height:1;text-align:center}
+.gift-send-title{font-size:17px;font-weight:600;color:var(--text);text-align:center}
+.gift-send-price{font-size:14px;color:#d97757;text-align:center;font-weight:600;margin-top:-8px}
+.gift-send-label{font-size:13px;color:var(--light-text);margin-bottom:4px;display:block}
+.gift-send-input{width:100%;height:42px;padding:0 12px;border:1px solid var(--accent);border-radius:10px;background:#fff;font-size:14px;font-family:inherit;color:var(--text);outline:none;box-sizing:border-box}
+.gift-send-input:focus{border-color:var(--primary)}
+.gift-send-actions{display:flex;gap:10px}
+.gift-send-btn{flex:1;height:42px;border:0;border-radius:10px;font-size:15px;font-family:inherit;font-weight:500;cursor:pointer}
+.gift-send-btn.ghost{background:var(--soft);color:var(--text)}
+.gift-send-btn.primary{background:var(--primary);color:#fff}
+.gift-send-btn:active{opacity:.82}
+.bubble.bubble-gift{background:transparent!important;padding:0}
+.gift-msg-wrap{display:flex;justify-content:center;width:100%;margin:6px 0}
+.gift-chat-card{width:auto;min-width:180px;max-width:220px;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid var(--line);text-align:center}
+.gift-chat-head{padding:8px 14px;background:linear-gradient(135deg,#fff2ea,#ffeae0);font-size:12px;color:#c47c5a;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px}
+.gift-chat-body{padding:14px 16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gift-chat-emoji{font-size:40px;line-height:1}
+.gift-chat-name{font-size:14px;font-weight:600;color:var(--text)}
+.gift-chat-bless{font-size:12px;color:var(--light-text);line-height:1.5;margin-top:2px}
+.gift-chat-foot{padding:7px 14px;background:var(--soft);font-size:11.5px;color:var(--light-text);display:flex;justify-content:space-between;gap:8px}
+.gift-chat-price{color:#d97757;font-weight:600}
 
 /* 更新提示卡片 */
 .update-bg{position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
@@ -1269,6 +1328,10 @@ html,body{height:100%;margin:0;padding:0}
       </div>
       <span class="app-label">聊天</span>
     </button>
+    <button class="app-item" data-app="group">
+      <div class="app-icon" data-icon-key="group"></div>
+      <span class="app-label">群聊</span>
+    </button>
     <button class="app-item" data-app="music">
       <div class="app-icon" data-icon-key="music"></div>
       <span class="app-label">一起听</span>
@@ -1289,9 +1352,9 @@ html,body{height:100%;margin:0;padding:0}
     <div class="app-icon" data-icon-key="game"></div>
     <span class="app-label">小游戏</span>
   </button>
-  <button class="app-item" data-app="group">
-    <div class="app-icon" data-icon-key="group"></div>
-    <span class="app-label">群聊</span>
+  <button class="app-item" data-app="shop">
+    <div class="app-icon" data-icon-key="shop"></div>
+    <span class="app-label">商城</span>
   </button>
 </div>
   <div class="big-photo-card" id="bigPhotoCard">
@@ -1997,11 +2060,13 @@ html,body{height:100%;margin:0;padding:0}
   <div class="game-card-name">跳一跳</div>
   <div class="game-card-desc">长按蓄力，跳远一点</div>
 </button>
-<div class="game-card disabled">
-  <div class="game-card-icon" style="font-size:22px;">🔒</div>
-  <div class="game-card-name">敬请期待</div>
-  <div class="game-card-desc">更多游戏开发中</div>
-</div>
+<button class="game-card" data-game="tetris">
+  <div class="game-card-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  </div>
+  <div class="game-card-name">俄罗斯方块</div>
+  <div class="game-card-desc">TA 会看着你玩</div>
+</button>
       <div class="game-card disabled">
         <div class="game-card-icon" style="font-size:22px;">🔒</div>
         <div class="game-card-name">敬请期待</div>
@@ -2117,6 +2182,32 @@ html,body{height:100%;margin:0;padding:0}
   </header>
   <div class="jump-wrap">
     <canvas id="jumpCanvas"></canvas>
+  </div>
+</section>
+
+<section class="page" id="tetrisPage">
+  <header class="page-header">
+    <button class="icon-btn" id="tetrisBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">俄罗斯方块</div>
+    <div id="tetrisScoreChip" style="padding:5px 11px;background:rgba(255,255,255,.75);border-radius:10px;color:var(--light-text);font-size:11.5px;box-shadow:0 2px 8px rgba(31,95,108,.04);white-space:nowrap;margin-right:8px;">0 分</div>
+  </header>
+  <div class="tetris-wrap">
+    <div class="gomoku-ta-row">
+      <div class="gomoku-ta-avatar" id="tetrisTaAvatar"></div>
+      <div class="gomoku-ta-bubble" id="tetrisTaBubble">加油！我在这里看着你～</div>
+    </div>
+    <div class="tetris-board-wrap">
+      <canvas id="tetrisCanvas"></canvas>
+    </div>
+    <div class="tetris-controls">
+      <button class="tetris-ctrl" id="tetrisLeftBtn" aria-label="左"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="tetris-ctrl" id="tetrisRotateBtn" aria-label="旋转"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></button>
+      <button class="tetris-ctrl" id="tetrisDownBtn" aria-label="下"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <button class="tetris-ctrl" id="tetrisRightBtn" aria-label="右"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div style="padding:0 4px;">
+      <button class="gomoku-ctrl" id="tetrisDropBtn" style="width:100%;">硬降 ⬇</button>
+    </div>
   </div>
 </section>
 
@@ -2296,6 +2387,23 @@ html,body{height:100%;margin:0;padding:0}
   </form>
 </section>
 
+<section class="page" id="shopPage">
+  <header class="page-header">
+    <button class="icon-btn" id="shopBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">商城</div>
+    <button class="icon-btn" id="shopBalanceBtn" aria-label="余额" style="width:auto;padding:0 12px;font-size:13px;color:var(--primary);font-weight:600;">¥520</button>
+  </header>
+  <div class="lib-tabs" id="shopTabs">
+    <button class="lib-tab active" data-shoptab="shop">商城</button>
+    <button class="lib-tab" data-shoptab="sent">我送出去</button>
+    <button class="lib-tab" data-shoptab="received">TA 送我</button>
+  </div>
+  <div class="page-body" style="padding:0;">
+    <div id="shopListView"></div>
+    <div id="giftSentView" style="display:none;"></div>
+    <div id="giftReceivedView" style="display:none;"></div>
+  </div>
+</section>
 <section class="page" id="backupPage">
   <header class="page-header"><button class="icon-btn" id="backupBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="page-title">聊天记录备份</div></header>
   <div class="page-body">
@@ -2452,6 +2560,19 @@ html,body{height:100%;margin:0;padding:0}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
       新建梦角
     </button>
+  </div>
+</div>
+<div class="gift-send-bg" id="giftSendBg">
+  <div class="gift-send-card">
+    <div class="gift-send-emoji" id="giftSendEmoji">🎁</div>
+    <div class="gift-send-title" id="giftSendName">礼物</div>
+    <div class="gift-send-price" id="giftSendPrice">¥0.00</div>
+    <label class="gift-send-label">祝福语（可留空，用礼物自带）</label>
+    <input type="text" class="gift-send-input" id="giftSendBlessInput" maxlength="40" placeholder="写一句想说的话…">
+    <div class="gift-send-actions">
+      <button class="gift-send-btn ghost" id="giftSendCancel">取消</button>
+      <button class="gift-send-btn primary" id="giftSendConfirm">送出</button>
+    </div>
   </div>
 </div>
 <div class="dialog-bg" id="dialogBg">
@@ -2701,6 +2822,8 @@ function compressImage(file, maxSize, callback, quality){
 var WALLET_TA_KEY = 'chat_wallet_ta_v1';
 var MUSIC_KEY = 'chat_music_v1';
 var MOMENTS_KEY = 'chat_moments_v1';
+var GIFTS_KEY = 'chat_gifts_v1';
+var GIFT_RECORDS_KEY = 'chat_gift_records_v1';
 
   var DEFAULT_AVATAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>';
 
@@ -2932,36 +3055,8 @@ function loadPerson(){
           }
         });
         
-        // 单独恢复App图标，避免白块
-        if(d.appIcons && typeof d.appIcons === 'object'){
-          person.appIcons = {};
-          for(var ik in d.appIcons){
-            var v = d.appIcons[ik];
-            if(typeof v !== 'string' || !v){ person.appIcons[ik] = ''; continue; }
-            
-            // 👈 新增：如果发现是失效的 blob 链接，直接清空，恢复默认图标
-            if(v.indexOf('blob:') === 0 && !imgBlobToKey[v]){
-              person.appIcons[ik] = '';
-              continue;
-            }
-
-            var key = idbMarkerToKey(v);
-            if(key){
-              person.appIcons[ik] = imgKeyToBlob[key] || '';
-            } else if(v.indexOf('data:image') === 0){
-  person.appIcons[ik] = v;
-  (function(k){
-    saveImgToIdb('appicon_' + k, v).then(function(url){
-      person.appIcons[k] = url;
-      savePerson();
-      renderAppIcons();
-    });
-  })(ik);
-} else {
-              person.appIcons[ik] = v;
-            }
-          }
-        }
+// 【临时】强制清空所有自定义图标，恢复默认 SVG
+person.appIcons = {};
       }
     }
   }catch(e){}
@@ -2988,7 +3083,19 @@ function loadPerson(){
   function loadMessages(){
   try{
     var raw = localStorage.getItem(MSG_KEY);
-    if(raw){ var d = JSON.parse(raw); if(Array.isArray(d)) messages = d.filter(function(m){ return m && (typeof m.text === 'string' || m.type); }); }
+    if(raw){
+      var d = JSON.parse(raw);
+      if(Array.isArray(d)){
+        messages = d.filter(function(m){ return m && (typeof m.text === 'string' || m.type); });
+        messages.forEach(function(m){
+          if(m && m.type === 'sticker' && typeof m.text === 'string' && m.text){
+            var k = idbMarkerToKey(m.text);
+            if(k){ m.text = imgKeyToBlob[k] || ''; }
+            else if(m.text.indexOf('blob:') === 0 && !imgBlobToKey[m.text]){ m.text = ''; }
+          }
+        });
+      }
+    }
   }catch(e){}
 }
 function loadLetters(){
@@ -3310,6 +3417,8 @@ system: {
         love: DEFAULT_LOVES.slice(),
         redpacket: DEFAULT_RP_REPLIES.slice(),
         readback: DEFAULT_READ_BACK_REPLIES.slice(),
+        giftThanks: ['谢谢宝宝！好喜欢～', '哇，你怎么知道我想要这个！', '收到了，抱抱你～', '好开心，谢谢你'],
+        giftNote: ['路过看到，觉得你会喜欢。', '给你的，别嫌弃呀。', '想你了，送个小东西。', '这个给你，收好啦。'],
 rejectListen: DEFAULT_REJECT_LISTEN_REPLIES.slice(),
 rejectedByMe: DEFAULT_REJECTED_BY_ME_REPLIES.slice(),
 callReject: ['现在有点忙，晚点再打给你', '在忙，等我一下', '现在不太方便，稍后回你'],
@@ -3354,7 +3463,8 @@ if(!Array.isArray(d.system.callReject) || d.system.callReject.length === 0) d.sy
 if(!Array.isArray(d.system.callRejectedByMe) || d.system.callRejectedByMe.length === 0) d.system.callRejectedByMe = ['好吧，那下次再打给你', '那我等你', '嗯…那我先挂了'];
     if(!Array.isArray(d.system.quitGame) || d.system.quitGame.length === 0) d.system.quitGame = ['怎么下到一半就跑啦？', '诶？人呢…', '好吧，那我自己练练。', '哼，下次要陪我下完哦。'];
 if(!Array.isArray(d.system.waitForYou) || d.system.waitForYou.length === 0) d.system.waitForYou = ['宝宝，你怎么还没来找我', '你怎么还不出现呀', '宝宝，不要玩手机啦！快来陪陪我', '你再不来我就生气了哦', '好想你，快点回来嘛', '喂，你在忙吗？想你了', '我在这里等你哦', '忙完了记得找我', '刚刚一直在想你', '再不回来我就自己玩啦'];
-if(!Array.isArray(d.system.rpThanks) || d.system.rpThanks.length === 0) d.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
+if(!Array.isArray(d.system.giftThanks) || d.system.giftThanks.length === 0) d.system.giftThanks = ['谢谢宝宝！好喜欢～', '哇，你怎么知道我想要这个！', '收到了，抱抱你～', '好开心，谢谢你'];
+if(!Array.isArray(d.system.giftNote) || d.system.giftNote.length === 0) d.system.giftNote = ['路过看到，觉得你会喜欢。', '给你的，别嫌弃呀。', '想你了，送个小东西。', '这个给你，收好啦。'];
     if(!Array.isArray(d.system.mood)) d.system.mood = DEFAULT_MOODS.slice();
     if(!Array.isArray(d.system.rejectGame) || d.system.rejectGame.length === 0) d.system.rejectGame = ['下次再玩吧～', '现在有点忙，回头陪你玩。', '这局先不玩啦，改天～', '嗯…今天不太想玩，抱抱。'];
     if(!Array.isArray(d.system.rejectedGame) || d.system.rejectedGame.length === 0) d.system.rejectedGame = ['好吧，那下次再一起玩。', '那我等你，随时都可以。', '没关系，等你想玩了再找我。', '嗯…那我先自己练练。'];
@@ -3378,6 +3488,7 @@ if(!Array.isArray(d.system.proactive)) d.system.proactive = [];
         if(!sg.name) sg.name = '默认';
         if(!Array.isArray(sg.items)) sg.items = [];
 if(typeof sg.keyword !== 'string') sg.keyword = '';
+        if(typeof sg.enabled !== 'boolean') sg.enabled = true;
         sg.items = sg.items.filter(function(s){ return typeof s === 'string' && s.trim(); });
       });
     });
@@ -3481,7 +3592,83 @@ function playDing(){
   }catch(e){}
 }
 
-  /* 弹窗 */
+  /* 游戏音效（独立于消息提示音） */
+  var gameAudioCtx = null;
+  function playGameSound(type){
+    try{
+      if(!gameAudioCtx){ var AC2 = window.AudioContext || window.webkitAudioContext; if(!AC2) return; gameAudioCtx = new AC2(); }
+      var doPlay = function(){
+        var now = gameAudioCtx.currentTime;
+        function beep(freq, start, dur, waveType, vol, freqEnd){
+          var osc = gameAudioCtx.createOscillator();
+          var g = gameAudioCtx.createGain();
+          osc.type = waveType || 'sine';
+          osc.frequency.setValueAtTime(freq, now + start);
+          if(freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, now + start + dur);
+          g.gain.setValueAtTime(0.0001, now + start);
+          g.gain.exponentialRampToValueAtTime(vol || 0.5, now + start + 0.006);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + start + dur);
+          osc.connect(g); g.connect(gameAudioCtx.destination);
+          osc.start(now + start); osc.stop(now + start + dur + 0.05);
+        }
+        if(type === 'place'){
+  /* 五子棋落子：短促的"嗒" */
+  beep(1100, 0, 0.06, 'triangle', 0.5, 520);
+  beep(1800, 0, 0.04, 'sine', 0.22, 900);
+}
+else if(type === 'jump'){
+  /* 跳一跳起跳："咻" */
+  beep(700, 0, 0.12, 'sine', 0.35, 1400);
+}
+else if(type === 'land'){
+  /* 跳一跳落地："哒" */
+  beep(420, 0, 0.08, 'triangle', 0.45, 260);
+  beep(900, 0, 0.05, 'sine', 0.2, 500);
+}
+else if(type === 'fall'){
+  /* 掉坑："呜" */
+  beep(600, 0, 0.35, 'sine', 0.4, 180);
+}
+else if(type === 'dial'){
+  /* 拨号音："嘟"（单声，循环由外面控制） */
+  beep(440, 0, 0.55, 'sine', 0.28);
+}
+else if(type === 'tetris_move'){
+  /* 俄罗斯方块移动/旋转："嘟"轻响 */
+  beep(880, 0, 0.03, 'square', 0.2, 700);
+}
+else if(type === 'tetris_clear'){
+  /* 俄罗斯方块消行：清脆的"叮叮叮" */
+  beep(1760, 0, 0.1, 'sine', 0.45, 1500);
+  beep(2200, 0.08, 0.14, 'sine', 0.4, 1900);
+  beep(2640, 0.16, 0.16, 'sine', 0.3, 2300);
+}
+else if(type === 'tetris_over'){
+  /* 游戏结束：下行音 */
+  beep(500, 0, 0.3, 'triangle', 0.4, 200);
+  beep(300, 0.2, 0.4, 'triangle', 0.35, 120);
+}
+      };
+      if(gameAudioCtx.state === 'suspended'){
+      gameAudioCtx.resume().then(doPlay).catch(function(e){});
+    } else {
+      doPlay();
+    }
+  }catch(e){}
+}
+
+/* 通话拨号音（循环"嘟……嘟……"） */
+var dialToneTimer = null;
+function startDialTone(){
+  stopDialTone();
+  playGameSound('dial');
+  dialToneTimer = setInterval(function(){ playGameSound('dial'); }, 2200);
+}
+function stopDialTone(){
+  if(dialToneTimer){ clearInterval(dialToneTimer); dialToneTimer = null; }
+}
+
+/* 弹窗 */
   function showDialog(title, body, buttons, isHtml){
   $('dialogTitle').textContent = title;
   if(isHtml){ $('dialogBody').innerHTML = body; }
@@ -3505,12 +3692,13 @@ function playDing(){
 
     var avatarHTML = person.avatar ? '<img src="' + person.avatar + '" alt="">' : DEFAULT_AVATAR_SVG;
     var preview = '';
-    if(m.type === 'text') preview = esc(m.text);
-    else if(m.type === 'emoji') preview = esc(m.text);
-    else if(m.type === 'sticker') preview = '[表情]';
-    else if(m.type === 'voice') preview = '[语音]';
-    else if(m.type === 'redpacket') preview = '[红包]';
-    else preview = '发来一条消息';
+if(m.type === 'text') preview = esc(m.text);
+else if(m.type === 'emoji') preview = esc(m.text);
+else if(m.type === 'sticker') preview = '[表情]';
+else if(m.type === 'voice') preview = '[语音]';
+else if(m.type === 'redpacket') preview = '[红包]';
+else if(m.type === 'sys') preview = esc(m.text);
+else preview = '发来一条消息';
 
     var badgeHTML = '';
     if(banner.classList.contains('show')){
@@ -3590,8 +3778,9 @@ function getMoodPool(){
     if(b.enabled === false) return;
     var bigMatch = kws.some(function(kw){ return b.name.indexOf(kw) > -1; });
     b.groups.forEach(function(sg){
-      var subMatch = kws.some(function(kw){ return sg.name.indexOf(kw) > -1; });
-      if(bigMatch || subMatch){
+  if(sg.enabled === false) return;
+  var subMatch = kws.some(function(kw){ return sg.name.indexOf(kw) > -1; });
+  if(bigMatch || subMatch){
         sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); });
       }
     });
@@ -3645,40 +3834,14 @@ function renderAppIcons(){
     cards:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h4"/></svg>',
     settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
     game:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',
-  group:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+  group:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8c-2-3-6-3-6-1 0 1.5 2 2 6 1z"/><path d="M12 8c2-3 6-3 6-1 0 1.5-2 2-6 1z"/></svg>'
 };
-  var icons = person.appIcons || {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-icon-key]'), function(el){
     var key = el.dataset.iconKey;
     var isChat = (key === 'chat');
-    var customSrc = icons[key];
     var defaultHTML = (isChat ? '<span class="app-badge" id="chatBadge" style="display:none;">0</span>' : '') + (iconSVGs[key] || '');
-    if(customSrc && typeof customSrc === 'string' && customSrc.trim()){
-      el.innerHTML = '';
-      var img = document.createElement('img');
-      img.src = customSrc;
-      img.alt = '';
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;';
-      img.onerror = function(){
-        el.innerHTML = defaultHTML;
-        var cb = el.querySelector('#chatBadge');
-        if(cb && unreadCount > 0){
-          cb.textContent = unreadCount > 99 ? '99+' : unreadCount;
-          cb.style.display = 'grid';
-        }
-      };
-      el.appendChild(img);
-      if(isChat){
-        var b = document.createElement('span');
-        b.className = 'app-badge';
-        b.id = 'chatBadge';
-        b.style.display = 'none';
-        b.textContent = '0';
-        el.appendChild(b);
-      }
-    } else {
-      el.innerHTML = defaultHTML;
-    }
+    el.innerHTML = defaultHTML;
   });
   var cb = $('chatBadge');
   if(cb){
@@ -4060,6 +4223,26 @@ if(m.type === 'redpacket'){
 }
 if(m.type === 'sticker') return '<div class="bubble bubble-sticker">' + quoteHTML + '<img src="' + esc(m.text) + '" alt="表情"></div>';
     if(m.type === 'emoji') return '<div class="bubble bubble-emoji">' + quoteHTML + esc(m.text) + '</div>';
+    if(m.type === 'quiz'){
+  var qs = m.questions || [];
+  var bodyHTML = '';
+  qs.forEach(function(q, i) {
+    var prefix = qs.length > 1 ? '<span class="quiz-q-num">第 ' + (i + 1) + ' 题</span> ' : '';
+    bodyHTML += '<div class="quiz-q">' + prefix + esc(q.q) + '</div>';
+    if(q.status === 'answered') {
+      bodyHTML += '<div class="quiz-status done">✓ TA选择了：' + esc(q.answer) + '</div>';
+    } else {
+      bodyHTML += '<div class="quiz-status pending">TA正在选择中...</div>';
+    }
+    if(i < qs.length - 1) bodyHTML += '<div class="quiz-divider"></div>';
+  });
+  return '<div class="quiz-msg-wrap">' +
+           '<div class="quiz-card">' +
+             '<div class="quiz-card-head">📋 ' + (m.isBatch ? '批量提问' : '提问') + '</div>' +
+             bodyHTML +
+           '</div>' +
+         '</div>';
+}
     return '<div class="bubble style-' + style + '">' + quoteHTML + esc(m.text) + '</div>';
   }
   function buildMsgHTML(m){
@@ -4157,6 +4340,22 @@ if(m.type === 'quiz'){
              bodyHTML +
            '</div>' +
          '</div>';
+}
+if(m.type === 'gift'){
+  var giftHeadText = m.me ? ('送给 ' + esc(person.name || 'TA')) : ('来自 ' + esc(person.name || 'TA'));
+  return '<div class="gift-msg-wrap">' +
+    '<div class="gift-chat-card">' +
+      '<div class="gift-chat-head">🎁 ' + giftHeadText + '</div>' +
+      '<div class="gift-chat-body">' +
+        '<div class="gift-chat-emoji">' + esc(m.emoji || '🎁') + '</div>' +
+        '<div class="gift-chat-name">' + esc(m.name || '礼物') + '</div>' +
+        (m.bless ? '<div class="gift-chat-bless">' + esc(m.bless) + '</div>' : '') +
+      '</div>' +
+      '<div class="gift-chat-foot"><span>' + formatTime(m.time) + '</span>' +
+        (m.me ? '<span class="gift-chat-price">-¥' + fmtMoney(m.price || 0) + '</span>' : '<span></span>') +
+      '</div>' +
+    '</div>' +
+  '</div>';
 }
 var musicTag = m.music ? '<span class="music-tag">🎵</span>' : '';
   var meta;
@@ -4319,12 +4518,17 @@ if(!big.groups.length){
     });
     if(kw && items.length === 0 && sg.name.toLowerCase().indexOf(kw) === -1) return;
     var isOpen = kw ? true : !!openIds[sg.id];
-    html += '<div class="subgroup-card' + (isOpen ? ' open' : '') + '" data-sub="' + sg.id + '" data-big="' + big.id + '">' +
-              '<div class="subgroup-head" data-toggle="' + sg.id + '">' +
-                '<span class="subgroup-name" data-rename-sub="' + sg.id + '" data-big-id="' + big.id + '">' + esc(sg.name) + '</span>' +
-                '<span class="subgroup-count">' + items.length + '</span>' +
-                '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
-              '</div>' +
+    var sgOffCls = (sg.enabled === false) ? ' off' : '';
+var sgEyeIcon = (sg.enabled === false)
+  ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>'
+  : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+html += '<div class="subgroup-card' + (isOpen ? ' open' : '') + sgOffCls + '" data-sub="' + sg.id + '" data-big="' + big.id + '">' +
+          '<div class="subgroup-head" data-toggle="' + sg.id + '">' +
+            '<span class="subgroup-name" data-rename-sub="' + sg.id + '" data-big-id="' + big.id + '">' + esc(sg.name) + '</span>' +
+            '<span class="subgroup-count">' + items.length + '</span>' +
+            '<span class="toggle" data-toggle-sub="' + sg.id + '" data-big-id="' + big.id + '">' + sgEyeIcon + '</span>' +
+            '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
+          '</div>' +
               '<div class="subgroup-body">' +
                 // 关键词输入框放这里
                 '<div style="display:flex;align-items:center;gap:8px;padding:10px 14px 4px;border-bottom:1px dashed var(--line);">' +
@@ -4411,9 +4615,15 @@ content.innerHTML = html;
   else box.innerHTML = html;
 }
   function renderSystemView(){
-  var v = $('viewSystem');
-  if(!v) return;
-  v.style.display = '';
+var v = $('viewSystem');
+if(!v) return;
+v.style.display = '';
+
+/* 记录当前打开的分类和子分组 */
+var openCats = {};
+var openSubs = {};
+Array.prototype.forEach.call(v.querySelectorAll('.syscat-card.open'), function(el, i){ openCats[i] = true; });
+Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card.open'), function(el, i){ openSubs[i] = true; });
   if(!Array.isArray(cards.system.redpacket) || !cards.system.redpacket.length) cards.system.redpacket = DEFAULT_RP_REPLIES.slice();
   if(!Array.isArray(cards.system.rpThanks) || !cards.system.rpThanks.length) cards.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
   if(!Array.isArray(cards.system.mood)) cards.system.mood = DEFAULT_MOODS.slice();
@@ -4525,24 +4735,50 @@ html += cat('🎮', '游戏', 5,
   sub('quitGame', '中途退出', cards.system.quitGame, 'data-quit-game-del', 'data-add-quit-game', '添加一句「你怎么跑了」的话', '你下到一半点退出时，TA 会从这抽一句话。')
 );
 
-  v.innerHTML = html;
+// 🎁 礼物
+html += cat('🎁', '礼物', 2,
+  sub('giftThanks', '礼物致谢', cards.system.giftThanks, 'data-gift-thanks-del', 'data-add-gift-thanks', '添加一句收礼后的话', '你送 TA 礼物之后，TA 会从这抽一句话回你。') +
+  sub('giftNote', 'TA 送礼附言', cards.system.giftNote, 'data-gift-note-del', 'data-add-gift-note', '添加一句送礼时说的话', 'TA 主动送你礼物时，会在礼物卡片之后补上一句话。')
+);
+
+    v.innerHTML = html;
+
+  /* 恢复打开状态 */
+  Array.prototype.forEach.call(v.querySelectorAll('.syscat-card'), function(el, i){ if(openCats[i]) el.classList.add('open'); });
+  Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card'), function(el, i){ if(openSubs[i]) el.classList.add('open'); });
 }
 
   /* 字卡库事件委托 */
-  document.addEventListener('click', function(e){
-    var toggleBtn = e.target.closest('[data-toggle-group]');
-    if(toggleBtn){
-      e.stopPropagation();
-      var tId = toggleBtn.dataset.toggleGroup;
-      var tBig = cards.text.filter(function(b){ return b.id === tId; })[0];
-      if(tBig){
-        tBig.enabled = (tBig.enabled === false) ? true : false;
+document.addEventListener('click', function(e){
+  var toggleBtn = e.target.closest('[data-toggle-group]');
+  if(toggleBtn){
+    e.stopPropagation();
+    var tId = toggleBtn.dataset.toggleGroup;
+    var tBig = cards.text.filter(function(b){ return b.id === tId; })[0];
+    if(tBig){
+      tBig.enabled = (tBig.enabled === false) ? true : false;
+      saveCards(); renderBigGroups();
+    }
+    return;
+  }
+
+  var subToggleBtn = e.target.closest('[data-toggle-sub]');
+  if(subToggleBtn){
+    e.stopPropagation();
+    var tsId = subToggleBtn.dataset.toggleSub;
+    var tsBid = subToggleBtn.dataset.bigId;
+    var tsBig = cards.text.filter(function(b){ return b.id === tsBid; })[0];
+    if(tsBig){
+      var tsSg = tsBig.groups.filter(function(g){ return g.id === tsId; })[0];
+      if(tsSg){
+        tsSg.enabled = (tsSg.enabled === false) ? true : false;
         saveCards(); renderBigGroups();
       }
-      return;
     }
+    return;
+  }
 
-    var drawerBtn = e.target.closest('.drawer-item[data-big]');
+  var drawerBtn = e.target.closest('.drawer-item[data-big]');
     if(drawerBtn){
       var did = drawerBtn.dataset.big;
       if(did && cards.text.some(function(b){ return b.id === did; })){
@@ -4754,14 +4990,30 @@ var sysToggle = e.target.closest('[data-sys-toggle]');
     if(emoDel){ var emi = parseInt(emoDel.dataset.emoticonDel, 10); cards.emoticon.splice(emi, 1); saveCards(); renderEmoticonGrid(); return; }
     var loveDel = e.target.closest('[data-love-del]');
     if(loveDel){ var li = parseInt(loveDel.dataset.loveDel, 10); cards.system.love.splice(li, 1); saveCards(); renderSystemView(); return; }
-    var rpDel = e.target.closest('[data-rp-del]');
-    if(rpDel){
-      var ri = parseInt(rpDel.dataset.rpDel, 10);
-      if(!Array.isArray(cards.system.redpacket)) cards.system.redpacket = [];
-      cards.system.redpacket.splice(ri, 1);
-      saveCards(); renderSystemView();
-      return;
-    }
+    var rpThanksDel = e.target.closest('[data-rp-thanks-del]');
+if(rpThanksDel){
+  var rti = parseInt(rpThanksDel.dataset.rpThanksDel, 10);
+  if(!Array.isArray(cards.system.rpThanks)) cards.system.rpThanks = [];
+  cards.system.rpThanks.splice(rti, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+    var giftThanksDel = e.target.closest('[data-gift-thanks-del]');
+if(giftThanksDel){
+  var gti = parseInt(giftThanksDel.dataset.giftThanksDel, 10);
+  if(!Array.isArray(cards.system.giftThanks)) cards.system.giftThanks = [];
+  cards.system.giftThanks.splice(gti, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+    var giftNoteDel = e.target.closest('[data-gift-note-del]');
+if(giftNoteDel){
+  var gni = parseInt(giftNoteDel.dataset.giftNoteDel, 10);
+  if(!Array.isArray(cards.system.giftNote)) cards.system.giftNote = [];
+  cards.system.giftNote.splice(gni, 1);
+  saveCards(); renderSystemView();
+  return;
+}
     var rlDel = e.target.closest('[data-reject-listen-del]');
 if(rlDel){
   var rli = parseInt(rlDel.dataset.rejectListenDel, 10);
@@ -4882,6 +5134,36 @@ if(dictDel){
       saveCards(); renderSystemView();
       return;
     }
+    if(f.matches('[data-add-rp-thanks]')){
+  e.preventDefault();
+  var inpRt = f.querySelector('input');
+  var valRt = inpRt.value.trim();
+  if(!valRt) return;
+  if(!Array.isArray(cards.system.rpThanks)) cards.system.rpThanks = [];
+  cards.system.rpThanks.push(valRt);
+  saveCards(); renderSystemView();
+  return;
+}
+    if(f.matches('[data-add-gift-thanks]')){
+  e.preventDefault();
+  var inpGt = f.querySelector('input');
+  var valGt = inpGt.value.trim();
+  if(!valGt) return;
+  if(!Array.isArray(cards.system.giftThanks)) cards.system.giftThanks = [];
+  cards.system.giftThanks.push(valGt);
+  saveCards(); renderSystemView();
+  return;
+}
+    if(f.matches('[data-add-gift-note]')){
+  e.preventDefault();
+  var inpGn = f.querySelector('input');
+  var valGn = inpGn.value.trim();
+  if(!valGn) return;
+  if(!Array.isArray(cards.system.giftNote)) cards.system.giftNote = [];
+  cards.system.giftNote.push(valGn);
+  saveCards(); renderSystemView();
+  return;
+}
     if(f.matches('[data-add-reject-listen]')){
   e.preventDefault();
   var inpRl = f.querySelector('input');
@@ -5227,7 +5509,10 @@ if($('importConfirmBtn')) $('importConfirmBtn').onclick = function(){
     var pool = [];
     cards.text.forEach(function(b){
       if(b.enabled === false) return;
-      b.groups.forEach(function(sg){ sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); }); });
+      b.groups.forEach(function(sg){
+  if(sg.enabled === false) return;
+  sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); });
+});
     });
     if(person.cardCooldown > 0 && recentCards.length){
       var filtered = pool.filter(function(t){ return recentCards.indexOf(t) === -1; });
@@ -5261,7 +5546,8 @@ if($('importConfirmBtn')) $('importConfirmBtn').onclick = function(){
     if(b.enabled === false) return;
     // 先看小分组（优先级更高，命中更精准）
     b.groups.forEach(function(sg){
-      if(!sg.keyword) return;
+  if(sg.enabled === false) return;
+  if(!sg.keyword) return;
       var kws = sg.keyword.split(/[,，]/).map(function(s){ return s.trim(); }).filter(Boolean);
       var ml = 0;
       kws.forEach(function(kw){ if(kw && lastUser.indexOf(kw) > -1 && kw.length > ml) ml = kw.length; });
@@ -5278,7 +5564,10 @@ if($('importConfirmBtn')) $('importConfirmBtn').onclick = function(){
       if(ml2 > 0 && ml2 > bestLen){
         bestLen = ml2;
         var pool2 = [];
-        b.groups.forEach(function(sg){ sg.items.forEach(function(it){ if(it && String(it).trim()) pool2.push(String(it).trim()); }); });
+b.groups.forEach(function(sg){
+  if(sg.enabled === false) return;
+  sg.items.forEach(function(it){ if(it && String(it).trim()) pool2.push(String(it).trim()); });
+});
         bestPool = pool2;
       }
     }
@@ -5379,8 +5668,9 @@ function makeOneReply(forceCare){
     // 检查大分组名字
     var bigHasCare = (b.name.indexOf('关心') > -1 || b.name.indexOf('安慰') > -1 || b.name.indexOf('心疼') > -1);
     b.groups.forEach(function(sg){ 
-      // 检查小分组名字
-      var subHasCare = (sg.name.indexOf('关心') > -1 || sg.name.indexOf('安慰') > -1 || sg.name.indexOf('心疼') > -1);
+  if(sg.enabled === false) return;
+  // 检查小分组名字
+  var subHasCare = (sg.name.indexOf('关心') > -1 || sg.name.indexOf('安慰') > -1 || sg.name.indexOf('心疼') > -1);
       // 只要大分组或小分组其中一个是，就抽这个里面的字卡
       if(bigHasCare || subHasCare) {
         sg.items.forEach(function(it){ if(it && String(it).trim()) carePool.push(String(it).trim()); }); 
@@ -5506,6 +5796,7 @@ function sendMyLetter(text){
   }, delayMs);
 }
 
+var replyToLetterId = null;
 function openLetterModal(letterId){
   var l = letters.filter(function(x){ return x.id === letterId; })[0]; 
   if(!l) return;
@@ -5513,7 +5804,7 @@ function openLetterModal(letterId){
   var titleText = l.me ? '你寄出的信' : ('来自 ' + (person.name || 'TA') + ' 的信');
   var bodyHTML = '<div style="text-align:left;font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;max-height:300px;overflow-y:auto;padding:4px;">' + esc(l.text) + '</div>';
   var buttons = l.me ? [{ text:'关闭', primary:true }] : [
-    { text:'提笔回信', primary:true, onClick:function(){ mailTab = 'write'; renderMailbox(); $('mailboxPage').classList.add('open'); } }, 
+    { text:'提笔回信', primary:true, onClick:function(){ replyToLetterId = l.id; mailTab = 'write'; renderMailbox(); $('mailboxPage').classList.add('open'); } }, 
     { text:'关闭' }
   ];
   showDialog(titleText, bodyHTML, buttons, true);
@@ -5528,14 +5819,19 @@ function renderMailbox(){
   $('mailSettings').style.display = (mailTab === 'settings') ? '' : 'none';
   
   if(mailTab === 'inbox'){
-    var inbox = letters.filter(function(l){ return !l.me; }).slice().reverse();
-    $('mailInbox').innerHTML = inbox.length ? inbox.map(function(l){ 
-      return '<div class="letter-card" data-letter-id="' + l.id + '" style="width:100%;margin-bottom:10px;">' +
-        '<div class="letter-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' + (l.read ? '来自 ' + esc(person.name || 'TA') : '新来信 · ' + esc(person.name || 'TA')) + '</div>' +
-        '<div class="letter-body">' + esc(l.text) + '</div>' +
-        '<div class="letter-status"><span>' + (l.read ? '已读' : '未读') + '</span><span>' + formatTime(l.time) + '</span></div></div>'; 
-    }).join('') : '<div class="lib-empty">还没有收到信。</div>';
-  } else if(mailTab === 'outbox'){
+  var inbox = letters.filter(function(l){ return !l.me; }).slice().reverse();
+  $('mailInbox').innerHTML = inbox.length ? inbox.map(function(l){ 
+    var status;
+    if(l.replied) status = '已回复';
+    else if(l.read) status = '已读';
+    else status = '未读';
+    var headText = l.read ? ('来自 ' + esc(person.name || 'TA')) : ('新来信 · ' + esc(person.name || 'TA'));
+    return '<div class="letter-card" data-letter-id="' + l.id + '" style="width:100%;margin-bottom:10px;">' +
+      '<div class="letter-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>' + headText + '</div>' +
+      '<div class="letter-body">' + esc(l.text) + '</div>' +
+      '<div class="letter-status"><span>' + status + '</span><span>' + formatTime(l.time) + '</span></div></div>'; 
+  }).join('') : '<div class="lib-empty">还没有收到信。</div>';
+} else if(mailTab === 'outbox'){
     var outbox = letters.filter(function(l){ return l.me; }).slice().reverse();
     $('mailOutbox').innerHTML = outbox.length ? outbox.map(function(l){ 
       return '<div class="letter-card" data-letter-id="' + l.id + '" style="width:100%;margin-bottom:10px;">' +
@@ -5595,6 +5891,8 @@ if(Math.random() * 100 < (person.letterChance || 10)){
 if(Math.random() * 100 < (person.gameInviteChance || 10)){
   setTimeout(function(){ taSendGameInvite(); }, 1200 + Math.random() * 1200);
 }
+/* TA 主动送礼（内部自带：距上次超过 4 小时 + 15% 概率） */
+setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
         saveMessages();
         showTyping();
         var gap = 0, sentOne = false;
@@ -5656,8 +5954,11 @@ if(Math.random() * 100 < (person.gameInviteChance || 10)){
       cards.text.forEach(function(b){
         if(b.enabled === false) return;
         if(b.name === '红包回复' || b.name === '红包' || b.name === '红包回复语'){
-          b.groups.forEach(function(sg){ sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); }); });
-        }
+  b.groups.forEach(function(sg){
+    if(sg.enabled === false) return;
+    sg.items.forEach(function(it){ if(it && String(it).trim()) pool.push(String(it).trim()); });
+  });
+}
       });
     }
     if(!pool.length) pool = ['够不够？不够再给你发', '拿去买点喜欢的', '给你的零花钱，收好啦', '别省着，想买什么就买'];
@@ -6163,7 +6464,7 @@ if(list){
   var appNames = {
   chat:'聊天', cards:'字卡', settings:'设置',
   music:'一起听', moments:'动态', mailbox:'信箱', wallet:'钱包', game:'小游戏',
-  group:'群聊'
+  group:'群聊', shop:'商城'
 };
   var icons = person.appIcons || {};
   list.innerHTML = Object.keys(appNames).map(function(key){
@@ -6949,6 +7250,11 @@ if($('mailSendBtn')) $('mailSendBtn').onclick = function(){
   var text = $('mailWriteContent').value.trim(); 
   if(!text) return; 
   sendMyLetter(text); 
+  if(replyToLetterId){
+    var src = letters.filter(function(x){ return x.id === replyToLetterId; })[0];
+    if(src){ src.replied = true; saveLetters(); }
+    replyToLetterId = null;
+  }
   $('mailWriteContent').value = ''; 
   mailTab = 'outbox'; 
   renderMailbox(); 
@@ -7143,7 +7449,14 @@ Array.prototype.forEach.call(document.querySelectorAll('.app-item, .dock-item'),
         refreshChatMusicBanner(); 
       }, 50);
     }
-    else if(app === 'music'){ musicTimerStart = Date.now(); renderMusicPage(); $('musicPage').classList.add('open'); }
+    else if(app === 'music'){
+  musicTimerStart = Date.now();
+  renderMusicPage();
+  $('musicPage').classList.add('open');
+  if(musicCurrentIndex === -1 && musicPlaylist.length > 0){
+    setTimeout(function(){ playMusicAtIndex(0); }, 400);
+  }
+}
 else if(app === 'moments'){ renderMoments(); $('momentsPage').classList.add('open'); setTimeout(maybeTaAutoPost, 300); }
     else if(app === 'cards'){ libSearchKeyword = ''; if($('libSearchInput')) $('libSearchInput').value = ''; renderLib(); $('cardsPage').classList.add('open'); }
 else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('open'); }
@@ -7153,6 +7466,7 @@ else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('ope
     else if(app === 'wallet'){ renderWalletPage(); $('walletPage').classList.add('open'); }
 else if(app === 'game'){ window.__gomokuMode = 'solo'; $('gameHallPage').classList.add('open'); }
 else if(app === 'group'){ loadGroupMessages(); renderGroupMessages(); $('groupPage').classList.add('open'); }
+else if(app === 'shop'){ renderShop(); $('shopPage').classList.add('open'); }
 else if(app === 'settings'){ openSettingsPage(); }
   });
 });
@@ -7174,6 +7488,14 @@ if($('gameGrid')) $('gameGrid').addEventListener('click', function(e){
       if(window.__sendGameInvite) window.__sendGameInvite('jump');
     } else {
       if(window.__openJump) window.__openJump();
+    }
+  } else if(g === 'tetris'){
+    if(window.__gomokuMode === 'invite'){
+      window.__gomokuMode = 'solo';
+      $('gameHallPage').classList.remove('open');
+    } else {
+      $('gameHallPage').classList.remove('open');
+      if(window.__openTetris) window.__openTetris();
     }
   }
 });
@@ -7253,22 +7575,18 @@ if($('chatMusicBack')){
   });
 
   function openMsgActions(idx){
-    if(idx < 0 || idx >= messages.length) return;
-    var m = messages[idx];
-    if(m.type === 'sys') return;
-    actionMsgIdx = idx;
-    var preview = (m.text || '').slice(0, 30);
-    if((m.text || '').length > 30) preview += '…';
-    $('msgActionsTitle').textContent = (m.me ? '你' : (person.name || 'TA')) + '：' + preview;
-    if(m.me){
-      $('msgActionDelete').style.display = '';
-    } else {
-      $('msgActionDelete').style.display = 'none';
-    }
-    if(!m.text && m.type === 'sticker'){ $('msgActionCopy').style.display = 'none'; $('msgActionQuote').style.display = 'none'; }
-    else { $('msgActionCopy').style.display = ''; $('msgActionQuote').style.display = ''; }
-    $('msgActionsBg').classList.add('open');
-  }
+  if(idx < 0 || idx >= messages.length) return;
+  var m = messages[idx];
+  if(m.type === 'sys') return;
+  actionMsgIdx = idx;
+  var preview = (m.text || '').slice(0, 30);
+  if((m.text || '').length > 30) preview += '…';
+  $('msgActionsTitle').textContent = (m.me ? '你' : (person.name || 'TA')) + '：' + preview;
+  $('msgActionDelete').style.display = '';
+  if(!m.text && m.type === 'sticker'){ $('msgActionCopy').style.display = 'none'; $('msgActionQuote').style.display = 'none'; }
+  else { $('msgActionCopy').style.display = ''; $('msgActionQuote').style.display = ''; }
+  $('msgActionsBg').classList.add('open');
+}
 
   function closeMsgActions(){
     $('msgActionsBg').classList.remove('open');
@@ -7315,14 +7633,298 @@ if($('chatMusicBack')){
   };
 
   $('msgActionDelete').onclick = function(){
-    if(actionMsgIdx < 0) return;
-    var m = messages[actionMsgIdx];
-    if(!m || !m.me) return;
-    messages.splice(actionMsgIdx, 1);
-    saveMessages(); renderMessages();
-    closeMsgActions();
-  };
+  if(actionMsgIdx < 0) return;
+  var m = messages[actionMsgIdx];
+  if(!m) return;
+  messages.splice(actionMsgIdx, 1);
+  saveMessages(); renderMessages();
+  closeMsgActions();
+};
 
+/* ============ 商城 ============ */
+var DEFAULT_GIFTS = [
+  { id:'g_tea', emoji:'🧋', name:'奶茶', price:15, bless:'给你带了一杯，记得少冰。' },
+  { id:'g_flower', emoji:'🌹', name:'玫瑰花', price:13.14, bless:'送你一朵，比心。' },
+  { id:'g_choco', emoji:'🍫', name:'巧克力', price:20, bless:'甜一点，心情好一点。' },
+  { id:'g_cake', emoji:'🎂', name:'小蛋糕', price:38, bless:'吃点甜的，今天也要开心。' },
+  { id:'g_car', emoji:'🚗', name:'小汽车', price:520, bless:'接你下班，好不好。' },
+  { id:'g_ring', emoji:'💍', name:'戒指', price:1314, bless:'戴上它，就当我一直陪着你。' },
+  { id:'g_star', emoji:'⭐', name:'星星', price:52, bless:'摘一颗给你，小心愿都实现。' },
+  { id:'g_hug', emoji:'🤗', name:'一个抱抱', price:1, bless:'抱抱，先欠着，下次还。' }
+];
+
+var giftLib = [];
+var giftRecords = [];
+var shopTab = 'shop';
+var pendingGiftId = null;
+
+function loadGiftLib(){
+  try{
+    var raw = localStorage.getItem(GIFTS_KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(Array.isArray(d) && d.length){ giftLib = d; return; }
+    }
+  }catch(e){}
+  giftLib = JSON.parse(JSON.stringify(DEFAULT_GIFTS));
+  saveGiftLib();
+}
+function saveGiftLib(){ safeSetItem(GIFTS_KEY, JSON.stringify(giftLib)); }
+function loadGiftRecords(){
+  try{
+    var raw = localStorage.getItem(GIFT_RECORDS_KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(Array.isArray(d)) giftRecords = d;
+    }
+  }catch(e){}
+}
+function saveGiftRecords(){
+  if(giftRecords.length > 200) giftRecords = giftRecords.slice(giftRecords.length - 200);
+  safeSetItem(GIFT_RECORDS_KEY, JSON.stringify(giftRecords));
+}
+
+function renderShopList(){
+  var box = $('shopListView');
+  if(!box) return;
+  var html = '<div class="shop-grid">';
+  giftLib.forEach(function(g){
+    html += '<div class="shop-card" data-gift-id="' + g.id + '">' +
+      '<button class="shop-card-del" data-gift-del="' + g.id + '">×</button>' +
+      '<div class="shop-card-emoji">' + esc(g.emoji) + '</div>' +
+      '<div class="shop-card-name">' + esc(g.name) + '</div>' +
+      '<div class="shop-card-price">¥' + fmtMoney(g.price) + '</div>' +
+    '</div>';
+  });
+  html += '<div class="shop-add-card" id="shopAddCard">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>' +
+    '<div>添加礼物</div>' +
+  '</div>';
+  html += '</div>';
+  box.innerHTML = html;
+}
+
+function renderGiftSent(){
+  var box = $('giftSentView');
+  if(!box) return;
+  var list = giftRecords.filter(function(r){ return r.direction === 'out'; }).slice().reverse();
+  if(!list.length){ box.innerHTML = '<div class="shop-empty">还没有送过礼物<br>去商城挑一份送给 TA 吧</div>'; return; }
+  box.innerHTML = '<div style="height:10px"></div>' + list.map(function(r){
+    return '<div class="gift-record">' +
+      '<div class="gift-record-emoji">' + esc(r.emoji) + '</div>' +
+      '<div class="gift-record-info">' +
+        '<div class="gift-record-head"><span class="gift-record-name">' + esc(r.name) + '</span><span class="gift-record-price out">-¥' + fmtMoney(r.price) + '</span></div>' +
+        (r.bless ? '<div class="gift-record-bless">' + esc(r.bless) + '</div>' : '') +
+        '<div class="gift-record-time">' + formatTime(r.time) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderGiftReceived(){
+  var box = $('giftReceivedView');
+  if(!box) return;
+  var list = giftRecords.filter(function(r){ return r.direction === 'in'; }).slice().reverse();
+  if(!list.length){ box.innerHTML = '<div class="shop-empty">还没有收到过礼物<br>多陪陪 TA 吧～</div>'; return; }
+  box.innerHTML = '<div style="height:10px"></div>' + list.map(function(r){
+    return '<div class="gift-record">' +
+      '<div class="gift-record-emoji">' + esc(r.emoji) + '</div>' +
+      '<div class="gift-record-info">' +
+        '<div class="gift-record-head"><span class="gift-record-name">' + esc(r.name) + '</span><span class="gift-record-price">来自 ' + esc(person.name || 'TA') + '</span></div>' +
+        (r.bless ? '<div class="gift-record-bless">' + esc(r.bless) + '</div>' : '') +
+        '<div class="gift-record-time">' + formatTime(r.time) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderShop(){
+  if(!$('shopPage')) return;
+  if($('shopBalanceBtn')) $('shopBalanceBtn').textContent = '¥' + fmtMoney(walletMe.balance);
+  renderShopList();
+  renderGiftSent();
+  renderGiftReceived();
+  Array.prototype.forEach.call(document.querySelectorAll('.lib-tab[data-shoptab]'), function(t){ t.classList.toggle('active', t.dataset.shoptab === shopTab); });
+  $('shopListView').style.display = (shopTab === 'shop') ? '' : 'none';
+  $('giftSentView').style.display = (shopTab === 'sent') ? '' : 'none';
+  $('giftReceivedView').style.display = (shopTab === 'received') ? '' : 'none';
+}
+
+function openGiftSend(giftId){
+  var g = giftLib.filter(function(x){ return x.id === giftId; })[0];
+  if(!g) return;
+  pendingGiftId = giftId;
+  $('giftSendEmoji').textContent = g.emoji;
+  $('giftSendName').textContent = g.name;
+  $('giftSendPrice').textContent = '¥' + fmtMoney(g.price);
+  $('giftSendBlessInput').value = '';
+  $('giftSendBlessInput').placeholder = g.bless || '写一句想说的话…';
+  $('giftSendBg').classList.add('open');
+}
+
+function confirmGiftSend(){
+  if(!pendingGiftId) return;
+  var g = giftLib.filter(function(x){ return x.id === pendingGiftId; })[0];
+  if(!g) return;
+  if(g.price > walletMe.balance){
+    showDialog('余额不足', '你当前余额 ¥' + fmtMoney(walletMe.balance) + '，不够买这份礼物。', [{ text:'知道了', primary:true }]);
+    return;
+  }
+  var bless = ($('giftSendBlessInput').value || '').trim() || g.bless || '';
+
+  walletMe.balance = Math.round((walletMe.balance - g.price) * 100) / 100;
+  saveWalletMe();
+
+  var record = {
+    id: uid('gift'), direction: 'out', giftId: g.id,
+    emoji: g.emoji, name: g.name, price: g.price, bless: bless, time: Date.now()
+  };
+  giftRecords.push(record);
+  saveGiftRecords();
+
+  var msg = {
+    me: true, type: 'gift', giftId: g.id,
+    emoji: g.emoji, name: g.name, price: g.price, bless: bless,
+    time: Date.now(), read: false, id: uid('m')
+  };
+  messages.push(msg);
+  saveMessages();
+  if(chatOpenNow) appendMessage(msg);
+
+  $('giftSendBg').classList.remove('open');
+pendingGiftId = null;
+
+/* 关闭商城，回到聊天页看效果 */
+$('shopPage').classList.remove('open');
+$('chatPage').classList.add('open');
+chatOpenNow = true;
+unreadCount = 0;
+renderHome();
+renderMessages();
+applyBeautify();
+
+/* TA 几秒后回复致谢 */
+  setTimeout(function(){
+    var txt = pickGiftThanks();
+    var cm = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
+    messages.push(cm);
+    saveMessages();
+    if(chatOpenNow) appendMessage(cm);
+    else { unreadCount++; renderHome(); showNotificationBanner(cm); }
+  }, 1500 + Math.random() * 2000);
+}
+
+function pickGiftThanks(){
+  var pool = [];
+  if(cards && cards.system && Array.isArray(cards.system.giftThanks)){
+    pool = cards.system.giftThanks.filter(function(t){ return t && String(t).trim(); });
+  }
+  if(!pool.length) pool = ['谢谢宝宝！好喜欢～', '哇，你怎么知道我想要这个！', '收到了，抱抱你～', '好开心，谢谢你'];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/* TA 主动送礼：距上次 TA 送礼超过 4 小时 + 15% 概率 */
+function taSendGift(){
+  var last = 0;
+  for(var i=giftRecords.length-1;i>=0;i--){
+    if(giftRecords[i].direction === 'in'){ last = giftRecords[i].time; break; }
+  }
+  var FOUR_HOURS = 4 * 3600 * 1000;
+  if(last && Date.now() - last < FOUR_HOURS) return;
+  if(Math.random() > 0.15) return;
+
+  var g = giftLib[Math.floor(Math.random() * giftLib.length)];
+  if(!g) return;
+
+  var record = {
+    id: uid('gift'), direction: 'in', giftId: g.id,
+    emoji: g.emoji, name: g.name, price: g.price, bless: g.bless || '', time: Date.now()
+  };
+  giftRecords.push(record);
+  saveGiftRecords();
+
+  var msg = {
+    me: false, type: 'gift',
+    emoji: g.emoji, name: g.name, price: g.price, bless: g.bless || '',
+    time: Date.now(), id: uid('m')
+  };
+  messages.push(msg);
+  saveMessages();
+  if(chatOpenNow){ appendMessage(msg); playDing(); }
+  else { unreadCount++; renderHome(); showNotificationBanner(msg); }
+
+  /* TA 在卡片之后补一句话 */
+  setTimeout(function(){
+    var pool = (cards && cards.system && Array.isArray(cards.system.giftNote))
+      ? cards.system.giftNote.filter(function(t){ return t && String(t).trim(); })
+      : [];
+    if(!pool.length) return;
+    var note = pool[Math.floor(Math.random() * pool.length)];
+    var nm = { me:false, type:'text', text: note, time: Date.now(), id: uid('m') };
+    messages.push(nm);
+    saveMessages();
+    if(chatOpenNow) appendMessage(nm);
+    else { unreadCount++; renderHome(); }
+  }, 1200 + Math.random() * 1200);
+}
+
+/* 商城事件绑定 */
+if($('shopBack')) $('shopBack').onclick = function(){ $('shopPage').classList.remove('open'); };
+if($('shopBalanceBtn')) $('shopBalanceBtn').onclick = function(){ renderWalletPage(); $('walletPage').classList.add('open'); };
+if($('shopTabs')){
+  $('shopTabs').addEventListener('click', function(e){
+    var tab = e.target.closest('[data-shoptab]');
+    if(!tab) return;
+    shopTab = tab.dataset.shoptab;
+    renderShop();
+  });
+}
+if($('shopListView')){
+  $('shopListView').addEventListener('click', function(e){
+    var del = e.target.closest('[data-gift-del]');
+    if(del){
+      e.stopPropagation();
+      var gid = del.dataset.giftDel;
+      var g = giftLib.filter(function(x){ return x.id === gid; })[0];
+      if(!g) return;
+      showDialog('删除礼物', '确定要把「' + g.name + '」从商城下架吗？', [
+        { text:'取消' },
+        { text:'删除', danger:true, onClick:function(){
+          giftLib = giftLib.filter(function(x){ return x.id !== gid; });
+          saveGiftLib(); renderShop();
+        }}
+      ]);
+      return;
+    }
+    if(e.target.closest('#shopAddCard')){
+      var emoji = window.prompt('礼物表情（一个 emoji，例如 🍰）：', '🎁');
+      if(emoji === null) return;
+      emoji = (emoji || '').trim() || '🎁';
+      var name = window.prompt('礼物名字（例如：草莓蛋糕）：', '');
+      if(name === null) return;
+      name = name.trim(); if(!name) return;
+      var priceStr = window.prompt('价格（数字，例如 38）：', '');
+      if(priceStr === null) return;
+      var price = parseFloat(priceStr);
+      if(isNaN(price) || price < 0) price = 0;
+      var bless = window.prompt('默认祝福语（可留空）：', '');
+      if(bless === null) bless = '';
+      bless = bless.trim();
+      giftLib.push({ id: uid('g'), emoji: emoji, name: name, price: price, bless: bless });
+      saveGiftLib(); renderShop();
+      return;
+    }
+    var card = e.target.closest('[data-gift-id]');
+    if(card){ openGiftSend(card.dataset.giftId); return; }
+  });
+}
+if($('giftSendCancel')) $('giftSendCancel').onclick = function(){ $('giftSendBg').classList.remove('open'); pendingGiftId = null; };
+if($('giftSendConfirm')) $('giftSendConfirm').onclick = confirmGiftSend;
+if($('giftSendBg')){
+  $('giftSendBg').addEventListener('click', function(e){
+    if(e.target === $('giftSendBg')){ $('giftSendBg').classList.remove('open'); pendingGiftId = null; }
+  });
+}
 /* ============ 群聊 ============ */
 var GROUP_MSG_KEY = 'chat_group_messages_v1';
 var groupMessages = [];
@@ -7359,7 +7961,8 @@ function pickCardFromPersona(pid){
     if(b.enabled === false) return;
     if(!Array.isArray(b.groups)) return;
     b.groups.forEach(function(sg){
-      if(!Array.isArray(sg.items)) return;
+  if(sg.enabled === false) return;
+  if(!Array.isArray(sg.items)) return;
       sg.items.forEach(function(it){
         if(it && String(it).trim()) pool.push(String(it).trim());
       });
@@ -7528,6 +8131,8 @@ loadStats();
   loadMusicPlaylist();
 loadMoments();
 loadGroupMessages();
+loadGiftLib();
+loadGiftRecords();
 
   renderHeader();
   renderMessages();
@@ -7726,7 +8331,13 @@ function taPostMoment(){
   var m = { id: uid('mo'), author: 'ta', text: text, sticker: sticker || '', time: Date.now(), likes: [], comments: [] };
   moments.push(m);
   saveMoments();
-  renderMoments();
+  var inMomentsPage = $('momentsPage') && $('momentsPage').classList.contains('open');
+  if(inMomentsPage){
+    renderMoments();
+  } else {
+    var preview = text || '[表情]';
+    showNotificationBanner({ type:'text', text: '发布了一条动态：' + preview, me:false });
+  }
 }
 
 function maybeTaAutoPost(){
@@ -8108,6 +8719,7 @@ function startOutgoingCall(){
   $('callSub').textContent = '等待接听';
   $('callAvatarWrap').classList.remove('connected');
   openCallScreen();
+  startDialTone();
 
   var rejected = Math.random() * 100 < (person.taRejectCallChance || 20);
   var waitTime = 1500 + Math.random() * 2500;
@@ -8151,6 +8763,7 @@ function startIncomingCall(){
 function connectCall(){
   if(callAutoHangTimer){ clearTimeout(callAutoHangTimer); callAutoHangTimer = null; }
   if(callIncomingTimeout){ clearTimeout(callIncomingTimeout); callIncomingTimeout = null; }
+  stopDialTone();
   callState = 'connected';
   $('callStatusText').textContent = '通话中';
   $('callSub').textContent = '已接通';
@@ -8222,6 +8835,7 @@ function rejectIncomingCall(){
 /* 结束通话 */
 function endCall(silent){
   callState = 'idle';
+  stopDialTone();
   if(callAutoHangTimer){ clearTimeout(callAutoHangTimer); callAutoHangTimer = null; }
   if(callIncomingTimeout){ clearTimeout(callIncomingTimeout); callIncomingTimeout = null; }
   
@@ -9395,11 +10009,12 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
   }
 
   function place(x, y, role){
-    board[y][x] = role;
-    history.push({x:x, y:y, role:role});
-    lastMove = {x:x, y:y, role:role};
-    drawBoard();
-  }
+  board[y][x] = role;
+  history.push({x:x, y:y, role:role});
+  lastMove = {x:x, y:y, role:role};
+  playGameSound('place');
+  drawBoard();
+}
 
   function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
@@ -9615,6 +10230,7 @@ else { wMe = 1.05; wOp = 1.0; noise = 30; }
   gamesTotal = 1;
   gamesPlayed = 0;
   roundWins = { me: 0, ta: 0 };
+  score = { me: 0, ta: 0 }; saveScore(); updateScoreChip();
   $('gomokuDiffBg').classList.add('open');
 }
 
@@ -9915,16 +10531,17 @@ if($('gomokuDiffConfirm')){
   canvas.addEventListener('mouseup', handleJumpUp);
 
   function startJump(dist, by) {
-    state = 'jumping';
-    currentJumpBy = by || 'me';
-    jumpAnim = {
-      startX: playerX,
-      endX: playerX + dist,
-      startT: performance.now(),
-      duration: 380,
-      height: 90
-    };
-  }
+  state = 'jumping';
+  currentJumpBy = by || 'me';
+  playGameSound('jump');
+  jumpAnim = {
+    startX: playerX,
+    endX: playerX + dist,
+    startT: performance.now(),
+    duration: 380,
+    height: 90
+  };
+}
 
   function scheduleTaJump() {
     taThinking = true;
@@ -9952,30 +10569,32 @@ if($('gomokuDiffConfirm')){
   }
 
   function checkLanding() {
-    var next = blocks[currentIdx + 1];
-    if (!next) { endGame(); return; }
-    if (playerX >= next.x && playerX <= next.x + next.w) {
-      currentIdx++;
-      score++;
-      landBounce = 1;
-      blocks.push(makeBlock(blocks[blocks.length - 1]));
+  var next = blocks[currentIdx + 1];
+  if (!next) { endGame(); return; }
+  if (playerX >= next.x && playerX <= next.x + next.w) {
+    currentIdx++;
+    score++;
+    landBounce = 1;
+    playGameSound('land');
+    blocks.push(makeBlock(blocks[blocks.length - 1]));
 
-      if (currentJumpBy === 'me') mySteps++;
-      else if (currentJumpBy === 'ta') taSteps++;
+    if (currentJumpBy === 'me') mySteps++;
+    else if (currentJumpBy === 'ta') taSteps++;
 
-      if (mode === 'duo') {
-        turn = (turn === 'me') ? 'ta' : 'me';
-        state = 'idle';
-        if (turn === 'ta') scheduleTaJump();
-        else sayTa(pickPraise());
-      } else {
-        state = 'idle';
-        if (Math.random() < 0.25 && score > 0) sayTa(pickPraise());
-      }
+    if (mode === 'duo') {
+      turn = (turn === 'me') ? 'ta' : 'me';
+      state = 'idle';
+      if (turn === 'ta') scheduleTaJump();
+      else sayTa(pickPraise());
     } else {
-      endGame();
+      state = 'idle';
+      if (Math.random() < 0.25 && score > 0) sayTa(pickPraise());
     }
+  } else {
+    playGameSound('fall');
+    endGame();
   }
+}
 
   function pickPraise() {
     var pool = ['好棒！', '稳住！', '好厉害～', '继续！', '手感不错嘛', '加油加油'];
@@ -10338,13 +10957,394 @@ if($('gomokuDiffConfirm')){
     });
   }
 
-  /* 返回按钮 */
-  if ($('jumpBack')) {
-    $('jumpBack').onclick = function(){
-      $('jumpPage').classList.remove('open');
-      if (taDelayTimer) { clearTimeout(taDelayTimer); taDelayTimer = null; }
+ /* 返回按钮 */
+if ($('jumpBack')) {
+  $('jumpBack').onclick = function(){
+    var midDuo = (mode === 'duo') && (mySteps + taSteps > 0) && state !== 'gameover';
+    if(midDuo){
+      showDialog('要退出吗？', '这局还没跳完，退出的话这轮就结束了哦。', [
+        { text:'继续跳', primary:true },
+        { text:'退出', danger:true, onClick:function(){
+          var pool = [];
+          if(cards && cards.system && Array.isArray(cards.system.quitGame)){
+            pool = cards.system.quitGame.filter(function(t){ return t && String(t).trim(); });
+          }
+          if(!pool.length) pool = ['怎么下到一半就跑啦？', '诶？人呢…', '好吧，那我自己练练。', '哼，下次要陪我下完哦。'];
+          var line = pool[Math.floor(Math.random() * pool.length)];
+          var cm = { me:false, type:'text', text: line, time: Date.now(), id: uid('m') };
+          messages.push(cm);
+          saveMessages();
+          if(typeof renderHome === 'function') renderHome();
+          if(typeof showNotificationBanner === 'function') showNotificationBanner(cm);
+          $('jumpPage').classList.remove('open');
+          if (taDelayTimer) { clearTimeout(taDelayTimer); taDelayTimer = null; }
+          state = 'gameover';
+        }}
+      ]);
+      return;
+    }
+    $('jumpPage').classList.remove('open');
+    if (taDelayTimer) { clearTimeout(taDelayTimer); taDelayTimer = null; }
+  };
+}
+})();
+/* ============ 俄罗斯方块 ============ */
+(function(){
+  var canvas = $('tetrisCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var COLS = 10, ROWS = 20;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var cell = 0, boardW = 0, boardH = 0;
+
+  var SHAPES = [
+    [[1,1,1,1]],
+    [[1,1],[1,1]],
+    [[0,1,0],[1,1,1]],
+    [[0,1,1],[1,1,0]],
+    [[1,1,0],[0,1,1]],
+    [[1,0,0],[1,1,1]],
+    [[0,0,1],[1,1,1]]
+  ];
+  var COLORS = ['#4ac4d4','#f0c040','#b16bd4','#5cc46a','#e85a6a','#4a7ed4','#f09a40'];
+
+  var board = [];
+  var current = null;
+  var score = 0;
+  var linesCleared = 0;
+  var running = false;
+  var paused = false;
+  var dropTimer = null;
+  var dropInterval = 800;
+  var taTimer = null;
+  var taBubbleTimer = null;
+
+  function newBoard(){
+    board = [];
+    for(var y=0;y<ROWS;y++){
+      var row = [];
+      for(var x=0;x<COLS;x++) row.push(0);
+      board.push(row);
+    }
+  }
+
+  function resize(){
+    var wrap = canvas.parentNode;
+    var availW = wrap.clientWidth;
+    var availH = wrap.clientHeight;
+    if(availW <= 0 || availH <= 0) return;
+    var cellFromW = Math.floor(availW / (COLS + 1.2));
+    var cellFromH = Math.floor(availH / (ROWS + 1.2));
+    cell = Math.min(cellFromW, cellFromH);
+    boardW = cell * COLS;
+    boardH = cell * ROWS;
+    canvas.style.width = boardW + 'px';
+    canvas.style.height = boardH + 'px';
+    canvas.width = Math.round(boardW * dpr);
+    canvas.height = Math.round(boardH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    render();
+  }
+
+  function drawCell(x, y, colorIdx){
+    var px = x * cell, py = y * cell;
+    var color = COLORS[colorIdx - 1] || '#888';
+    ctx.fillStyle = color;
+    ctx.fillRect(px + 1, py + 1, cell - 2, cell - 2);
+    ctx.fillStyle = 'rgba(255,255,255,.28)';
+    ctx.fillRect(px + 1, py + 1, cell - 2, Math.max(2, cell * 0.18));
+    ctx.fillStyle = 'rgba(0,0,0,.08)';
+    ctx.fillRect(px + 1, py + cell - Math.max(2, cell * 0.14), cell - 2, Math.max(2, cell * 0.14) - 1);
+  }
+
+  function render(){
+    if(!boardW) return;
+    ctx.fillStyle = '#f8fafb';
+    ctx.fillRect(0, 0, boardW, boardH);
+    ctx.strokeStyle = 'rgba(31,95,108,.05)';
+    ctx.lineWidth = 1;
+    for(var i=1;i<COLS;i++){ ctx.beginPath(); ctx.moveTo(i*cell, 0); ctx.lineTo(i*cell, boardH); ctx.stroke(); }
+    for(var j=1;j<ROWS;j++){ ctx.beginPath(); ctx.moveTo(0, j*cell); ctx.lineTo(boardW, j*cell); ctx.stroke(); }
+
+    for(var y=0;y<ROWS;y++){
+      for(var x=0;x<COLS;x++){
+        if(board[y][x]) drawCell(x, y, board[y][x]);
+      }
+    }
+    if(current){
+      for(var sy=0;sy<current.shape.length;sy++){
+        for(var sx=0;sx<current.shape[sy].length;sx++){
+          if(!current.shape[sy][sx]) continue;
+          var px = current.x + sx, py = current.y + sy;
+          if(py >= 0) drawCell(px, py, current.color);
+        }
+      }
+    }
+    if(!running && boardW){
+      ctx.fillStyle = 'rgba(255,255,255,.88)';
+      ctx.fillRect(0, 0, boardW, boardH);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#1f5f6c';
+      ctx.font = 'bold 20px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillText('俄罗斯方块', boardW/2, boardH/2 - 30);
+      ctx.font = '13px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#8a8a8a';
+      ctx.fillText('点屏幕开始', boardW/2, boardH/2);
+      ctx.font = '12px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#b8b8b8';
+      ctx.fillText('最高 ' + getHighScore(), boardW/2, boardH/2 + 30);
+    }
+  }
+
+  function getHighScore(){
+    try{ return parseInt(localStorage.getItem('tetris_high_v1') || '0', 10) || 0; }catch(e){ return 0; }
+  }
+  function setHighScore(v){
+    try{ localStorage.setItem('tetris_high_v1', String(v)); }catch(e){}
+  }
+
+  function randPiece(){
+    var idx = Math.floor(Math.random() * SHAPES.length);
+    var shape = SHAPES[idx].map(function(r){ return r.slice(); });
+    return { shape: shape, color: idx + 1, x: Math.floor((COLS - shape[0].length) / 2), y: 0 };
+  }
+
+  function canPlace(piece, dx, dy, newShape){
+    var shape = newShape || piece.shape;
+    for(var y=0;y<shape.length;y++){
+      for(var x=0;x<shape[y].length;x++){
+        if(!shape[y][x]) continue;
+        var nx = piece.x + x + (dx || 0);
+        var ny = piece.y + y + (dy || 0);
+        if(nx < 0 || nx >= COLS || ny >= ROWS) return false;
+        if(ny >= 0 && board[ny][nx]) return false;
+      }
+    }
+    return true;
+  }
+
+  function lockPiece(){
+    for(var y=0;y<current.shape.length;y++){
+      for(var x=0;x<current.shape[y].length;x++){
+        if(!current.shape[y][x]) continue;
+        var ny = current.y + y, nx = current.x + x;
+        if(ny >= 0 && ny < ROWS && nx >= 0 && nx < COLS) board[ny][nx] = current.color;
+      }
+    }
+  }
+
+  function clearLines(){
+    var n = 0;
+    for(var y=ROWS-1;y>=0;y--){
+      var full = true;
+      for(var x=0;x<COLS;x++){ if(!board[y][x]){ full = false; break; } }
+      if(full){
+        board.splice(y, 1);
+        var row = [];
+        for(var x2=0;x2<COLS;x2++) row.push(0);
+        board.unshift(row);
+        n++; y++;
+      }
+    }
+    return n;
+  }
+
+  function rotateShape(shape){
+    var h = shape.length, w = shape[0].length;
+    var out = [];
+    for(var x=0;x<w;x++){
+      var row = [];
+      for(var y=h-1;y>=0;y--) row.push(shape[y][x]);
+      out.push(row);
+    }
+    return out;
+  }
+
+  function updateScoreChip(){
+    var el = $('tetrisScoreChip');
+    if(el) el.textContent = score + ' 分';
+  }
+
+  function spawn(){
+    current = randPiece();
+    if(!canPlace(current, 0, 0)){
+      gameOver();
+      return false;
+    }
+    render();
+    return true;
+  }
+
+  function step(){
+    if(!running || paused) return;
+    if(canPlace(current, 0, 1)){
+      current.y++;
+      render();
+    } else {
+      lockPiece();
+      var n = clearLines();
+      if(n > 0){
+        linesCleared += n;
+        var add = [0, 100, 300, 500, 800][n] || 800;
+        score += add;
+        playGameSound('tetris_clear');
+        var newInterval = Math.max(120, 800 - Math.floor(linesCleared / 10) * 80);
+        if(newInterval !== dropInterval){
+          dropInterval = newInterval;
+          scheduleDrop();
+        }
+        updateScoreChip();
+      }
+      if(!spawn()) return;
+    }
+  }
+
+  function scheduleDrop(){
+    if(dropTimer) clearTimeout(dropTimer);
+    dropTimer = setTimeout(function tick(){
+      step();
+      if(running) scheduleDrop();
+    }, dropInterval);
+  }
+
+  function move(dx){
+    if(!running || paused || !current) return;
+    if(canPlace(current, dx, 0)){ current.x += dx; playGameSound('tetris_move'); render(); }
+  }
+  function rotate(){
+    if(!running || paused || !current) return;
+    var ns = rotateShape(current.shape);
+    if(canPlace(current, 0, 0, ns)){ current.shape = ns; playGameSound('tetris_move'); render(); }
+  }
+  function softDrop(){
+    if(!running || paused || !current) return;
+    if(canPlace(current, 0, 1)){ current.y++; render(); }
+  }
+  function hardDrop(){
+    if(!running || paused || !current) return;
+    while(canPlace(current, 0, 1)) current.y++;
+    playGameSound('tetris_move');
+    step();
+  }
+
+  function sayTa(text, dur){
+    var el = $('tetrisTaBubble');
+    if(!el) return;
+    el.classList.remove('thinking');
+    el.textContent = text;
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = 'gomokuBubbleIn .25s ease';
+    if(taBubbleTimer) clearTimeout(taBubbleTimer);
+    taBubbleTimer = setTimeout(function(){
+      if(running) el.textContent = '继续加油～';
+    }, dur || 3000);
+  }
+
+  function pickTaCheer(){
+    var pool = (typeof allTextCards === 'function') ? allTextCards() : [];
+    if(!pool.length) pool = ['加油！','好厉害～','稳住！','继续呀','手速不错嘛'];
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function startTaTimer(){
+    if(taTimer) clearInterval(taTimer);
+    taTimer = setInterval(function(){
+      if(!running || paused) return;
+      if(Math.random() < 0.5){
+        sayTa(pickTaCheer(), 3500);
+      }
+    }, 30000);
+  }
+
+  function startGame(){
+    if(running) return;
+    newBoard();
+    score = 0;
+    linesCleared = 0;
+    dropInterval = 800;
+    running = true;
+    paused = false;
+    updateScoreChip();
+    sayTa('开始啦，我在这里陪你～', 3000);
+    spawn();
+    scheduleDrop();
+    startTaTimer();
+  }
+
+  function gameOver(){
+    running = false;
+    if(dropTimer){ clearTimeout(dropTimer); dropTimer = null; }
+    if(taTimer){ clearInterval(taTimer); taTimer = null; }
+    playGameSound('tetris_over');
+    if(score > getHighScore()) setHighScore(score);
+    sayTa(score > 0 ? ('这局 ' + score + ' 分，已经很棒啦～') : '再来一次吧～', 5000);
+    render();
+  }
+
+  canvas.addEventListener('click', function(){
+    if(!running) startGame();
+  });
+
+  if($('tetrisLeftBtn')) $('tetrisLeftBtn').onclick = function(){ move(-1); };
+  if($('tetrisRightBtn')) $('tetrisRightBtn').onclick = function(){ move(1); };
+  if($('tetrisRotateBtn')) $('tetrisRotateBtn').onclick = rotate;
+  if($('tetrisDownBtn')) $('tetrisDownBtn').onclick = softDrop;
+  if($('tetrisDropBtn')) $('tetrisDropBtn').onclick = hardDrop;
+
+  document.addEventListener('keydown', function(e){
+    if(!$('tetrisPage') || !$('tetrisPage').classList.contains('open')) return;
+    if(!running) return;
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); move(-1); }
+    else if(e.key === 'ArrowRight'){ e.preventDefault(); move(1); }
+    else if(e.key === 'ArrowUp'){ e.preventDefault(); rotate(); }
+    else if(e.key === 'ArrowDown'){ e.preventDefault(); softDrop(); }
+    else if(e.key === ' '){ e.preventDefault(); hardDrop(); }
+  });
+
+  function updateTaAvatar(){
+    var av = $('tetrisTaAvatar');
+    if(!av) return;
+    if(person.avatar){ av.innerHTML = '<img src="' + person.avatar + '" alt="">'; av.style.background = 'transparent'; }
+    else { av.innerHTML = DEFAULT_AVATAR_SVG; av.style.background = 'none'; }
+  }
+
+  window.__openTetris = function(){
+    $('tetrisPage').classList.add('open');
+    updateTaAvatar();
+    setTimeout(function(){
+      resize();
+      if(!running) startGame();
+    }, 340);
+  };
+
+  if($('tetrisBack')){
+    $('tetrisBack').onclick = function(){
+      var mid = running && score > 0;
+      if(mid){
+        showDialog('要退出吗？', '这局还没结束，退出就作废啦。', [
+          { text:'继续玩', primary:true },
+          { text:'退出', danger:true, onClick:function(){
+            running = false;
+            if(dropTimer){ clearTimeout(dropTimer); dropTimer = null; }
+            if(taTimer){ clearInterval(taTimer); taTimer = null; }
+            $('tetrisPage').classList.remove('open');
+          }}
+        ]);
+        return;
+      }
+      running = false;
+      if(dropTimer){ clearTimeout(dropTimer); dropTimer = null; }
+      if(taTimer){ clearInterval(taTimer); taTimer = null; }
+      $('tetrisPage').classList.remove('open');
     };
   }
+
+  window.addEventListener('resize', function(){
+    if($('tetrisPage') && $('tetrisPage').classList.contains('open')) resize();
+  });
+
+  newBoard();
 })();
 
 })();
@@ -10356,18 +11356,29 @@ if($('gomokuDiffConfirm')){
      ① 修改下面的 APP_VERSION（版本号 +1）
      ② 往 UPDATE_LOGS 里加一条，格式见下面
      ======================================================== */
-var APP_VERSION = '1.0.6';
+var APP_VERSION = '1.0.7';
 
   var UPDATE_LOGS = {
-    /* 版本号要和上面 APP_VERSION 一致，才会显示 */
-    '1.0.6': [
-      '🌙 新增「跨桌面梦角切换」，每个梦角拥有独立的聊天、字卡、钱包、动态',
-      '💬 新增「群聊」，所有梦角可以聚在一个群里聊天',
-      '✨ 群聊里每个梦角用自己的字卡说话，各自的性格不串味',
-      '🎨 切换梦角时新增过渡动画，切换过程更顺滑',
-      '🐛 修复了 App 图标偶尔变白块的问题',
-      '🔧 优化了一些细节体验'
-    ],
+  /* 版本号要和上面 APP_VERSION 一致，才会显示 */
+  '1.0.7': [
+    '🛍️ 新增「商城」，可以买礼物送给 TA，TA 也会主动送你',
+    '🎁 礼物卡片会在聊天里居中显示，自带祝福语',
+    '💌 系统预设新增「礼物」分类，可自定义 TA 收礼和送礼时说的话',
+    '🐰 新增俄罗斯方块，TA 会在旁边陪你玩',
+    '🎮 小游戏优化：五子棋落子音效、跳一跳三个音效、通话拨号音',
+    '👁️ 字卡库大分组、小分组都能关闭，不参与抽卡',
+    '🐛 修复了多处小问题，体验更顺滑'
+  ],
+
+  /* 旧版本记录保留，方便以后翻看 */
+  '1.0.6': [
+    '🌙 新增「跨桌面梦角切换」，每个梦角拥有独立的聊天、字卡、钱包、动态',
+    '💬 新增「群聊」，所有梦角可以聚在一个群里聊天',
+    '✨ 群聊里每个梦角用自己的字卡说话，各自的性格不串味',
+    '🎨 切换梦角时新增过渡动画，切换过程更顺滑',
+    '🐛 修复了 App 图标偶尔变白块的问题',
+    '🔧 优化了一些细节体验'
+  ],
 
     /* 旧版本记录保留，方便以后翻看 */
     '1.0.5': [
