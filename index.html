@@ -3485,15 +3485,74 @@ function switchPersona(id){
   if(!id || id === window.__ACTIVE_PERSONA_ID){ closePersonaModal(); return; }
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
-  // 关键：告诉浏览器现在要用新梦角
+  
+  // 清除旧梦角的定时器，防止消息串台
+  if(replyTimer) { clearTimeout(replyTimer); replyTimer = null; }
+  if(pendingNoReplyTimer) { clearTimeout(pendingNoReplyTimer); pendingNoReplyTimer = null; }
+
+  // 1. 更新全局索引 ID
   try{ window.__RawLS.set('chat_active_persona_v1', id); }catch(e){}
-  // 智能刷新：网络环境用 ?t= 防缓存，本地文件直接 reload
-  if(window.location.protocol === 'http:' || window.location.protocol === 'https:'){
-    var baseUrl = window.location.href.split('?')[0];
-    window.location.href = baseUrl + '?t=' + Date.now();
-  } else {
-    window.location.reload();
+  window.__ACTIVE_PERSONA_ID = id;
+  _activeId = id;
+
+  // 2. 彻底清空旧梦角的全部内存
+  messages = [];
+  letters = [];
+  cards = null;
+  taStickers = [];
+  userStickers = [];
+  myPats = [];
+  taPats = [];
+  moments = [];
+  groupMessages = [];
+  recentCards = [];
+  pendingQuote = null;
+  unreadCount = 0;
+
+  // 3. 重新加载新梦角的所有数据
+  loadPerson();
+  loadStats();
+  loadProactive();
+  loadSignIn();
+  loadMessages();
+  loadCards();
+  loadTaStickers();
+  loadUserStickers();
+  loadPats();
+  loadWallets();
+  loadLetters();
+  loadMusicPlaylist();
+  loadMoments();
+  loadGroupMessages();
+  loadGiftLib();
+  loadGiftRecords();
+
+  // 4. 重新渲染全部界面
+  renderHeader();
+  renderMessages();
+  renderSettingsPreview();
+  renderBeautify();
+  renderTaStickers();
+  renderUserStickers();
+  renderMyPatList();
+  renderTaPatList();
+  renderDict();
+  renderLib();
+  renderHome();
+  applyBeautify();
+  renderPersonaChip();
+  renderPersonaModal(); // 更新切换列表的选中状态
+
+  if($('groupPage') && $('groupPage').classList.contains('open')){
+     renderGroupMessages();
   }
+
+  // 5. 关闭弹窗和加载动画
+  closePersonaModal();
+  if(loading) loading.classList.remove('show');
+
+  var home = $('homeScreen');
+  if(home) home.scrollTop = 0;
 }
 
 function createPersona(){
@@ -3505,17 +3564,8 @@ function createPersona(){
   var newId = 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   personas.push({ id: newId, name: name, avatar: '' });
   savePersonas();
-  var loading = $('personaLoading');
-  if(loading) loading.classList.add('show');
-  // 关键：告诉浏览器现在要用新创建的梦角
-  try{ window.__RawLS.set('chat_active_persona_v1', newId); }catch(e){}
-  // 智能刷新：网络环境用 ?t= 防缓存，本地文件直接 reload
-  if(window.location.protocol === 'http:' || window.location.protocol === 'https:'){
-    var baseUrl = window.location.href.split('?')[0];
-    window.location.href = baseUrl + '?t=' + Date.now();
-  } else {
-    window.location.reload();
-  }
+  // 直接调用切换逻辑，完美复用
+  switchPersona(newId);
 }
 
 function deletePersona(id){
