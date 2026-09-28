@@ -37,7 +37,11 @@ input, textarea, [contenteditable="true"]{
     }
   }
 }
-html,body{height:100%;margin:0;padding:0}
+html, body {
+  height: 100%; margin: 0; padding: 0;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
   body{font-family:var(--font-family);font-size:var(--font-size-base);background:#e3eaec;color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
   svg{display:block}
   .app{position:relative;display:flex;flex-direction:column;width:100%;height:100vh;height:100dvh;margin:0 auto;background:var(--panel);overflow:hidden}
@@ -118,9 +122,9 @@ html,body{height:100%;margin:0;padding:0}
   .app-grid{margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 12px}
   .app-item{display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:transparent;font-family:inherit;cursor:pointer;position:relative}
   .app-item:active .app-icon{transform:scale(.92)}
-  .app-icon{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--primary);box-shadow:0 4px 12px rgba(31,95,108,.08);transition:transform .16s ease;position:relative}
-  .app-icon svg{width:26px;height:26px}
-  .app-label{font-size:11.5px;color:var(--text);text-align:center;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .app-icon{width:clamp(46px, 14vw, 56px);height:clamp(46px, 14vw, 56px);border-radius:clamp(12px, 4vw, 16px);background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--primary);box-shadow:0 4px 12px rgba(31,95,108,.08);transition:transform .16s ease;position:relative}
+.app-icon svg{width:clamp(20px, 7vw, 26px);height:clamp(20px, 7vw, 26px)}
+.app-label{font-size:clamp(10px, 3.2vw, 11.5px);color:var(--text);text-align:center;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .app-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--highlight);color:#fff;font-size:10.5px;font-weight:600;display:grid;place-items:center;border:2px solid rgba(255,255,255,.9)}
 
   /* 聊天页 */
@@ -390,7 +394,7 @@ html,body{height:100%;margin:0;padding:0}
   .drawer-item.active{background:var(--primary);color:#fff;border-left-color:var(--primary)}
   .drawer-item.active .dot{background:#fff !important}
   .drawer-item:not(.active):active{background:var(--soft)}
-  .drawer-add{margin-top:auto;padding:14px 10px;border:0;background:transparent;color:var(--light-text);font-size:12px;font-family:inherit;cursor:pointer;border-top:1px solid var(--line);text-align:left;position:sticky;bottom:0;background:#f8fafb}
+  .drawer-add{padding:14px 10px;border:0;background:transparent;color:var(--light-text);font-size:12px;font-family:inherit;cursor:pointer;border-bottom:1px solid var(--line);text-align:left;position:sticky;top:0;background:#f8fafb;z-index:2}
   .drawer-add:active{background:var(--soft)}
   .drawer-content{flex:1;min-width:0;overflow-y:auto;display:flex;flex-direction:column}
   .drawer-content::-webkit-scrollbar{width:5px}
@@ -796,8 +800,8 @@ html,body{height:100%;margin:0;padding:0}
 .bottom-row{display:flex;gap:12px;align-items:stretch;margin-top:8px}
 .app-grid-secondary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 8px;flex:0 0 42%;align-content:start}
 .app-grid-secondary .app-item{display:flex;flex-direction:column;align-items:center;gap:5px;background:transparent;border:0;font-family:inherit;cursor:pointer;padding:0}
-.app-grid-secondary .app-icon{width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--primary);box-shadow:0 2px 8px rgba(31,95,108,.06);transition:transform .15s ease;background-size:cover;background-position:center;position:relative}
-.app-grid-secondary .app-icon svg{width:24px;height:24px}
+..app-grid-secondary .app-icon{width:clamp(44px, 13vw, 52px);height:clamp(44px, 13vw, 52px);border-radius:clamp(10px, 3.5vw, 14px);background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--primary);box-shadow:0 2px 8px rgba(31,95,108,.06);transition:transform .15s ease;background-size:cover;background-position:center;position:relative}
+..app-grid-secondary .app-icon svg{width:clamp(20px, 6.5vw, 24px);height:clamp(20px, 6.5vw, 24px)}
 .app-grid-secondary .app-icon img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
 .app-grid-secondary .app-label{font-size:11px;color:var(--text);text-align:center;max-width:64px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .app-grid-secondary .app-item:active .app-icon{transform:scale(.92)}
@@ -808,6 +812,7 @@ html,body{height:100%;margin:0;padding:0}
 .big-photo-empty{font-size:13px;color:var(--light-text);letter-spacing:.5px;pointer-events:none}
 
 /* 底部 Dock */
+.home-bottom-spacer { height: clamp(120px, 15vh, 140px); }
 .bottom-dock{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:auto;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:999px;padding:8px 22px;display:flex;gap:20px;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1px solid rgba(255,255,255,.6);z-index:100}
 .dock-item{display:grid;place-items:center;background:transparent;border:0;font-family:inherit;cursor:pointer;width:44px;height:44px;border-radius:50%;transition:background .15s ease}
 .dock-item:active{background:rgba(31,95,108,.1)}
@@ -1475,8 +1480,9 @@ html,body{height:100%;margin:0;padding:0}
     <div class="msg-actions">
       <div class="msg-actions-title" id="msgActionsTitle"></div>
       <button class="msg-action-btn" id="msgActionCopy">复制</button>
-      <button class="msg-action-btn" id="msgActionQuote">引用</button>
-      <button class="msg-action-btn danger" id="msgActionDelete" style="display:none;">删除</button>
+<button class="msg-action-btn" id="msgActionQuote">引用</button>
+<button class="msg-action-btn danger" id="msgActionRecall" style="display:none;">撤回</button>
+<button class="msg-action-btn danger" id="msgActionDelete" style="display:none;">删除</button>
       <button class="msg-action-btn" id="msgActionCancel">取消</button>
     </div>
   </div>
@@ -1897,7 +1903,7 @@ html,body{height:100%;margin:0;padding:0}
 <section class="page" id="cardsPage">
   <header class="page-header">
     <button class="icon-btn" id="cardsBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="page-title">字卡库</div>
+    <div class="page-title">字卡库 <span id="cardsTotalCount" style="font-size:12px;color:var(--light-text);font-weight:400;margin-left:6px;"></span></div>
     <button class="icon-btn" id="cardsMore" aria-label="更多"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/></svg></button>
   </header>
   <div class="lib-tabs" id="libTabs">
@@ -1912,9 +1918,9 @@ html,body{height:100%;margin:0;padding:0}
   <div class="page-body" style="flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column;padding:0;">
     <div id="viewText" class="drawer-layout">
       <aside class="drawer-side" id="drawerSide">
-        <div id="drawerList"></div>
-        <button class="drawer-add" id="drawerAddBig">+ 新建大分组</button>
-      </aside>
+  <button class="drawer-add" id="drawerAddBig">+ 新建大分组</button>
+  <div id="drawerList"></div>
+</aside>
       <main class="drawer-content">
         <div class="content-search"><input type="text" id="libSearchInput" placeholder="搜索…" autocomplete="off"></div>
         <div id="biggroupContent"></div>
@@ -2526,8 +2532,8 @@ html,body{height:100%;margin:0;padding:0}
 
 <!-- 👇 新增：公告大字提醒 -->
 <div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
-  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🌟 新增字卡权重</p>
-  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">去字卡库给分组调个权重，让 TA 的性格更贴合你的心意</p>
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🔄 新增撤回 & 导出功能</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">长按自己的消息可以撤回啦！去字卡库还能一键导出 JSON 分享字卡</p>
 </div>
 <!-- 👆 大字提醒结束 -->
 
@@ -2755,7 +2761,7 @@ html,body{height:100%;margin:0;padding:0}
   /* ========================================================
      📝 每次发新版，只改下面这一个版本号就行
      ======================================================== */
-  var APP_VERSION = '1.0.9';
+  var APP_VERSION = '1.1.0';
 
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
@@ -3385,9 +3391,20 @@ function savePerson(){
 }
   function saveStats(){ safeSetItem(STATS_KEY, JSON.stringify(stats)); }
   function saveProactive(){ safeSetItem(PROACTIVE_KEY, JSON.stringify(proactive)); }
-  function saveMessages(){
-    if(messages.length > 200){ messages = messages.slice(messages.length - 200); }
-    safeSetItem(MSG_KEY, JSON.stringify(messages));
+  var MAX_MESSAGES_KEEP = 1000;
+function saveMessages(){
+    if(messages.length > MAX_MESSAGES_KEEP){ messages = messages.slice(messages.length - MAX_MESSAGES_KEEP); }
+    /* 表情包消息的 blob URL 要转成 @idb: 标记，否则下次打开就失效 */
+    var toSave = messages.map(function(m){
+      if(m && m.type === 'sticker' && typeof m.text === 'string' && m.text.indexOf('blob:') === 0){
+        var copy = {};
+        for(var k in m){ copy[k] = m[k]; }
+        copy.text = urlToIdbMarker(m.text);
+        return copy;
+      }
+      return m;
+    });
+    safeSetItem(MSG_KEY, JSON.stringify(toSave));
   }
   function saveCards(){
   try{
@@ -3484,76 +3501,22 @@ function closePersonaModal(){ $('personaModalBg').classList.remove('open'); }
 
 function switchPersona(id){
   if(!id || id === window.__ACTIVE_PERSONA_ID){ closePersonaModal(); return; }
+  
   var loading = $('personaLoading');
   if(loading) loading.classList.add('show');
   
-  // 清除旧梦角的定时器，防止消息串台
+  // 清除旧梦角的所有定时器，防止消息串台
   if(replyTimer) { clearTimeout(replyTimer); replyTimer = null; }
   if(pendingNoReplyTimer) { clearTimeout(pendingNoReplyTimer); pendingNoReplyTimer = null; }
-
-  // 1. 更新全局索引 ID
+  if(window._musicTimerInterval) { clearInterval(window._musicTimerInterval); window._musicTimerInterval = null; }
+  
+  // 更新到新梦角的 ID
   try{ window.__RawLS.set('chat_active_persona_v1', id); }catch(e){}
-  window.__ACTIVE_PERSONA_ID = id;
-  _activeId = id;
-
-  // 2. 彻底清空旧梦角的全部内存
-  messages = [];
-  letters = [];
-  cards = null;
-  taStickers = [];
-  userStickers = [];
-  myPats = [];
-  taPats = [];
-  moments = [];
-  groupMessages = [];
-  recentCards = [];
-  pendingQuote = null;
-  unreadCount = 0;
-
-  // 3. 重新加载新梦角的所有数据
-  loadPerson();
-  loadStats();
-  loadProactive();
-  loadSignIn();
-  loadMessages();
-  loadCards();
-  loadTaStickers();
-  loadUserStickers();
-  loadPats();
-  loadWallets();
-  loadLetters();
-  loadMusicPlaylist();
-  loadMoments();
-  loadGroupMessages();
-  loadGiftLib();
-  loadGiftRecords();
-
-  // 4. 重新渲染全部界面
-  renderHeader();
-  renderMessages();
-  renderSettingsPreview();
-  renderBeautify();
-  renderTaStickers();
-  renderUserStickers();
-  renderMyPatList();
-  renderTaPatList();
-  renderDict();
-  renderLib();
-  renderHome();
-  applyBeautify();
-  renderPersonaChip();
-  renderPersonaModal(); // 更新切换列表的选中状态
-
-  if($('groupPage') && $('groupPage').classList.contains('open')){
-     renderGroupMessages();
-  }
-
-  // 5. 关闭弹窗和加载动画
-  closePersonaModal();
-  if(loading) loading.classList.remove('show');
-
-  var home = $('homeScreen');
-  if(home) home.scrollTop = 0;
+  
+  // 等 300 毫秒（让加载动画转起来），直接强制刷新整个页面！
+  setTimeout(function(){
+    window.location.reload();
+  }, 300);
 }
 
 function createPersona(){
@@ -4488,6 +4451,8 @@ if(momentsIcon){
       }
       var el = $('cardsSummary');
       if(el) el.textContent = n + ' 条';
+      var el2 = $('cardsTotalCount');
+      if(el2) el2.textContent = '共 ' + n + ' 张';
     }catch(e){}
   }
 
@@ -4604,7 +4569,8 @@ if(m.type === 'sticker') return '<div class="bubble bubble-sticker">' + quoteHTM
 /* 撤回的消息：直白保留原话，一眼就能看到 */
 if(m.recalled){
   var rIdx = messages.indexOf(m);
-  return '<div class="sys-msg" data-recall-idx="'+rIdx+'" style="cursor:pointer;">对方撤回了一条消息 <span style="opacity:.55;font-size:11px;">（原话：' + esc(m.text) + '）</span></div>';
+  var recallWho = m.me ? '你' : '对方';
+  return '<div class="sys-msg" data-recall-idx="'+rIdx+'" style="cursor:pointer;">' + recallWho + '撤回了一条消息 <span style="opacity:.55;font-size:11px;">（原话：' + esc(m.text) + '）</span></div>';
 }
 if(m.type === 'sys'){ return '<div class="sys-msg">' + esc(m.text) + '</div>'; }
 if(m.type === 'invite'){
@@ -4732,7 +4698,7 @@ var musicTag = m.music ? '<span class="music-tag">🎵</span>' : '';
              '<div class="bubble-wrap">' + buildBubbleInner(m) + meta + '</div>' +
            '</div>';
   }
-  var RENDER_LIMIT = 60;
+  var RENDER_LIMIT = 200;
   function getDateLabel(ts){
     if(!ts) return '';
     var d = new Date(ts), now = new Date();
@@ -4835,12 +4801,15 @@ var musicTag = m.music ? '<span class="music-tag">🎵</span>' : '';
       drawer.innerHTML = cards.text.map(function(b){
         var act = (b.id === activeBigGroup) ? ' active' : '';
         var offCls = (b.enabled === false) ? ' off' : '';
+        var bigTotal = 0;
+        b.groups.forEach(function(g){ bigTotal += (g.items || []).length; });
         var eyeIcon = (b.enabled === false)
           ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>'
           : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
         return '<div class="drawer-item' + act + offCls + '" data-big="' + b.id + '">' +
                  '<span class="dot" style="background:' + b.color + '"></span>' +
                  '<span class="name">' + esc(b.name) + '</span>' +
+                 '<span style="flex:0 0 auto;font-size:10.5px;opacity:.6;margin-right:2px;">' + bigTotal + '</span>' +
                  '<span class="toggle" data-toggle-group="' + b.id + '">' + eyeIcon + '</span>' +
                '</div>';
       }).join('');
@@ -4850,9 +4819,11 @@ var musicTag = m.music ? '<span class="music-tag">🎵</span>' : '';
 
       var kw = (libSearchKeyword || '').trim().toLowerCase();
 
-      var html = '';
+      var bigTotalCount = 0;
+big.groups.forEach(function(g){ bigTotalCount += (g.items || []).length; });
+var html = '';
 html += '<div class="content-title">' +
-          '<span class="title-name">' + esc(big.name) + '</span>' +
+          '<span class="title-name">' + esc(big.name) + ' <span style="font-size:12px;color:var(--light-text);font-weight:400;">（' + bigTotalCount + ' 张）</span></span>' +
           '<span class="title-actions">' +
             '<button data-weight-big="' + big.id + '">⭐权重:' + (big.weight || 1) + '</button>' +
             '<button data-rename-big="' + big.id + '">重命名</button>' +
@@ -4886,7 +4857,8 @@ var sgEyeIcon = (sg.enabled === false)
 html += '<div class="subgroup-card' + (isOpen ? ' open' : '') + sgOffCls + '" data-sub="' + sg.id + '" data-big="' + big.id + '">' +
           '<div class="subgroup-head" data-toggle="' + sg.id + '">' +
   '<span class="subgroup-name" data-rename-sub="' + sg.id + '" data-big-id="' + big.id + '">' + esc(sg.name) + '</span>' +
-  '<span class="subgroup-count" data-weight-sub="' + sg.id + '" data-big-id="' + big.id + '" style="cursor:pointer;background:var(--secondary);">⭐权重:' + (sg.weight || 1) + '</span>' +
+  '<span style="flex:0 0 auto;font-size:11px;color:var(--light-text);background:var(--soft);padding:1px 8px;border-radius:9px;margin-right:4px;">' + sg.items.length + ' 张</span>' +
+'<span class="subgroup-count" data-weight-sub="' + sg.id + '" data-big-id="' + big.id + '" style="cursor:pointer;background:var(--secondary);">⭐权重:' + (sg.weight || 1) + '</span>' +
             '<span class="toggle" data-toggle-sub="' + sg.id + '" data-big-id="' + big.id + '">' + sgEyeIcon + '</span>' +
             '<span class="subgroup-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>' +
           '</div>' +
@@ -4996,11 +4968,17 @@ cards.system.proactive.forEach(function(pg){
 /* ======================================================= */
 
 
-/* 记录当前打开的分类和子分组 */
+/* 记录当前打开的分类和子分组 —— 用稳定标识，避免增删后错位 */
 var openCats = {};
 var openSubs = {};
-Array.prototype.forEach.call(v.querySelectorAll('.syscat-card.open'), function(el, i){ openCats[i] = true; });
-Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card.open'), function(el, i){ openSubs[i] = true; });
+Array.prototype.forEach.call(v.querySelectorAll('.syscat-card.open'), function(el){
+  var nameEl = el.querySelector('.syscat-name');
+  if(nameEl) openCats[nameEl.textContent.trim()] = true;
+});
+Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card.open'), function(el){
+  var head = el.querySelector('.subgroup-head');
+  if(head && head.dataset.sysToggle) openSubs[head.dataset.sysToggle] = true;
+});
   if(!Array.isArray(cards.system.redpacket) || !cards.system.redpacket.length) cards.system.redpacket = DEFAULT_RP_REPLIES.slice();
   if(!Array.isArray(cards.system.rpThanks) || !cards.system.rpThanks.length) cards.system.rpThanks = ['谢谢宝宝！', '收到啦，嘿嘿', '喜欢！谢谢你', '哇，爱你！', '拿着了，好开心', '谢谢，啵啵', '收到了，抱着不放'];
   if(!Array.isArray(cards.system.mood)) cards.system.mood = DEFAULT_MOODS.slice();
@@ -5130,9 +5108,15 @@ html += cat('🎁', '礼物', 2,
 
     v.innerHTML = html;
 
-  /* 恢复打开状态 */
-  Array.prototype.forEach.call(v.querySelectorAll('.syscat-card'), function(el, i){ if(openCats[i]) el.classList.add('open'); });
-  Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card'), function(el, i){ if(openSubs[i]) el.classList.add('open'); });
+  /* 恢复打开状态 —— 用稳定标识 */
+Array.prototype.forEach.call(v.querySelectorAll('.syscat-card'), function(el){
+  var nameEl = el.querySelector('.syscat-name');
+  if(nameEl && openCats[nameEl.textContent.trim()]) el.classList.add('open');
+});
+Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card'), function(el){
+  var head = el.querySelector('.subgroup-head');
+  if(head && head.dataset.sysToggle && openSubs[head.dataset.sysToggle]) el.classList.add('open');
+});
 }
 
   /* 字卡库事件委托 */
@@ -6336,6 +6320,10 @@ function startReadNoReply(){
   }
 
   function scheduleReply(){
+    // 👇 如果用户最后一条消息被撤回了，且没有新消息，就不回复
+var lastUserMsg = null;
+for(var i=messages.length-1;i>=0;i--){ if(messages[i].me){ lastUserMsg = messages[i]; break; } }
+if(lastUserMsg && lastUserMsg.recalled) return;
     if(replyTimer) clearTimeout(replyTimer);
     var minS = person.replyMin, maxS = person.replyMax;
     if(maxS < minS) maxS = minS;
@@ -6564,8 +6552,15 @@ setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
     if(chatOpenNow) renderMessages();
 
     setTimeout(function(){
-      var txt = pickRpReply();
-      var cm = { me:false, type:'text', text:txt, time: Date.now(), id: uid('m') };
+  var txt = pickRpReply();
+  /* 防御：用户领了 TA 的红包，TA 不应该说"谢谢"类的话 */
+  var retry = 0;
+  while(txt && txt.indexOf('谢') > -1 && retry < 5){
+    txt = pickRpReply();
+    retry++;
+  }
+  if(!txt || txt.indexOf('谢') > -1) txt = '喜欢吗？给你的';
+  var cm = { me:false, type:'text', text:txt, time: Date.now(), id: uid('m') };
       messages.push(cm);
       saveMessages();
       if(chatOpenNow) appendMessage(cm);
@@ -6622,32 +6617,63 @@ setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
       }
     }
     gainAffection();
-  proactive.lastChatTime = Date.now(); saveProactive();
+proactive.lastChatTime = Date.now(); saveProactive();
 
-  /* 如果用户刚回复的就是撤回的消息，TA 彻底慌神 */
-  var lastTaMsg = null;
-  for(var qi = messages.length - 2; qi >= 0; qi--){
-    if(!messages[qi].me){ lastTaMsg = messages[qi]; break; }
+/* TA 主动来电 */
+if(callState === 'idle' && Math.random() * 100 < (person.taCallChance || 10)){
+  var delayCall = 5000 + Math.random() * 10000; // 5~15 秒后来电
+  setTimeout(function(){
+    if(callState === 'idle'){ startIncomingCall(); }
+  }, delayCall);
+}
+
+  /* 如果用户刚回复的是撤回的消息，TA 彻底慌神 */
+var recalledMsg = null;
+/* 往前找最近 6 条 TA 消息，只要其中一条在 2 分钟内撤回，就触发 */
+for(var qi = messages.length - 2; qi >= 0 && qi >= messages.length - 8; qi--){
+  var mi = messages[qi];
+  if(mi && !mi.me && mi.recalled && mi.recallTime){
+    if(Date.now() - mi.recallTime < 120000){ recalledMsg = mi; break; }
   }
-  if(lastTaMsg && lastTaMsg.recalled){
-    if(window.__recallPanicTimer){ clearTimeout(window.__recallPanicTimer); window.__recallPanicTimer = null; }
-    setTimeout(function(){
-      var PANIC_REPLIES = [
-        '啊啊啊你怎么还没删！',
-        '你快忘掉！快点！',
-        '你别引用了！我求你了！',
-        '撤回键怎么突然不好使了……呜呜呜',
-        '你怎么什么都看得到啊！',
-        '我不理你了……（过了两秒）好吧我理你。',
-        '你你你……你截图了对不对！'
-      ];
-      var txt = PANIC_REPLIES[Math.floor(Math.random() * PANIC_REPLIES.length)];
-      var pm = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
-      messages.push(pm); saveMessages();
-      if(chatOpenNow) appendMessage(pm);
-      else { unreadCount++; renderHome(); showNotificationBanner(pm); }
-    }, 800 + Math.random() * 1000);
+}
+/* 没找到最近撤回的，就不触发；找到就慌 */
+if(recalledMsg){
+  /* 👇 小提醒：如果 TA 已经"装死慌过"了，就不重复触发 */
+  var alreadyPanicked = false;
+  for(var pi = messages.length - 1; pi >= 0 && pi >= messages.length - 4; pi--){
+    if(messages[pi].me) break;
+    var pt = messages[pi].text || '';
+    if(pt.indexOf('你怎么不说话') > -1 || pt.indexOf('你是不是看到了') > -1){
+      alreadyPanicked = true; break;
+    }
   }
+  if(alreadyPanicked) return; /* 已慌过，不重复 */
+  /* 👆 小提醒结束 */
+
+  /* 干掉"没反应的慌乱"，避免重复 */
+  if(window.__recallPanicTimer){ clearTimeout(window.__recallPanicTimer); window.__recallPanicTimer = null; }
+  /* 干掉可能已经发出去的那条"没反应的慌乱"（用户看到了也没关系，但避免刷屏） */
+  var lastIdx = messages.length - 1;
+  /* 延迟一小会儿，让用户的回复先渲染出来，TA 再慌 */
+  setTimeout(function(){
+    var PANIC_REPLIES = [
+      '啊啊啊你怎么还没删！',
+      '你快忘掉！快点！',
+      '你别引用了！我求你了！',
+      '撤回键怎么突然不好使了……呜呜呜',
+      '你怎么什么都看得到啊！',
+      '我不理你了……（过了两秒）好吧我理你。',
+      '你你你……你截图了对不对！',
+      '不是，你怎么这个时候才回我……',
+      '我以为你没看到……你吓死我了。'
+    ];
+    var txt = PANIC_REPLIES[Math.floor(Math.random() * PANIC_REPLIES.length)];
+    var pm = { me:false, type:'text', text: txt, time: Date.now(), id: uid('m') };
+    messages.push(pm); saveMessages();
+    if(chatOpenNow) appendMessage(pm);
+    else { unreadCount++; renderHome(); showNotificationBanner(pm); }
+  }, 800 + Math.random() * 1000);
+}
 }
 if($('msgInput')) $('msgInput').addEventListener('input', function(){ $('sendBtn').disabled = $('msgInput').value.trim().length === 0; });
   if($('composer')) $('composer').addEventListener('submit', function(e){ e.preventDefault(); doSendMessage(); });
@@ -7545,16 +7571,96 @@ function renderLockNotifications(){
     };
   }
 
-  /* 头部 ⋯ 菜单 */
-  if($('cardsMore')){
-    $('cardsMore').onclick = function(){
-      showDialog('字卡库工具', '', [
-        { text:'去重复', onClick:function(){ if($('btnDedup')) $('btnDedup').click(); } },
-        { text:'批量导入', onClick:function(){ $('importTextarea').value = ''; $('importPage').classList.add('open'); } },
-        { text:'取消', primary:true }
-      ]);
-    };
+/* 头部 ⋯ 菜单 */
+if($('cardsMore')){
+  $('cardsMore').onclick = function(){
+    showDialog('字卡库工具', '', [
+      { text:'去重复', onClick:function(){
+        var removed = 0;
+        if(cards && Array.isArray(cards.text)){
+          cards.text.forEach(function(b){
+            b.groups.forEach(function(sg){
+              var seen = {}, unique = [];
+              sg.items.forEach(function(it){
+                var k = String(it).trim();
+                if(!k) return;
+                if(seen[k]){ removed++; return; }
+                seen[k] = true;
+                unique.push(k);
+              });
+              sg.items = unique;
+            });
+          });
+        }
+        saveCards(); renderLib(); updateCardsSummary();
+        showDialog('去重完成', removed > 0 ? ('共移除 ' + removed + ' 条重复字卡。') : '没有发现重复字卡。', [{ text:'知道了', primary:true }]);
+      } },
+      { text:'导出字卡（JSON）', onClick:function(){ exportCardsJSON(); } },
+      { text:'批量导入', onClick:function(){ $('importTextarea').value = ''; $('importPage').classList.add('open'); } },
+      { text:'取消', primary:true }
+    ]);
+  };
+}
+
+/* 导出字卡库为 JSON */
+function exportCardsJSON(){
+  try{
+    var exportData = JSON.parse(JSON.stringify(cards));
+    var stickerList = exportData.sticker || [];
+    if(!stickerList.length){ doExportCards(exportData); return; }
+
+    /* 表情包里的 blob URL 转成 dataURL，方便跨设备分享 */
+    var converted = new Array(stickerList.length);
+    var pending = stickerList.length;
+    var done = false;
+
+    function finish(){
+      if(done) return;
+      done = true;
+      exportData.sticker = converted;
+      doExportCards(exportData);
+    }
+
+    stickerList.forEach(function(s, i){
+      if(typeof s === 'string' && s.indexOf('blob:') === 0){
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', s, true);
+        xhr.responseType = 'blob';
+        xhr.onload = function(){
+          var reader = new FileReader();
+          reader.onload = function(){
+            converted[i] = reader.result;
+            pending--; if(pending === 0) finish();
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.onerror = function(){ converted[i] = s; pending--; if(pending === 0) finish(); };
+        xhr.send();
+      } else {
+        converted[i] = s;
+        pending--; if(pending === 0) finish();
+      }
+    });
+
+    /* 超时兜底 */
+    setTimeout(function(){ if(!done) finish(); }, 15000);
+  }catch(e){
+    showDialog('导出失败', String(e), [{ text:'知道了', primary:true }]);
   }
+}
+
+function doExportCards(data){
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var d = new Date();
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  a.href = url;
+  a.download = 'chat-cards-' + d.getFullYear() + pad(d.getMonth()+1) + pad(d.getDate()) + '-' + pad(d.getHours()) + pad(d.getMinutes()) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showDialog('导出成功', '字卡库已导出为 JSON 文件。<br>可以发给朋友，用「批量导入 → JSON」导入。', [{ text:'好的', primary:true }], true);
+}
   /* 小分组拖动排序 */
   (function(){
     var dragEl = null, dragStartY = 0, dragging = false, longPressTimer = null;
@@ -8184,6 +8290,12 @@ $('messages').addEventListener('touchend', function(){
   var preview = (m.text || '').slice(0, 30);
   if((m.text || '').length > 30) preview += '…';
   $('msgActionsTitle').textContent = (m.me ? '你' : (person.name || 'TA')) + '：' + preview;
+  // 只有自己的消息才能撤回，且不能撤回已经撤回过的消息
+if(m.me && !m.recalled){
+  $('msgActionRecall').style.display = '';
+} else {
+  $('msgActionRecall').style.display = 'none';
+}
   $('msgActionDelete').style.display = '';
   if(!m.text && m.type === 'sticker'){ $('msgActionCopy').style.display = 'none'; $('msgActionQuote').style.display = 'none'; }
   else { $('msgActionCopy').style.display = ''; $('msgActionQuote').style.display = ''; }
@@ -8241,6 +8353,50 @@ $('messages').addEventListener('touchend', function(){
   messages.splice(actionMsgIdx, 1);
   saveMessages(); renderMessages();
   closeMsgActions();
+};
+$('msgActionRecall').onclick = function(){
+  if(actionMsgIdx < 0) return;
+  var m = messages[actionMsgIdx];
+  if(!m || m.recalled) return;
+
+  // 1. 标记撤回
+  m.recalled = true;
+  m.recallTime = Date.now();
+  saveMessages();
+  renderMessages();
+  closeMsgActions();
+
+  // 2. ⚠️ 关键：拦截 TA 即将到来的回复！
+  if(replyTimer){ 
+    clearTimeout(replyTimer); 
+    replyTimer = null; 
+  }
+  if(pendingNoReplyTimer){ 
+    clearTimeout(pendingNoReplyTimer); 
+    pendingNoReplyTimer = null; 
+  }
+
+  // 3. 触发 TA 的随机反应（50% 不回复，50% 好奇追问）
+  setTimeout(function(){
+    if(Math.random() < 0.5){
+      return; 
+    }
+    
+    var REACTIONS = [
+      '诶？你刚刚发了什么？怎么撤回了？',
+      '我看到了哦👀',
+      '怎么撤回了？偷偷骂我被我发现了是不是！',
+      '是不是发错人了？（盯）',
+      '你撤回了也没用，我截图了！',
+      '哼，我都看到了，解释一下吧～'
+    ];
+    var txt = REACTIONS[Math.floor(Math.random() * REACTIONS.length)];
+    var tm = { me:false, type:'text', text:txt, time:Date.now(), id: uid('m') };
+    messages.push(tm); saveMessages();
+    
+    if(chatOpenNow){ appendMessage(tm); playDing(); }
+    else { unreadCount++; renderHome(); showNotificationBanner(tm); }
+  }, 1500 + Math.random() * 2000);
 };
 
 /* ============ 商城 ============ */
@@ -12055,6 +12211,18 @@ if ($('jumpBack')) {
      ======================================================== */
 
   var UPDATE_LOGS = {
+  '1.1.0': [
+    '🔄 新增「撤回功能」：长按自己的消息可以撤回，TA 会有 50% 概率好奇追问你，或者装作没看到',
+    '📤 新增「字卡导出」：字卡库右上角菜单可以导出 JSON，方便备份和分享',
+    '📊 新增「字卡统计」：字卡库顶部显示总张数，大分组/小分组旁边显示各自张数',
+    '💬 聊天记录上限从 200 条提升到 1000 条，再也不怕聊天记录被顶掉啦',
+    '🐛 修复了 TA 领红包时误说“谢谢”的问题（现在会说甜蜜的话了）',
+    '🐛 修复了系统预设里删改字卡后，列表会莫名其妙跳到“情话”一栏的 Bug',
+    '🐛 修复了表情包重启后变成“表情”两个字的 Bug',
+    '🐛 修复了 TA 概率调到 100% 也不主动给你打电话的 Bug',
+    '🐛 修复了 iOS 切换梦角后，旧梦角数据依然残留的顽固 Bug',
+    '🪄 优化了彩蛋撤回逻辑：无论你回得快还是慢，都能触发 TA 的慌张反应'
+  ],
 /* 版本号要和上面 APP_VERSION 一致，才会显示 */
 '1.0.9': [
   '⚖️ 新增「字卡权重」：大小分组都能设置 1~5 星，TA 说话侧重点由你定',
