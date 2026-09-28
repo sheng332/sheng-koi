@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
 <title>sheng·g</title>
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <style>
   :root{
     --primary: #1f5f6c;--secondary: #d2e6ec;--accent: #d1d1d1;--text: #5a5a5a;--light-text: #8a8a8a;--highlight: #e1b2b2;
@@ -4051,8 +4051,13 @@ else preview = '发来一条消息';
     if(bannerTimer) clearTimeout(bannerTimer);
     banner.style.display = 'flex';
     requestAnimationFrame(function(){ banner.classList.add('show'); });
-
+    
     playDing();
+    if ("Notification" in window && Notification.permission === "granted") {
+  try {
+    new Notification(person.name || 'TA', { body: preview, icon: "icon-192.png" });
+  } catch(e) {}
+}
 
     bannerTimer = setTimeout(function(){
       banner.classList.remove('show');
@@ -6592,6 +6597,9 @@ setTimeout(function(){ taSendGift(); }, 2000 + Math.random() * 2000);
     inp.value = '';
     $('sendBtn').disabled = true;
     inp.blur();
+    if ("Notification" in window && Notification.permission === "default") {
+  Notification.requestPermission();
+}
     if(pendingNoReplyTimer){
       clearTimeout(pendingNoReplyTimer);
       pendingNoReplyTimer = null;
