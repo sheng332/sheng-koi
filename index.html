@@ -1227,6 +1227,48 @@ html, body {
   font-size:14px;color:var(--primary);
   letter-spacing:2px;font-weight:500;
 }
+/* 👇 更多菜单悬浮面板样式 */
+./* 👇 更多菜单弹窗的基础显示规则（千万不要漏掉） */
+.more-menu-bg { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 300; display: none; align-items: flex-end; justify-content: center; }
+.more-menu-bg.open { display: flex; animation: fadeIn .15s ease; }
+.more-menu { width: 100%; max-width: 600px; background: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px; padding-bottom: env(safe-area-inset-bottom,0px); animation: slideUp .2s ease; overflow: hidden; }
+
+/* 👇 刚刚给你配的方块布局 */
+.more-menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; padding: 20px 16px; background: #fff; border-top-left-radius: 16px; border-top-right-radius: 16px; }
+.more-menu-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: transparent; border: 0; color: var(--text); cursor: pointer; padding: 0; }
+.more-menu-btn:active .more-menu-btn-icon-wrap { transform: scale(.92); }
+.more-menu-btn-icon-wrap { width: 52px; height: 52px; border-radius: 14px; background: var(--soft); color: var(--primary); display: grid; place-items: center; transition: transform .15s ease; }
+.more-menu-btn span { font-size: 12px; color: var(--light-text); }
+.more-menu-cancel { width: 100%; height: 50px; border: 0; background: #fff; color: var(--text); font-size: 15px; font-family: inherit; border-top: 1px solid var(--line); cursor: pointer; }
+/* 👇 动态选表情包弹窗 */
+.moment-sticker-picker-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10001;display:none;align-items:flex-end}
+.moment-sticker-picker-bg.open{display:flex;animation:fadeIn .2s ease}
+.moment-sticker-picker-panel{width:100%;max-height:65vh;background:#fff;border-top-left-radius:20px;border-top-right-radius:20px;padding:16px;display:flex;flex-direction:column;animation:slideUp .2s ease}
+.moment-sticker-picker-header{display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.moment-sticker-picker-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:12px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+/* 👇 修复小屏幕手机（真我/窄屏）小分组名称被挤压的问题 */
+.subgroup-head {
+  flex-wrap: wrap !important; /* 允许换行 */
+  padding: 8px 10px !important;
+  gap: 6px !important;
+}
+.subgroup-name {
+  flex: 1 1 auto !important; /* 保证名称优先获得空间 */
+  min-width: 60px !important; /* 强制最小宽度，绝对不会被挤没 */
+  white-space: normal !important; /* 名字太长时自动换行 */
+  word-break: break-word;
+  margin-bottom: 2px;
+}
+/* 缩小张数徽章的内边距 */
+.subgroup-head > span:nth-child(2) {
+  padding: 1px 6px !important;
+  font-size: 10.5px !important;
+}
+/* 缩小权重徽章的内边距 */
+.subgroup-head .subgroup-count {
+  padding: 1px 6px !important;
+  font-size: 10.5px !important;
+}
 </style>
 </head>
 <body>
@@ -1432,7 +1474,8 @@ html, body {
     </div>
     <form class="composer" id="composer" autocomplete="off">
       <button type="button" class="icon-btn" id="openStickerPanel" aria-label="表情"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9.5" r="0.8" fill="currentColor"/><circle cx="15" cy="9.5" r="0.8" fill="currentColor"/></svg></button>
-      <button type="button" class="icon-btn" id="openRpFormBtn" aria-label="红包"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="15" rx="2"/><path d="m2 8 10 6 10-6"/></svg></button>
+      <button type="button" class="icon-btn" id="openImageBtn" aria-label="图片"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+<input type="file" id="chatImageUpload" accept="image/*" style="display:none;">
 <button type="button" class="icon-btn" id="openMoreMenuBtn" aria-label="更多"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/></svg></button>
       <input id="msgInput" type="text" placeholder="发送消息" enterkeyhint="send">
       <button type="button" class="send-btn" id="sendBtn" disabled aria-label="发送"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
@@ -1440,27 +1483,33 @@ html, body {
   </div>
   <div class="more-menu-bg" id="moreMenuBg">
   <div class="more-menu">
-    <button class="more-menu-btn" id="moreMenuInvite">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-  <span>邀请他一起听歌</span>
-</button>
-<button class="more-menu-btn" id="moreMenuGame">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
-  <span>邀请 TA 一起玩</span>
-</button>
-<button class="more-menu-btn" id="moreMenuQuiz">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6"/><path d="M9 15h3"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg>
-  <span>发起提问</span>
-</button>
-<button class="more-menu-btn" id="moreMenuBatchQuiz">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6"/><path d="M9 15h3"/><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 2v2"/></svg>
-  <span>批量提问</span>
-</button>
-<button class="more-menu-btn" id="moreMenuCall">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-  <span>打电话给他</span>
-</button>
-<button class="more-menu-btn" id="moreMenuCancel">取消</button>
+    <div class="more-menu-grid">
+      <button class="more-menu-btn" id="moreMenuInvite">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <span>一起听歌</span>
+      </button>
+      <button class="more-menu-btn" id="moreMenuGame">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg></div>
+        <span>一起玩</span>
+      </button>
+      <button class="more-menu-btn" id="moreMenuQuiz">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6"/><path d="M9 15h3"/><rect x="4" y="4" width="16" height="16" rx="3"/></svg></div>
+        <span>发起提问</span>
+      </button>
+      <button class="more-menu-btn" id="moreMenuBatchQuiz">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11h6"/><path d="M9 15h3"/><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 2v2"/></svg></div>
+        <span>批量提问</span>
+      </button>
+      <button class="more-menu-btn" id="moreMenuCall">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <span>打电话</span>
+      </button>
+      <button class="more-menu-btn" id="moreMenuRp">
+        <div class="more-menu-btn-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="15" rx="2"/><path d="m2 8 10 6 10-6"/></svg></div>
+        <span>发红包</span>
+      </button>
+    </div>
+    <button class="more-menu-cancel" id="moreMenuCancel">取消</button>
   </div>
 </div>
 <div class="chat-settings-menu-bg" id="chatSettingsMenuBg">
@@ -1546,6 +1595,18 @@ html, body {
       · 点主屏右上角的<strong style="color:var(--primary);">梦角胶囊</strong>，随时切换不同梦角<br>
       · 使用<strong style="color:var(--primary);">群聊</strong>功能，让多个梦角在一个群里聊天<br>
       关闭后只保留单梦角，群聊入口也会隐藏。
+    </div>
+  </div>
+</div>
+
+<div class="field-group">
+  <div class="field" style="flex-direction:column;align-items:stretch;gap:10px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="flex:1;font-size:14.5px;font-weight:600;color:var(--text);">显示动态和信箱</span>
+      <label class="switch"><input type="checkbox" id="showMomentsMailToggle"><span class="switch-slider"></span></label>
+    </div>
+    <div style="font-size:12.5px;color:var(--light-text);line-height:1.65;">
+      关闭后，主屏的<strong style="color:var(--primary);">动态</strong>和<strong style="color:var(--primary);">信箱</strong>图标会隐藏，聊天中也不会再触发写信和自动发动态。
     </div>
   </div>
 </div>
@@ -2435,9 +2496,12 @@ html, body {
     <div class="group-messages" id="groupMessages"></div>
   </div>
   <form class="composer" id="groupComposer" autocomplete="off">
-    <input id="groupInput" type="text" placeholder="说点什么…" enterkeyhint="send">
-    <button type="button" class="send-btn" id="groupSendBtn" disabled aria-label="发送"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
-  </form>
+  <button type="button" class="icon-btn" id="groupStickerBtn" aria-label="表情"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9.5" r="0.8" fill="currentColor"/><circle cx="15" cy="9.5" r="0.8" fill="currentColor"/></svg></button>
+  <button type="button" class="icon-btn" id="groupImageBtn" aria-label="图片"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+  <input type="file" id="groupImageUpload" accept="image/*" style="display:none;">
+  <input id="groupInput" type="text" placeholder="说点什么…" enterkeyhint="send">
+  <button type="button" class="send-btn" id="groupSendBtn" disabled aria-label="发送"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+</form>
 </section>
 
 <section class="page" id="shopPage">
@@ -2532,8 +2596,8 @@ html, body {
 
 <!-- 👇 新增：公告大字提醒 -->
 <div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
-  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🔄 新增撤回 & 导出功能</p>
-  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">长按自己的消息可以撤回啦！去字卡库还能一键导出 JSON 分享字卡</p>
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🚀 全新 1.2.0 版本更新</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">聊天/群聊支持发图片啦！TA 的钱包也变成了无限额度，快去体验吧！</p>
 </div>
 <!-- 👆 大字提醒结束 -->
 
@@ -2745,6 +2809,15 @@ html, body {
     </div>
   </div>
 </div>
+<div class="moment-sticker-picker-bg" id="momentStickerPickerBg">
+  <div class="moment-sticker-picker-panel">
+    <div class="moment-sticker-picker-header">
+      <span>选择表情包</span>
+      <button class="icon-btn" id="momentStickerPickerClose" style="font-size:24px;">×</button>
+    </div>
+    <div class="moment-sticker-picker-grid" id="momentStickerPickerGrid"></div>
+  </div>
+</div>
 <div class="dialog-bg" id="dialogBg">
   <div class="dialog">
     <div class="dialog-title" id="dialogTitle">提示</div>
@@ -2761,7 +2834,7 @@ html, body {
   /* ========================================================
      📝 每次发新版，只改下面这一个版本号就行
      ======================================================== */
-  var APP_VERSION = '1.1.0';
+  var APP_VERSION = '1.2.0';
 
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
@@ -3333,27 +3406,30 @@ function loadUserStickers(){
   try{ var raw = localStorage.getItem(USER_STICKER_KEY); if(raw){ var d = JSON.parse(raw); userStickers = resolveStickerArray(d); } }catch(e){}
 }
   function loadWallets(){
-    try{
-      var raw = localStorage.getItem(WALLET_ME_KEY);
-      if(raw){
-        var d = JSON.parse(raw);
-        if(d && typeof d === 'object'){
-          walletMe.balance = (typeof d.balance === 'number') ? d.balance : 520;
-          walletMe.records = Array.isArray(d.records) ? d.records : [];
-        }
+  try{
+    var raw = localStorage.getItem(WALLET_ME_KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(d && typeof d === 'object'){
+        walletMe.balance = (typeof d.balance === 'number') ? d.balance : 520;
+        walletMe.records = Array.isArray(d.records) ? d.records : [];
       }
-    }catch(e){}
-    try{
-      var raw2 = localStorage.getItem(WALLET_TA_KEY);
-      if(raw2){
-        var d2 = JSON.parse(raw2);
-        if(d2 && typeof d2 === 'object'){
-          walletTa.balance = (typeof d2.balance === 'number') ? d2.balance : 520;
-          walletTa.records = Array.isArray(d2.records) ? d2.records : [];
-        }
+    }
+  }catch(e){}
+  
+  // 🔒 核心：强制让 TA 的钱包变成无限
+  walletTa.balance = 999999999;
+  
+  try{
+    var raw2 = localStorage.getItem(WALLET_TA_KEY);
+    if(raw2){
+      var d2 = JSON.parse(raw2);
+      if(d2 && typeof d2 === 'object'){
+        walletTa.records = Array.isArray(d2.records) ? d2.records : [];
       }
-    }catch(e){}
-  }
+    }
+  }catch(e){}
+}
   function saveWalletMe(){ safeSetItem(WALLET_ME_KEY, JSON.stringify(walletMe)); }
   function saveWalletTa(){ safeSetItem(WALLET_TA_KEY, JSON.stringify(walletTa)); }
 
@@ -4417,6 +4493,7 @@ renderTopHero();
 renderBigPhoto();
 renderAnniversaryBg();
 renderAppIcons();
+applyMomentsMailVisibility();
 /* 检查动态红点 */
 var momentsIcon = document.querySelector('.app-item[data-app="moments"] .app-icon');
 if(momentsIcon){
@@ -4484,9 +4561,14 @@ if(momentsIcon){
     var style = person.bubbleStyle || 'rounded';
     var quoteHTML = '';
     if(m.quote){
-      var qName = m.quote.me ? '你' : (person.name || 'TA');
-      quoteHTML = '<div class="bubble-quote" data-quote-jump="' + (m.quote.id || '') + '">' + qName + '：' + esc(m.quote.text || '') + '</div>';
-    }
+  var qName = m.quote.me ? '你' : (person.name || 'TA');
+  var qText = m.quote.text || '';
+  // 只要是表情包类型、或者文本里包含 blob/idb/data:image，一律显示 [表情]
+  if(m.quote.type === 'sticker' || qText.indexOf('blob:') > -1 || qText.indexOf('@idb:') > -1 || qText.indexOf('data:image') > -1 || qText.indexOf('sticker_') > -1 || qText.indexOf('chat_img_') > -1){
+    qText = '[表情]';
+  }
+  quoteHTML = '<div class="bubble-quote" data-quote-jump="' + (m.quote.id || '') + '">' + qName + '：' + esc(qText) + '</div>';
+}
     if(m.type === 'invite'){
   var tName = person.name || 'TA';
 var statusText = '待回应...';
@@ -6338,10 +6420,21 @@ var picked = [];
 for(var i=0;i<count;i++){ var r = makeOneReply(false); if(r) picked.push(r); }
 if(!picked.length) return;
 
-var lastUserMsg = null;
-for(var i=messages.length-1;i>=0;i--){ if(messages[i].me){ lastUserMsg = messages[i]; break; } }
-if(lastUserMsg && Math.random() * 100 < (person.quoteChance || 0)){
-  picked[0].quote = { me:true, text: lastUserMsg.text || '', id: lastUserMsg.id || '' };
+/* 👇 引用逻辑升级：从最近 30 条消息里随机挑一条来引用（包括 TA 自己的） */
+if(Math.random() * 100 < (person.quoteChance || 0)){
+  var quotePool = messages.slice(-30).filter(function(m){
+    // 排除系统消息、撤回的消息、红包、信件、邀请等特殊卡片
+    return (m.type === 'text' || m.type === 'sticker' || m.type === 'emoji' || m.type === 'voice') && !m.recalled && !m.type.includes('sys');
+  });
+  if(quotePool.length > 0){
+    var randomMsg = quotePool[Math.floor(Math.random() * quotePool.length)];
+    picked[0].quote = { 
+      me: !!randomMsg.me, 
+      text: randomMsg.text || '', 
+      id: randomMsg.id || '', 
+      type: randomMsg.type 
+    };
+  }
 }
 
 picked.forEach(function(m){ m.id = m.id || uid('m'); messages.push(m); });
@@ -6349,8 +6442,10 @@ picked.forEach(function(m){ m.id = m.id || uid('m'); messages.push(m); });
 if(musicPlaylist.length && Math.random() * 100 < (person.taInviteChance || 10)){
   setTimeout(function(){ taSendListenInvite(); }, 800 + Math.random() * 800);
 }
-if(Math.random() * 100 < (person.letterChance || 10)){
-  setTimeout(function(){ sendTaLetter(); }, 1500 + Math.random() * 2000);
+if(localStorage.getItem('chat_show_moments_mail_v1') !== 'off'){
+  if(Math.random() * 100 < (person.letterChance || 10)){
+    setTimeout(function(){ sendTaLetter(); }, 1500 + Math.random() * 2000);
+  }
 }
 if(Math.random() * 100 < (person.gameInviteChance || 10)){
   setTimeout(function(){ taSendGameInvite(); }, 1200 + Math.random() * 1200);
@@ -6815,20 +6910,29 @@ if($('closeStickerPanel')) $('closeStickerPanel').onclick = function(){ $('stick
     return String(txt).replace(/\{me\}/g, meLabel || '你').replace(/\{ta\}/g, person.name || 'TA');
   }
   function doPatTa(){
-    if(!myPats.length){ showDialog('还没有拍一拍', '去「我的收藏 → 拍一拍」里加几条文案吧。', [{ text:'知道了', primary:true }]); return; }
-    var raw = myPats[Math.floor(Math.random() * myPats.length)];
-    var txt = fillPatText(raw, '你');
-    var sys = { me:false, type:'sys', text:'你 ' + txt, time:Date.now() };
-    messages.push(sys); saveMessages(); appendMessage(sys);
-    if(taPats.length && Math.random() < 0.5){
-      setTimeout(function(){
-        var raw2 = taPats[Math.floor(Math.random() * taPats.length)];
-        var txt2 = fillPatText(raw2, '你');
-        var sys2 = { me:false, type:'sys', text:(person.name || 'TA') + ' ' + txt2, time:Date.now() };
-        messages.push(sys2); saveMessages(); appendMessage(sys2);
-      }, 800 + Math.random() * 800);
-    }
-  }
+  if(!myPats.length){ showDialog('还没有拍一拍', '去「我的收藏 → 拍一拍」里加几条文案吧。', [{ text:'知道了', primary:true }]); return; }
+  
+  /* 弹出选择列表，而不是随机抽 */
+  var btns = myPats.map(function(txt, i){
+    return { text: txt, onClick: function(){
+      var filled = fillPatText(txt, '你');
+      var sys = { me:false, type:'sys', text:'你 ' + filled, time:Date.now() };
+      messages.push(sys); saveMessages(); appendMessage(sys);
+      
+      if(taPats.length && Math.random() < 0.5){
+        setTimeout(function(){
+          var raw2 = taPats[Math.floor(Math.random() * taPats.length)];
+          var txt2 = fillPatText(raw2, '你');
+          var sys2 = { me:false, type:'sys', text:(person.name || 'TA') + ' ' + txt2, time:Date.now() };
+          messages.push(sys2); saveMessages(); appendMessage(sys2);
+        }, 800 + Math.random() * 800);
+      }
+    }};
+  });
+  btns.push({ text: '取消', primary: true });
+  
+  showDialog('选一个拍一拍', '', btns);
+}
   function tryTaPatMe(){
     if(!taPats.length) return;
     var raw = taPats[Math.floor(Math.random() * taPats.length)];
@@ -6934,6 +7038,20 @@ function setMultiPersonaMode(on){
 if($('multiPersonaToggle')){
   $('multiPersonaToggle').addEventListener('change', function(){
     setMultiPersonaMode(!!this.checked);
+  });
+}
+function applyMomentsMailVisibility(){
+  var show = localStorage.getItem('chat_show_moments_mail_v1') !== 'off';
+  var momentsBtn = document.querySelector('.app-item[data-app="moments"]');
+  var mailboxBtn = document.querySelector('.app-item[data-app="mailbox"]');
+  if(momentsBtn) momentsBtn.style.display = show ? '' : 'none';
+  if(mailboxBtn) mailboxBtn.style.display = show ? '' : 'none';
+  if($('showMomentsMailToggle')) $('showMomentsMailToggle').checked = show;
+}
+if($('showMomentsMailToggle')){
+  $('showMomentsMailToggle').addEventListener('change', function(){
+    try{ localStorage.setItem('chat_show_moments_mail_v1', this.checked ? 'on' : 'off'); }catch(e){}
+    applyMomentsMailVisibility();
   });
 }
 function openSettingsPage(){
@@ -7860,7 +7978,11 @@ function doExportCards(data){
   function renderWalletPage(){
     if(!$('walletMeAmount')) return;
     $('walletMeAmount').textContent = '¥ ' + fmtMoney(walletMe.balance);
-    $('walletTaAmount').textContent = '¥ ' + fmtMoney(walletTa.balance);
+    if(walletTa.balance >= 999999999){
+  $('walletTaAmount').textContent = '无限 ♾️';
+} else {
+  $('walletTaAmount').textContent = '¥ ' + fmtMoney(walletTa.balance);
+}
 
     var inCount = 0, outCount = 0, maxAmt = 0;
     (walletMe.records || []).forEach(function(r){
@@ -8203,7 +8325,28 @@ if($('chatMusicBack')){
   /* 钱包页面 */
   if($('walletBack')) $('walletBack').onclick = function(){ $('walletPage').classList.remove('open'); };
   if($('rpFormBack')) $('rpFormBack').onclick = function(){ $('rpFormPage').classList.remove('open'); };
-  if($('openRpFormBtn')) $('openRpFormBtn').onclick = openRpFormPage;
+  /* 红包搬家到菜单里 */
+if($('moreMenuRp')) $('moreMenuRp').onclick = function(){
+  $('moreMenuBg').classList.remove('open');
+  openRpFormPage();
+};
+
+/* 输入框改为发送图片 */
+if($('openImageBtn')) $('openImageBtn').onclick = function(){ $('chatImageUpload').click(); };
+if($('chatImageUpload')){
+  $('chatImageUpload').addEventListener('change', function(){
+    var f = this.files && this.files[0]; if(!f) return;
+    compressImage(f, 800, function(dataUrl){
+      var key = 'chat_img_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+      saveImgToIdb(key, dataUrl).then(function(url){
+        var msg = { me:true, type:'sticker', text:url, time:Date.now(), read:false, id: uid('m') };
+        messages.push(msg); saveMessages(); appendMessage(msg);
+        scheduleReply(); gainAffection();
+      });
+    }, 0.85);
+    this.value = '';
+  });
+}
   if($('rpSendBtn')) $('rpSendBtn').onclick = sendRedpacket;
   if($('rpPopupOk')) $('rpPopupOk').onclick = function(){ $('rpPopupBg').classList.remove('open'); };
   if($('rpQuickRow')){
@@ -8333,7 +8476,7 @@ if(m.me && !m.recalled){
     if(actionMsgIdx < 0) return;
     var m = messages[actionMsgIdx];
     if(!m) return;
-    pendingQuote = { me: !!m.me, text: m.text || '', id: m.id || '' };
+    pendingQuote = { me: !!m.me, text: m.text || '', id: m.id || '', type: m.type };
     var who = m.me ? '你' : (person.name || 'TA');
     $('composerQuoteContent').textContent = who + '：' + (m.text || '[非文字]');
     $('composerQuote').classList.add('show');
@@ -8837,6 +8980,56 @@ function sendGroupMessage(){
   });
 }
 
+if($('groupImageBtn')) $('groupImageBtn').onclick = function(){ $('groupImageUpload').click(); };
+if($('groupImageUpload')){
+  $('groupImageUpload').addEventListener('change', function(){
+    var f = this.files && this.files[0]; if(!f) return;
+    compressImage(f, 800, function(dataUrl){
+      var key = 'group_img_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+      saveImgToIdb(key, dataUrl).then(function(url){
+        groupMessages.push({ id: uid('gm'), me: true, type: 'sticker', text: url, time: Date.now() });
+        saveGroupMessages();
+        renderGroupMessages();
+      });
+    }, 0.85);
+    this.value = '';
+  });
+}
+if($('groupStickerBtn')) {
+  $('groupStickerBtn').onclick = function(){
+    var pool = (userStickers && userStickers.length) ? userStickers : (cards && cards.sticker ? cards.sticker : []);
+    if(!pool.length){ showDialog('还没有表情包', '先去字卡库或聊天面板里加几张吧～', [{text:'好的', primary:true}]); return; }
+    
+    var html = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-height:40vh;overflow-y:auto;padding:10px;">';
+    pool.forEach(function(url, idx){
+      html += '<div class="sticker-cell" data-group-sticker-idx="' + idx + '" style="aspect-ratio:1/1;border-radius:10px;overflow:hidden;cursor:pointer;"><img src="' + esc(url) + '" style="width:100%;height:100%;object-fit:cover;display:block;"></div>';
+    });
+    html += '</div>';
+    
+    showDialog('选择表情包', html, [
+      { text:'取消', primary:true }
+    ], true);
+    
+    setTimeout(function(){
+      var dialogBody = $('dialogBody');
+      var handleGridClick = function(e){
+        var cell = e.target.closest('[data-group-sticker-idx]');
+        if(!cell) return;
+        var idx = parseInt(cell.dataset.groupStickerIdx, 10);
+        var url = pool[idx];
+        if(!url) return;
+        
+        groupMessages.push({ id: uid('gm'), me: true, type: 'sticker', text: url, time: Date.now() });
+        saveGroupMessages();
+        renderGroupMessages();
+        
+        $('dialogBg').classList.remove('open');
+        dialogBody.removeEventListener('click', handleGridClick);
+      };
+      dialogBody.addEventListener('click', handleGridClick);
+    }, 100);
+  };
+}
 if($('groupBack')) $('groupBack').onclick = function(){ $('groupPage').classList.remove('open'); };
 if($('groupInput')) $('groupInput').addEventListener('input', function(){
   $('groupSendBtn').disabled = $('groupInput').value.trim().length === 0;
@@ -9153,13 +9346,24 @@ function pickMomentSticker(fromTa){
 }
 
 function taPostMoment(){
-  var text = pickMomentText();
-  if(cards && cards.system && Array.isArray(cards.system.lifeMoments) && cards.system.lifeMoments.length > 0){
-    if(Math.random() < 0.7){
-      text = cards.system.lifeMoments[Math.floor(Math.random() * cards.system.lifeMoments.length)];
-    }
-  }
+  var text = '';
   var sticker = pickMomentSticker(true);
+
+  /* 按概率决定文本来源 */
+  var rand = Math.random();
+  if(rand < 0.4 && cards && cards.system && Array.isArray(cards.system.lifeMoments) && cards.system.lifeMoments.length > 0){
+    /* 40%概率：从预设的日常碎片抽 */
+    text = cards.system.lifeMoments[Math.floor(Math.random() * cards.system.lifeMoments.length)];
+  } else if(rand < 0.7){
+    /* 30%概率：从主字卡池里抽 2-3 张拼在一起 */
+    text = pickMomentText();
+  } else {
+    /* 30%概率：走词典拼字卡逻辑 */
+    var cm = (typeof buildConcatMsg === 'function') ? buildConcatMsg() : null;
+    if(cm && cm.text) text = cm.text;
+    else text = pickMomentText(); // 兜底
+  }
+
   if(!text && !sticker) return;
   var m = { id: uid('mo'), author: 'ta', text: text, sticker: sticker || '', time: Date.now(), likes: [], comments: [] };
   moments.push(m);
@@ -9174,6 +9378,7 @@ function taPostMoment(){
 }
 
 function maybeTaAutoPost(){
+  if(localStorage.getItem('chat_show_moments_mail_v1') === 'off') return;
   var lastTa = null;
   for(var i=moments.length-1;i>=0;i--){ if(moments[i].author === 'ta'){ lastTa = moments[i]; break; } }
   var hours = person.momentAutoPostHours || 4;
@@ -9309,10 +9514,34 @@ if($('momentPostSubmit')) $('momentPostSubmit').onclick = submitMomentPost;
 if($('momentPostStickerBtn')) $('momentPostStickerBtn').onclick = function(){
   var pool = (userStickers && userStickers.length) ? userStickers : (taStickers && taStickers.length ? taStickers : (cards && cards.sticker ? cards.sticker : []));
   if(!pool.length){ showDialog('还没有表情包', '先去聊天页或字卡库里加几张吧。', [{ text:'知道了', primary:true }]); return; }
-  momentPostSticker = pool[Math.floor(Math.random() * pool.length)];
-  $('momentPostStickerPreview').src = momentPostSticker;
-  $('momentPostStickerBox').style.display = 'block';
+  var grid = $('momentStickerPickerGrid');
+  grid.innerHTML = pool.map(function(url, i){
+    return '<div class="sticker-cell" data-moment-sticker-idx="' + i + '"><img src="' + esc(url) + '" alt="表情"></div>';
+  }).join('');
+  $('momentStickerPickerBg').classList.add('open');
 };
+
+if($('momentStickerPickerClose')){
+  $('momentStickerPickerClose').onclick = function(){ $('momentStickerPickerBg').classList.remove('open'); };
+}
+if($('momentStickerPickerBg')){
+  $('momentStickerPickerBg').addEventListener('click', function(e){
+    if(e.target === this) this.classList.remove('open');
+  });
+}
+if($('momentStickerPickerGrid')){
+  $('momentStickerPickerGrid').addEventListener('click', function(e){
+    var cell = e.target.closest('[data-moment-sticker-idx]');
+    if(!cell) return;
+    var idx = parseInt(cell.dataset.momentStickerIdx, 10);
+    var pool = (userStickers && userStickers.length) ? userStickers : (taStickers && taStickers.length ? taStickers : (cards && cards.sticker ? cards.sticker : []));
+    if(!pool[idx]) return;
+    momentPostSticker = pool[idx];
+    $('momentPostStickerPreview').src = momentPostSticker;
+    $('momentPostStickerBox').style.display = 'block';
+    $('momentStickerPickerBg').classList.remove('open');
+  });
+}
 if($('momentPostStickerRemove')) $('momentPostStickerRemove').onclick = function(){
   momentPostSticker = null;
   $('momentPostStickerBox').style.display = 'none';
@@ -12211,7 +12440,19 @@ if ($('jumpBack')) {
      ======================================================== */
 
   var UPDATE_LOGS = {
-  '1.1.0': [
+'1.2.0': [
+  '🖼️ 聊天和群聊都支持发送相册图片了，图片会自动压缩保存',
+  '🎭 群聊新增表情包功能，单聊和群聊的表情包是互通的',
+  '🖐️ 拍一拍升级：现在双击头像会弹出选择列表，让你自己挑一个拍',
+  '💌 更多菜单大改版：变成了 6 个方块面板，「发红包」也挪进去了',
+  '💰 TA 的钱包变成无限额度，再也不用担心 TA 没钱给你发红包啦',
+  '🚫 设置新增「显示动态和信箱」开关，一键隐藏入口，聊天也不再触发',
+  '📝 动态大升级：发布时支持网格选择表情包，TA 发动态时也会拼字卡了',
+  '🔗 TA 引用升级：现在可以引用更早的历史消息，甚至是 TA 自己说过的话',
+  '🐛 修复了 iOS 切换梦角数据串台、引用表情包乱码、领红包说谢谢等若干 Bug',
+  '📦 优化了底层数据存储逻辑，运行更稳定'
+],
+'1.1.0': [
     '🔄 新增「撤回功能」：长按自己的消息可以撤回，TA 会有 50% 概率好奇追问你，或者装作没看到',
     '📤 新增「字卡导出」：字卡库右上角菜单可以导出 JSON，方便备份和分享',
     '📊 新增「字卡统计」：字卡库顶部显示总张数，大分组/小分组旁边显示各自张数',
