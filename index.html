@@ -884,7 +884,7 @@ html, body {
 .call-bg::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.15)}
 .call-status{position:relative;z-index:2;flex:0 0 auto;text-align:center;padding:calc(50px + env(safe-area-inset-top,0px)) 20px 0;font-size:14px;color:rgba(60,70,80,.75);letter-spacing:1px}
 .call-status .call-time{margin-top:8px;font-size:18px;font-weight:600;color:#3a4a55;letter-spacing:2px;font-variant-numeric:tabular-nums}
-.call-avatar-wrap{position:relative;z-index:2;flex:1;display:flex;align-items:center;justify-content:center}
+.call-avatar-wrap{position:relative;z-index:2;flex:0 0 auto;margin-top:30px;display:flex;align-items:center;justify-content:center}
 .call-avatar{width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#5a7fa3,#8a7aa3);display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:700;color:#fff;position:relative;z-index:2;box-shadow:0 20px 60px rgba(60,80,100,.25);overflow:hidden;background-size:cover;background-position:center}
 .call-avatar img{width:100%;height:100%;object-fit:cover}
 .call-ripple{position:absolute;width:140px;height:140px;border-radius:50%;border:2px solid rgba(90,120,140,.35);animation:callRipple 2.2s infinite ease-out;pointer-events:none}
@@ -892,9 +892,9 @@ html, body {
 .call-ripple:nth-child(3){animation-delay:1.4s}
 @keyframes callRipple{0%{transform:scale(1);opacity:.55}100%{transform:scale(2.2);opacity:0}}
 .call-avatar-wrap.connected .call-ripple{animation-duration:3.5s;border-color:rgba(90,120,140,.15)}
-.call-name{position:relative;z-index:2;text-align:center;font-size:22px;font-weight:600;margin-top:-20px;margin-bottom:20px;letter-spacing:1px;color:#3a4a55}
+.call-name{position:relative;z-index:2;text-align:center;font-size:22px;font-weight:600;margin-top:10px;margin-bottom:0px;letter-spacing:1px;color:#3a4a55}
 .call-name .call-sub{display:block;font-size:13px;font-weight:400;color:rgba(60,80,90,.55);margin-top:8px;letter-spacing:2px}
-.call-actions{position:relative;z-index:2;flex:0 0 auto;display:flex;justify-content:center;gap:40px;padding:0 20px calc(50px + env(safe-area-inset-bottom,0px))}
+.call-actions{position:relative;z-index:2;flex:0 0 auto;display:flex;justify-content:center;gap:40px;padding:0 20px calc(20px + env(safe-area-inset-bottom,0px))}
 .call-action-btn{width:66px;height:66px;border-radius:50%;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s ease,background .15s ease;font-family:inherit;color:#3a4a55}
 .call-action-btn svg{width:26px;height:26px}
 .call-action-btn .lbl{font-size:10px;margin-top:2px;opacity:.85}
@@ -1269,6 +1269,55 @@ html, body {
   padding: 1px 6px !important;
   font-size: 10.5px !important;
 }
+/* 👇 通话界面：输入框 + 字幕 */
+.call-input-area {
+  position: relative; z-index: 2; margin: auto 20px 12px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-radius: 24px; padding: 6px 6px 6px 16px; box-shadow: 0 4px 16px rgba(60, 80, 100, 0.1);
+}
+.call-input-area input {
+  flex: 1; min-width: 0; height: 40px; border: 0; background: transparent;
+  font-size: 14px; font-family: inherit; color: #3a4a55; outline: none;
+}
+.call-input-area input::placeholder { color: rgba(60, 80, 100, 0.4); }
+.call-input-area button {
+  flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: #1f5f6c; color: #fff; cursor: pointer;
+}
+.call-input-area button svg { width: 18px; height: 18px; margin-left: 2px; }
+.call-input-area button:active { transform: scale(.92); }
+.call-input-area button:disabled { opacity: .4; transform: none; }
+.call-subtitle {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto; /* 核心：不再撑满，随内容自适应 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 15px auto 0; /* 距离名字有15px间距，且水平居中 */
+  width: fit-content; /* 宽度刚好包住文字 */
+  max-width: 80%; /* 防止长句超出屏幕 */
+  min-height: 40px;
+  font-size: 15px;
+  color: #3a4a55;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px; /* 圆润一点，像小胶囊 */
+  padding: 8px 20px;
+  box-shadow: 0 4px 16px rgba(60, 80, 100, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+.call-subtitle.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.call-subtitle.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -2569,9 +2618,16 @@ html, body {
     <div class="call-avatar" id="callAvatar">TA</div>
   </div>
   <div class="call-name" id="callName">
-    TA
-    <span class="call-sub" id="callSub">等待接听</span>
-  </div>
+  TA
+  <span class="call-sub" id="callSub">等待接听</span>
+</div>
+<div class="call-subtitle" id="callSubtitle"></div>
+  <div class="call-input-area" id="callInputArea">
+  <input type="text" id="callInput" placeholder="输入你想说的话…" autocomplete="off">
+  <button type="button" id="callSendBtn" aria-label="发送">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+  </button>
+</div>
   <div class="call-actions" id="callActions"></div>
 </div>
 
@@ -2596,8 +2652,8 @@ html, body {
 
 <!-- 👇 新增：公告大字提醒 -->
 <div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
-  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">🚀 全新 1.2.0 版本更新</p>
-  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">聊天/群聊支持发图片啦！TA 的钱包也变成了无限额度，快去体验吧！</p>
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">📞 全新 1.3.0 沉浸式通话</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">通话界面支持打字聊天啦！TA会实时回你字幕，群聊也支持发图片和表情包了～</p>
 </div>
 <!-- 👆 大字提醒结束 -->
 
@@ -2834,7 +2890,7 @@ html, body {
   /* ========================================================
      📝 每次发新版，只改下面这一个版本号就行
      ======================================================== */
-  var APP_VERSION = '1.2.0';
+  var APP_VERSION = '1.3.0';
 
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
@@ -9686,6 +9742,84 @@ if($('moreMenuInvite')){
 }
 
 /* ============ 通话系统 ============ */
+/* ============ 通话字幕 + 双向对话 ============ */
+var callSubtitleTimer = null;
+var callInputLock = false;
+var callHistory = [];
+
+function stopCallSubtitle(){
+  if(callSubtitleTimer){ clearTimeout(callSubtitleTimer); callSubtitleTimer = null; }
+  var subtitleEl = $('callSubtitle');
+  if(subtitleEl){ subtitleEl.classList.remove('show'); subtitleEl.textContent = ''; }
+  callInputLock = false;
+  var inputEl = $('callInput');
+  if(inputEl) inputEl.disabled = false;
+  var btnEl = $('callSendBtn');
+  if(btnEl) btnEl.disabled = false;
+}
+
+function showCallSubtitle(text, duration){
+  var subtitleEl = $('callSubtitle');
+  if(!subtitleEl) return;
+  subtitleEl.textContent = text;
+  subtitleEl.classList.add('show');
+  if(callSubtitleTimer) clearTimeout(callSubtitleTimer);
+  callSubtitleTimer = setTimeout(function(){ subtitleEl.classList.remove('show'); }, duration || 2500);
+}
+
+function pickCallReply(userText){
+  var kws = userText.toLowerCase().split(/[\s,，。.!！?？]+/).filter(Boolean);
+  var matchedPool = [];
+  var allPool = allTextCards().filter(function(t){ return t.length <= 25 && t.indexOf('http') === -1 && t.indexOf('blob:') === -1; });
+  cards.text.forEach(function(b){
+    if(b.enabled === false) return;
+    var bigMatch = kws.some(function(kw){ return b.name.toLowerCase().indexOf(kw) > -1; });
+    b.groups.forEach(function(sg){
+      if(sg.enabled === false) return;
+      var subMatch = kws.some(function(kw){ return sg.name.toLowerCase().indexOf(kw) > -1; });
+      if(bigMatch || subMatch){
+        sg.items.forEach(function(it){ var t = String(it).trim(); if(t.length > 0 && t.length <= 25 && t.indexOf('http') === -1) matchedPool.push(t); });
+      }
+    });
+  });
+  if(matchedPool.length > 0 && Math.random() < 0.8) return matchedPool[Math.floor(Math.random() * matchedPool.length)];
+  if(allPool.length > 0) return allPool[Math.floor(Math.random() * allPool.length)];
+  return '嗯…我在听你说。';
+}
+
+function handleCallSend(){
+  var inputEl = $('callInput');
+  var text = (inputEl.value || '').trim();
+  if(!text || callInputLock) return;
+callInputLock = true; inputEl.value = ''; $('callSendBtn').disabled = true;$('callSendBtn').disabled = true;
+
+  showCallSubtitle(text, 2500);
+  callHistory.push({ me: true, text: text, time: Date.now() });
+
+  setTimeout(function(){
+    showCallSubtitle('TA正在接收你的话…', 2000);
+    setTimeout(function(){
+      if(callState !== 'connected') return;
+      var minS = person.replyMin || 1, maxS = person.replyMax || 3;
+      if(maxS < minS) maxS = minS;
+      var delay = (minS + Math.random() * (maxS - minS)) * 1000;
+      setTimeout(function(){
+        if(callState !== 'connected') return;
+        var reply = pickCallReply(text);
+        showCallSubtitle(reply, 999999);
+        callHistory.push({ me: false, text: reply, time: Date.now() });
+        callInputLock = false; 
+var inp = $('callInput'); 
+if(inp){ inp.disabled = false; inp.blur(); } /* 👈 这里改成 blur，强制取消聚焦，不再弹出键盘 */
+var btn = $('callSendBtn'); 
+if(btn) btn.disabled = false;
+      }, delay);
+    }, 2000);
+  }, 2500);
+}
+
+if($('callSendBtn')) $('callSendBtn').onclick = handleCallSend;
+if($('callInput')){ $('callInput').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); handleCallSend(); } }); }
 var callState = 'idle';  // idle / outgoing / incoming / connected
 var callTimerInterval = null;
 var callSeconds = 0;
@@ -9807,7 +9941,9 @@ function startOutgoingCall(){
 function startIncomingCall(){
   callState = 'incoming';
   setCallActions('incoming');
-  $('callStatusText').textContent = 'TA 来电';
+  setCallBg();
+setCallAvatar();
+$('callStatusText').textContent = 'TA 来电';
   $('callSub').textContent = '正在响铃…';
   $('callAvatarWrap').classList.remove('connected');
   openCallScreen();
@@ -9827,16 +9963,18 @@ function connectCall(){
   if(callIncomingTimeout){ clearTimeout(callIncomingTimeout); callIncomingTimeout = null; }
   stopDialTone();
   callState = 'connected';
+callHistory = [];
+setCallActions('outgoing');
+callInputLock = false;
+var inputEl = $('callInput');
+if(inputEl) inputEl.disabled = false;
+var btnEl = $('callSendBtn');
+if(btnEl) btnEl.disabled = false; /* 👈 加上这一行，接通后把底部的按钮变成“取消/挂断”样式 */
+  callHistory = [];
   $('callStatusText').textContent = '通话中';
   $('callSub').textContent = '已接通';
   $('callAvatarWrap').classList.add('connected');
   startTimer();
-
-  /* 缩小成胶囊 */
-  setTimeout(function(){
-    closeCallScreen();
-    showCallCapsule();
-  }, 600);
 
   /* 中途挂断概率 */
   var hangChance = person.taHangupChance || 10;
@@ -9902,6 +10040,15 @@ function endCall(silent){
   if(callIncomingTimeout){ clearTimeout(callIncomingTimeout); callIncomingTimeout = null; }
   
   var finalSeconds = callSeconds;
+  if(callHistory && callHistory.length > 0){
+  callHistory.forEach(function(item){
+    var m = { me: item.me, type: 'text', text: item.text, time: item.time, read: true, id: uid('m'), call: true };
+    messages.push(m);
+  });
+  saveMessages();
+  if(chatOpenNow) renderMessages();
+  callHistory = [];
+}
   stopTimer();
   closeCallScreen();
   hideCallCapsule();
@@ -12440,6 +12587,18 @@ if ($('jumpBack')) {
      ======================================================== */
 
   var UPDATE_LOGS = {
+'1.3.0': [
+  '📞 通话界面大升级：支持输入框打字，TA 会实时显示回复字幕',
+  '✍️ 通话字幕支持“TA正在接收你的话”过渡动画，极具沉浸感',
+  '🐛 修复了通话时输入框被锁、TA回复后自动弹出键盘的Bug',
+  '💬 群聊新增发图片和表情包功能，且与单聊互通',
+  '🖼️ 聊天输入框的“红包”按钮替换为“发图片”按钮，红包挪入更多菜单',
+  '💰 TA的钱包变为无限额度，显示为“无限♾️”',
+  '🚫 设置新增“显示动态和信箱”开关，可一键隐藏入口且不再触发',
+  '📝 动态发布支持网格选择表情包，TA发动态会拼字卡，引用不再乱码',
+  '🖐️ 双击头像“拍一拍”改为弹出选择列表，再也不随机乱拍',
+  '🐛 修复了真我/窄屏手机小分组名字被挤压的问题，优化了多处体验'
+],
 '1.2.0': [
   '🖼️ 聊天和群聊都支持发送相册图片了，图片会自动压缩保存',
   '🎭 群聊新增表情包功能，单聊和群聊的表情包是互通的',
