@@ -243,8 +243,66 @@ html, body {
   .redpacket-bubble.done .rp-bottom::before{content:"✓ "}
   .rp-bottom .rp-status{display:inline-flex;align-items:center;gap:4px}
 
-  /* 钱包 */
-  .wallet-card{margin:16px;border-radius:16px;padding:22px 20px;background:linear-gradient(135deg,#1f5f6c,#2f7f8c);color:#fff;box-shadow:0 8px 24px rgba(31,95,108,.25)}
+  /* 日记本 */
+.diary-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+.diary-calendar-section{flex:0 0 auto;background:var(--panel);padding:10px 14px 14px;border-bottom:4px solid var(--bg);box-shadow:0 4px 12px rgba(31,95,108,.03);z-index:2}
+.diary-cal-head{display:flex;justify-content:space-between;align-items:center;font-weight:600;color:var(--primary);margin-bottom:10px;padding:0 4px}
+.diary-cal-head button{border:0;background:transparent;font-size:18px;color:var(--primary);cursor:pointer;padding:4px 14px;border-radius:8px}
+.diary-cal-head button:active{background:var(--soft)}
+.diary-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--light-text);margin-bottom:4px}
+.diary-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.diary-day{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px 0;border-radius:10px;cursor:pointer;min-height:50px;transition:all .15s ease;position:relative;user-select:none;-webkit-user-select:none}
+.diary-day:active{background:var(--soft)}
+.diary-day.empty{visibility:hidden}
+.diary-day.today{border:2px solid var(--primary);background:rgba(31,95,108,.04)}
+.diary-day.selected{background:rgba(31,95,108,.1)}
+.diary-day.period-start{background:#e84a5f;color:#fff}
+.diary-day.period-start .diary-day-num{color:#fff}
+.diary-day.period-start .diary-day-mood{color:rgba(255,255,255,.85)!important}
+.diary-day.period-day{background:rgba(232,74,95,.12)}
+.diary-day.period-day .diary-day-num{color:#e84a5f}
+.diary-day-num{font-size:14px;font-weight:600;line-height:1.15}
+.diary-day-mood{font-size:9.5px;line-height:1.15;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.diary-day-mood.mood-ta{color:var(--primary)}
+.diary-day-mood.mood-me{color:var(--highlight)}
+.diary-card-section{flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px 14px 30px;-webkit-overflow-scrolling:touch}
+.diary-card-section::-webkit-scrollbar{width:4px}
+.diary-card-section::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+.diary-card-inner{background:var(--panel);border-radius:16px;padding:18px 16px;box-shadow:0 4px 16px rgba(31,95,108,.05);display:flex;flex-direction:column;gap:14px;animation:diaryCardIn .25s ease}
+@keyframes diaryCardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.diary-card-date{font-size:14px;font-weight:600;color:var(--light-text);display:flex;justify-content:space-between;align-items:center;padding-bottom:4px;border-bottom:1px dashed var(--soft)}
+.diary-card-date .today-badge{font-size:11px;background:var(--primary);color:#fff;padding:2px 8px;border-radius:8px;font-weight:500}
+.diary-ta-box{background:var(--soft);border-radius:12px;padding:12px 14px}
+.diary-ta-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--primary);font-weight:600;margin-bottom:8px}
+.diary-ta-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.diary-ta-tag{background:rgba(255,255,255,.85);color:var(--primary);padding:2px 8px;border-radius:8px;font-size:11.5px;font-weight:500}
+.diary-ta-content{font-size:14px;line-height:1.65;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.diary-ta-whisper{font-size:12.5px;color:#b08a8a;margin-top:10px;font-style:italic;display:flex;gap:5px;line-height:1.5}
+.diary-ta-whisper::before{content:"💌";font-style:normal}
+.diary-me-box{background:#fff;border:1px solid var(--soft);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.diary-me-head{font-size:12px;color:var(--highlight);font-weight:600;display:flex;gap:6px;align-items:center}
+.diary-me-mood{font-size:14px;color:var(--text);font-weight:500}
+.diary-me-content{font-size:14px;line-height:1.65;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.diary-me-empty{font-size:13px;color:var(--light-text);text-align:center;padding:8px 0}
+.diary-ta-reply{margin-top:4px;padding:10px 12px;background:linear-gradient(135deg,#eaf4f6,#dceef2);border-radius:12px;border-top-left-radius:4px;font-size:13px;color:var(--primary);line-height:1.55}
+.diary-ta-reply::before{content:"TA 留言";display:block;font-size:11px;font-weight:600;color:var(--primary);opacity:.7;margin-bottom:4px}
+.diary-write-btn{display:block;width:100%;height:44px;border:1px solid var(--primary);border-radius:12px;background:transparent;color:var(--primary);font-size:14.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:background .15s ease}
+.diary-write-btn:active{background:var(--soft)}
+.diary-write-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center;z-index:100}
+.diary-write-overlay.show{display:flex;animation:fadeIn .2s ease}
+.diary-write-panel{width:100%;max-width:430px;background:#fff;border-top-left-radius:20px;border-top-right-radius:20px;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:slideUp .25s cubic-bezier(.32,.72,0,1)}
+.diary-write-label{font-size:13px;font-weight:600;color:var(--primary);margin-bottom:8px}
+.diary-mood-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;max-height:120px;overflow-y:auto}
+.diary-mood-chip{padding:6px 14px;border:1px solid var(--accent);border-radius:16px;background:#fff;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;transition:all .15s ease}
+.diary-mood-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.diary-write-panel textarea{width:100%;height:120px;border:1px solid var(--accent);border-radius:12px;padding:12px;font-size:14px;font-family:inherit;resize:none;outline:none;color:var(--text);margin-bottom:16px;box-sizing:border-box}
+.diary-write-panel textarea:focus{border-color:var(--primary)}
+.diary-write-actions{display:flex;gap:10px}
+.diary-write-btn-ghost{flex:1;height:44px;border:0;border-radius:12px;background:var(--soft);color:var(--text);font-size:15px;font-family:inherit;font-weight:500;cursor:pointer}
+.diary-write-btn-primary{flex:1;height:44px;border:0;border-radius:12px;background:var(--primary);color:#fff;font-size:15px;font-family:inherit;font-weight:500;cursor:pointer}
+
+/* 钱包 */
+.wallet-card{margin:16px;border-radius:16px;padding:22px 20px;background:linear-gradient(135deg,#1f5f6c,#2f7f8c);color:#fff;box-shadow:0 8px 24px rgba(31,95,108,.25)}
   .wallet-label{font-size:12px;opacity:.75;letter-spacing:.5px}
   .wallet-amount{font-size:36px;font-weight:700;margin-top:6px;letter-spacing:.5px}
   .wallet-sub{font-size:12px;opacity:.75;margin-top:8px}
@@ -1474,6 +1532,10 @@ html, body {
     <div class="app-icon" data-icon-key="shop"></div>
     <span class="app-label">商城</span>
   </button>
+  <button class="app-item" data-app="diary">
+    <div class="app-icon" data-icon-key="diary"></div>
+    <span class="app-label">日记</span>
+  </button>
 </div>
   <div class="big-photo-card" id="bigPhotoCard">
     <img id="bigPhotoImg" src="" alt="" style="display:none;">
@@ -2184,6 +2246,27 @@ html, body {
   </div>
 </section>
 
+<section class="page" id="diaryPage">
+  <header class="page-header">
+    <button class="icon-btn" id="diaryBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="page-title">日记本</div>
+  </header>
+  <div class="diary-body">
+    <div class="diary-calendar-section">
+      <div class="diary-cal-head">
+        <button id="diaryPrevMonth">◀</button>
+        <span id="diaryMonthText">2026年 10月</span>
+        <button id="diaryNextMonth">▶</button>
+      </div>
+      <div class="diary-weekdays">
+        <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+      </div>
+      <div class="diary-cal-grid" id="diaryCalGrid"></div>
+    </div>
+    <div class="diary-card-section" id="diaryCardSection"></div>
+  </div>
+</section>
+
 <section class="page" id="walletPage">
   <header class="page-header"><button class="icon-btn" id="walletBack" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><div class="page-title">钱包</div></header>
   <div class="page-body">
@@ -2592,6 +2675,19 @@ html, body {
   <button class="fc-btn fc-close" id="fcCloseBtn" aria-label="关闭"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
 </div>
 <div class="notification-banner" id="notificationBanner"></div>
+<div class="diary-write-overlay" id="diaryWriteOverlay">
+  <div class="diary-write-panel">
+    <div class="diary-write-label">今日心情</div>
+    <div class="diary-mood-row" id="diaryMoodRow"></div>
+    <div class="diary-write-label">今天发生了什么</div>
+    <textarea id="diaryWriteContent" placeholder="写点什么吧..."></textarea>
+    <div class="diary-write-actions">
+      <button class="diary-write-btn-ghost" id="diaryWriteCancel">取消</button>
+      <button class="diary-write-btn-primary" id="diaryWriteSubmit">发布</button>
+    </div>
+  </div>
+</div>
+
 <div class="rp-popup-bg" id="rpPopupBg">
   <div class="rp-popup">
     <div class="rp-popup-top">
@@ -2653,8 +2749,8 @@ html, body {
 
 <!-- 👇 新增：公告大字提醒 -->
 <div style="background:#fdf2f4;border:2px dashed #e1b2b2;border-radius:12px;padding:14px 16px;margin:14px 0 0;text-align:center;box-shadow:0 4px 12px rgba(225,178,178,.15);">
-  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">📞 全新 1.3.0 沉浸式通话</p>
-  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">通话界面支持打字聊天啦！TA会实时回你字幕，群聊也支持发图片和表情包了～</p>
+  <p style="font-size:18px;font-weight:700;color:#c45b66;margin:0 0 4px;letter-spacing:1px;">📖 全新 1.4.0 日记本</p>
+  <p style="font-size:15px;font-weight:600;color:#c45b66;margin:0;line-height:1.5;">每天翻开 TA 的日记，写下你的心情。<br>长按日历还能标记经期，TA 会偷偷关心你～</p>
 </div>
 <!-- 👆 大字提醒结束 -->
 
@@ -2681,15 +2777,16 @@ html, body {
         <p>它<strong>没有联网</strong>、<strong>没有账号</strong>、<strong>没有 AI</strong>——TA 说的每一句话，都来自你自己写进字卡库里的字卡。</p>
 
         <p class="welcome-h">它现在能做的事</p>
-        <p>· <strong>聊天</strong>：文字 / emoji / 表情包 / 语音 / 红包 / 信件 / 提问 / 邀请一起听歌、一起玩游戏、打电话</p>
-        <p>· <strong>字卡库</strong>：大分组 / 小分组 / 关键词 / 词典拼字 / 系统预设</p>
-        <p>· <strong>小游戏</strong>：五子棋 / 跳一跳 / 俄罗斯方块</p>
-        <p>· <strong>商城</strong>：买礼物送给 TA，TA 也会主动送你</p>
-        <p>· <strong>动态</strong>：发帖、点赞、评论，TA 会来互动</p>
-        <p>· <strong>信箱</strong>：给 TA 写信，TA 会回信</p>
-        <p>· <strong>钱包</strong>：红包和礼物的账目都记着</p>
-        <p>· <strong>主屏</strong>：拍立得、待办、纪念日、今日情话、今日状态</p>
-        <p>· <strong>美化</strong>：气泡、字体、背景、App 图标、锁屏，全部可以自己改</p>
+<p>· <strong>聊天</strong>：文字 / emoji / 表情包 / 语音 / 红包 / 信件 / 提问 / 邀请一起听歌、一起玩游戏、打电话</p>
+<p>· <strong>日记本</strong>：每天翻开 TA 的日记，写下自己的心情，长按日历还能标记经期</p>
+<p>· <strong>字卡库</strong>：大分组 / 小分组 / 关键词 / 词典拼字 / 系统预设</p>
+<p>· <strong>小游戏</strong>：五子棋 / 跳一跳 / 俄罗斯方块</p>
+<p>· <strong>商城</strong>：买礼物送给 TA，TA 也会主动送你</p>
+<p>· <strong>动态</strong>：发帖、点赞、评论，TA 会来互动</p>
+<p>· <strong>信箱</strong>：给 TA 写信，TA 会回信</p>
+<p>· <strong>钱包</strong>：红包和礼物的账目都记着</p>
+<p>· <strong>主屏</strong>：拍立得、待办、纪念日、今日情话、今日状态</p>
+<p>· <strong>美化</strong>：气泡、字体、背景、App 图标、锁屏，全部可以自己改</p>
 
         <p class="welcome-h">关于「多梦角模式」</p>
         <p>打开时，你可以同时养多个梦角，每个梦角有<strong>完全独立的聊天、字卡、钱包、动态</strong>，互不打扰。主屏右上角的梦角胶囊点一下就能切换。群聊里，所有梦角会用<strong>各自的字卡</strong>说话，性格不会串味。</p>
@@ -2731,6 +2828,13 @@ html, body {
         <p>· <strong>例子二</strong>：今天你心情很好，不想被突然来一句"对不起"、"我错了"打断。那就把「道歉」类的小分组关掉。</p>
         <p>· <strong>例子三</strong>：你在忙，只想收到短句，不想长篇大论。把"长句"或"情话"分组关掉，只留"短回复"类。</p>
         <p>这个小眼睛不是"永久删除"，只是"暂时不抽"。想恢复，再点一下就行。<strong>它让你可以随时微调 TA 的性格和状态，连接会更贴合当下的你。</strong></p>
+
+        <p class="welcome-h">隐藏玩法 · 日记本</p>
+<p>主屏有一个<strong>日记本</strong>图标。点进去，上半屏是日历，下半屏是日记卡片。</p>
+<p>· <strong>TA的日记</strong>：TA 每天会写一篇日记，包含天气、心情、行程、正文和悄悄话。正文是从<strong>你自己写的主字卡</strong>里抽 5~10 张拼起来的，所以字卡写得越丰富，TA 的日记越有意思。</p>
+<p>· <strong>我的日记</strong>：你点一下「写今天的日记」，选个心情，写点什么，发布。TA 会过一会儿给你留言（留言也是从主字卡抽 2~3 张拼的）。</p>
+<p>· <strong>每天首开弹窗</strong>：每天第一次打开 App，屏幕正中央会弹出 TA 今天写的日记，你可以选择「今日不写」或「写我的日记」。</p>
+<p>· <strong>经期标记</strong>：长按日历上的某一天，标记为经期第一天。之后几天会自动变红。经期期间，TA 有 30% 概率会突然关心你。</p>
 
         <p class="welcome-h">玩法六 · 权重（决定 TA 更爱说什么）</p>
 <p>字卡库里，大分组和小分组的名字旁边现在多了一个 <strong style="color:var(--primary);">⭐权重</strong> 按钮。</p>
@@ -2891,7 +2995,7 @@ html, body {
   /* ========================================================
      📝 每次发新版，只改下面这一个版本号就行
      ======================================================== */
-  var APP_VERSION = '1.3.0';
+  var APP_VERSION = '1.4.0';
 
 /* ============ 梦角命名空间 ============ */
 var _NO_NS_KEYS = {
@@ -3133,7 +3237,59 @@ var GIFT_RECORDS_KEY = 'chat_gift_records_v1';
   var PROACTIVE_COLORS = ['#5a7fa3','#4a9a8a','#b67a7a','#8a7aa3','#1f5f6c','#b08a5a'];
 
   var DEFAULT_EMOJIS = ['😀','😂','🥰','😊','😍','🤔','😴','😭','😡','👍','❤️','🎉','✨','🌟','💔','🔥','🙏','👌','😅','🙂'];
-  var DEFAULT_LOVES = ['今天也想你，比昨天多一点。','不管多忙，记得有人在想你。','你是我所有温柔的来源。','和你在一起，每天都很甜。','想牵着你的手，走过每一条街。','你是我的小确幸。'];
+  var DEFAULT_LOVES = [
+  '今天也想你，比昨天多一点。',
+  '不管多忙，记得有人在想你。',
+  '你是我所有温柔的来源。',
+  '和你在一起，每天都很甜。',
+  '想牵着你的手，走过每一条街。',
+  '你是我的小确幸。',
+  '你是我心里最柔软的那一块。',
+  '天塌下来，我给你抗。',
+  '你笑起来的时候，全世界都亮了。',
+  '你是我平淡生活里的光。',
+  '想抱抱你，就现在。',
+  '你在我心里，比任何人都重要。',
+  '不管你在哪里，我都在想你。',
+  '你是我最想守护的人。',
+  '和你在一起，每一天都值得。',
+  '你是我所有的偏爱和例外。',
+  '想和你一起看很多很多个日落。',
+  '你是我心里最甜的那颗糖。',
+  '今天也想你了，不只是今天。',
+  '你是我最温柔的牵挂。',
+  '你的一切，我都想记在心里。',
+  '想给你最好的，因为我最好的就是你。',
+  '你是我每天醒来的第一个念头。',
+  '想和你慢慢变老。',
+  '你是我所有浪漫的起点。',
+  '不管世界多吵，我只听见你的声音。',
+  '你是我心里最安稳的角落。',
+  '想和你一起过每一个春夏秋冬。',
+  '你是我最珍贵的礼物。',
+  '想你的时候，风都是甜的。',
+  '你是我最想靠近的温暖。',
+  '想把我所有的温柔都给你。',
+  '你是我心里最亮的那颗星。',
+  '不管多远，我都会想你。',
+  '你是我最舍不得的牵挂。',
+  '想和你一起看很多很多场雪。',
+  '你是我心里最柔软的名字。',
+  '今天也想你，明天也是。',
+  '你是我最想拥抱的人。',
+  '想和你一起走过每一条路。',
+  '你是我心里最甜的回忆。',
+  '不管发生什么，我都在。',
+  '你是我最想珍惜的人。',
+  '想和你一起做很多很多小事。',
+  '你是我心里最温暖的存在。',
+  '今天也想你，想到睡不着。',
+  '你是我最想见的人。',
+  '想和你一起看星星。',
+  '你是我心里最美好的意外。',
+  '不管多晚，我都等你。',
+  '你是我最想陪伴的人。'
+];
   var DEFAULT_RP_REPLIES = [
   '这么快就领啦？',
   '领了要对我负责哦',
@@ -3170,7 +3326,41 @@ var DEFAULT_READ_BACK_REPLIES = [
   '在想你 | 撒娇黏人,想念',
   '今天有点忙 | 短回复,待续',
   '不太开心 | 冷,低落,沉默',
-  '平平淡淡 | 日常问候'
+  '平平淡淡 | 日常问候',
+  '超级开心 | 宠溺,撒娇,情话',
+  '元气满满 | 鼓励,加油,夸夸',
+  '有点困 | 短回复,嗯,晚安',
+  '想撒娇 | 撒娇黏人,抱抱,亲亲',
+  '想被哄 | 安慰,哄,宠溺',
+  '今天超甜 | 甜,撒娇,情话',
+  '有点无聊 | 陪聊,撒娇,逗',
+  '刚睡醒 | 早安,慵懒,撒娇',
+  '准备睡觉 | 晚安,抱抱,明天见',
+  '心情复杂 | 倾听,陪,抱抱',
+  '想吃好吃的 | 甜,宠溺,撒娇',
+  '今天很顺利 | 夸夸,开心,鼓励',
+  '想黏着你 | 撒娇黏人,黏,抱抱',
+  '有点小委屈 | 安慰,哄,心疼',
+  '今天特别想你 | 想念,情话,撒娇',
+  '心情超好 | 宠溺,甜,情话',
+  '想和你聊天 | 陪聊,撒娇,情话',
+  '今天想被夸 | 夸夸,宠溺,甜',
+  '有点累但想你 | 想念,安慰,抱抱',
+  '周末愉快 | 开心,陪,撒娇',
+  '今天想见你 | 想念,撒娇,情话',
+  '心情平静 | 日常问候,陪聊',
+  '想给你惊喜 | 甜,撒娇,情话',
+  '今天想撒娇 | 撒娇黏人,抱抱,亲亲',
+  '有点小开心 | 开心,甜,夸夸',
+  '想被你陪 | 陪聊,撒娇,抱抱',
+  '今天格外想你 | 想念,情话,撒娇',
+  '心情甜甜的 | 甜,宠溺,情话',
+  '想听你说话 | 陪聊,撒娇,倾听',
+  '今天想被你哄 | 哄,安慰,宠溺',
+  '有点想念 | 想念,撒娇,抱抱',
+  '心情美美的 | 开心,甜,夸夸',
+  '想和你一起 | 陪,撒娇,情话',
+  '今天想你了 | 想念,情话,撒娇'
 ];
 var MOOD_KEY = 'chat_mood_v1';
 
@@ -3784,7 +3974,18 @@ system: {
           '没事，你说', '我在等你说话呢', '嗯，抱一下', '怎么啦'
         ],
         love: DEFAULT_LOVES.slice(),
-        redpacket: DEFAULT_RP_REPLIES.slice(),
+weather: [
+  '☀️ 晴','⛅ 多云','🌧️ 下雨了','⛈️ 打雷了','🌫️ 阴天','❄️ 降温了',
+  '🌬️ 刮风了','🌈 出彩虹了','🌤️ 阳光很好','🌙 晚上风很凉','☁️ 云很厚',
+  '🥵 闷热','🥶 冻手冻脚','🌧️ 小雨淅沥','🌨️ 下雪了','🌪️ 天气有点糟糕'
+],
+itinerary: [
+  '📍 在训练','📍 在看书','📍 在开会','📍 在吃饭','📍 在发呆','📍 偷偷想你',
+  '📍 在等你','📍 在写报告','📍 在打游戏','📍 在洗澡','📍 准备睡了','📍 在喝奶茶',
+  '📍 在健身房举铁','📍 在阳台吹风','📍 在回忆我们的过去','📍 在处理工作',
+  '📍 在赶路','📍 在听我们常听的歌','📍 在挑送给你的礼物','📍 在梦里找你'
+],
+redpacket: DEFAULT_RP_REPLIES.slice(),
         readback: DEFAULT_READ_BACK_REPLIES.slice(),
         giftThanks: ['谢谢宝宝！好喜欢～', '哇，你怎么知道我想要这个！', '收到了，抱抱你～', '好开心，谢谢你'],
         giftNote: ['路过看到，觉得你会喜欢。', '给你的，别嫌弃呀。', '想你了，送个小东西。', '这个给你，收好啦。'],
@@ -3870,6 +4071,17 @@ if(!Array.isArray(d.system.touchReplies) || d.system.touchReplies.length === 0){
   ];
 }
 if(!Array.isArray(d.system.love)) d.system.love = DEFAULT_LOVES.slice();
+if(!Array.isArray(d.system.weather) || !d.system.weather.length) d.system.weather = [
+  '☀️ 晴','⛅ 多云','🌧️ 下雨了','⛈️ 打雷了','🌫️ 阴天','❄️ 降温了',
+  '🌬️ 刮风了','🌈 出彩虹了','🌤️ 阳光很好','🌙 晚上风很凉','☁️ 云很厚',
+  '🥵 闷热','🥶 冻手冻脚','🌧️ 小雨淅沥','🌨️ 下雪了','🌪️ 天气有点糟糕'
+];
+if(!Array.isArray(d.system.itinerary) || !d.system.itinerary.length) d.system.itinerary = [
+  '📍 在训练','📍 在看书','📍 在开会','📍 在吃饭','📍 在发呆','📍 偷偷想你',
+  '📍 在等你','📍 在写报告','📍 在打游戏','📍 在洗澡','📍 准备睡了','📍 在喝奶茶',
+  '📍 在健身房举铁','📍 在阳台吹风','📍 在回忆我们的过去','📍 在处理工作',
+  '📍 在赶路','📍 在听我们常听的歌','📍 在挑送给你的礼物','📍 在梦里找你'
+];
     if(!Array.isArray(d.system.redpacket) || d.system.redpacket.length === 0) d.system.redpacket = DEFAULT_RP_REPLIES.slice();
     if(!Array.isArray(d.system.readback) || d.system.readback.length === 0) d.system.readback = DEFAULT_READ_BACK_REPLIES.slice();
     if(!Array.isArray(d.system.rejectListen) || d.system.rejectListen.length === 0) d.system.rejectListen = DEFAULT_REJECT_LISTEN_REPLIES.slice();
@@ -4270,7 +4482,8 @@ function renderAppIcons(){
     settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
     game:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>',
   group:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8c-2-3-6-3-6-1 0 1.5 2 2 6 1z"/><path d="M12 8c2-3 6-3 6-1 0 1.5-2 2-6 1z"/></svg>'
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M12 8c-2-3-6-3-6-1 0 1.5 2 2 6 1z"/><path d="M12 8c2-3 6-3 6-1 0 1.5-2 2-6 1z"/></svg>',
+  diary:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>'
 };
   Array.prototype.forEach.call(document.querySelectorAll('[data-icon-key]'), function(el){
     var key = el.dataset.iconKey;
@@ -5184,22 +5397,24 @@ Array.prototype.forEach.call(v.querySelectorAll('.subgroup-card.open'), function
 
   var html = '';
 
-  // 💌 情话
-  html += cat('💌', '情话', 1,
-    sub('love', '今日情话', cards.system.love, 'data-love-del', 'data-add-love', '添加一句情话')
-  );
+  // 📖 日记
+html += cat('📖', '日记', 4,
+  sub('mood', '今日心情', cards.system.mood, 'data-mood-del', 'data-add-mood', '例：有点累 | 短回复,嗯,困', '格式：<code style="background:var(--soft);padding:1px 6px;border-radius:5px;">状态名 | 关键词1,关键词2</code><br>状态名会显示在 TA 的日记卡片上。<br>关键词是"去哪抽卡"，比如"短回复"就去找名字带"短回复"的分组。<br>不写竖线 → 只显示不生效。匹配不到 → 正常随机抽卡。') +
+  sub('weather', '今日天气', cards.system.weather, 'data-weather-del', 'data-add-weather', '例：☀️ 晴', '显示在 TA 日记卡片右上角。') +
+  sub('itinerary', '今日行程', cards.system.itinerary, 'data-itin-del', 'data-add-itin', '例：📍 在训练', '显示在 TA 日记卡片上的小标签。') +
+  sub('love', '悄悄话', cards.system.love, 'data-love-del', 'data-add-love', '添加一句悄悄话', '显示在 TA 日记卡片底部的悄悄话。')
+);
 
-  // 🧧 红包
-  html += cat('🧧', '红包', 2,
-    sub('rpThanks', '红包致谢', cards.system.rpThanks, 'data-rp-thanks-del', 'data-add-rp-thanks', '添加一句红包致谢', 'TA 领了你的红包之后，会说的话。跟"红包回复"是两回事，别搞混。') +
-    sub('redpacket', '红包回复', cards.system.redpacket, 'data-rp-del', 'data-add-rp', '添加一句红包回复')
-  );
+// 🧧 红包
+html += cat('🧧', '红包', 2,
+  sub('rpThanks', '红包致谢', cards.system.rpThanks, 'data-rp-thanks-del', 'data-add-rp-thanks', '添加一句红包致谢', 'TA 领了你的红包之后，会说的话。跟"红包回复"是两回事，别搞混。') +
+  sub('redpacket', '红包回复', cards.system.redpacket, 'data-rp-del', 'data-add-rp', '添加一句红包回复')
+);
 
-  // 🎭 情绪
-  html += cat('🎭', '情绪', 2,
-    sub('mood', '今日状态', cards.system.mood, 'data-mood-del', 'data-add-mood', '例：有点累 | 短回复,嗯,困', '格式：<code style="background:var(--soft);padding:1px 6px;border-radius:5px;">状态名 | 关键词1,关键词2</code><br>关键词是"去哪抽卡"，比如"短回复"就去找名字带"短回复"的分组。<br>不写竖线 → 只显示不生效。匹配不到 → 正常随机抽卡。') +
-    sub('readback', '已读不回', cards.system.readback, 'data-readback-del', 'data-add-readback', '添加一句被炸出来的台词')
-  );
+// 🎭 其他
+html += cat('🎭', '其他', 1,
+  sub('readback', '已读不回', cards.system.readback, 'data-readback-del', 'data-add-readback', '添加一句被炸出来的台词')
+);
 
   // ⏰ 自动回复
   var autoInner = sub('waitForYou', '等你回来', cards.system.waitForYou, 'data-wait-del', 'data-add-wait', '添加一句等你的话', '你离开一段时间再回来，TA 会一次性补给你一些"在你不在时想你"的话。离开越久，堆得越多。');
@@ -5613,6 +5828,22 @@ if(rbmDel){
   saveCards(); renderSystemView();
   return;
 }
+var weatherDel = e.target.closest('[data-weather-del]');
+if(weatherDel){
+  var wi = parseInt(weatherDel.dataset.weatherDel, 10);
+  if(!Array.isArray(cards.system.weather)) cards.system.weather = [];
+  cards.system.weather.splice(wi, 1);
+  saveCards(); renderSystemView();
+  return;
+}
+var itinDel = e.target.closest('[data-itin-del]');
+if(itinDel){
+  var ii = parseInt(itinDel.dataset.itinDel, 10);
+  if(!Array.isArray(cards.system.itinerary)) cards.system.itinerary = [];
+  cards.system.itinerary.splice(ii, 1);
+  saveCards(); renderSystemView();
+  return;
+}
 var moodDel = e.target.closest('[data-mood-del]');
 if(moodDel){ var mi = parseInt(moodDel.dataset.moodDel, 10); cards.system.mood.splice(mi, 1); saveCards(); renderSystemView(); return; }
 var rbDel = e.target.closest('[data-readback-del]');
@@ -5840,6 +6071,26 @@ if(f.matches('[data-add-score-behind]')){
   if(!valSB) return;
   if(!Array.isArray(cards.system.scoreBehind)) cards.system.scoreBehind = [];
   cards.system.scoreBehind.push(valSB);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-weather]')){
+  e.preventDefault();
+  var inpWt = f.querySelector('input');
+  var valWt = inpWt.value.trim();
+  if(!valWt) return;
+  if(!Array.isArray(cards.system.weather)) cards.system.weather = [];
+  cards.system.weather.push(valWt);
+  saveCards(); renderSystemView();
+  return;
+}
+if(f.matches('[data-add-itin]')){
+  e.preventDefault();
+  var inpIt = f.querySelector('input');
+  var valIt = inpIt.value.trim();
+  if(!valIt) return;
+  if(!Array.isArray(cards.system.itinerary)) cards.system.itinerary = [];
+  cards.system.itinerary.push(valIt);
   saveCards(); renderSystemView();
   return;
 }
@@ -6120,6 +6371,81 @@ function allTextCards(){
   return pool;
 }
 
+  /* ============ 日记正文：从主字卡抽 5~10 张拼起来 ============ */
+/* ============ 日记留言：从主字卡抽 2~3 张拼起来 ============ */
+/* ============ 经期判断 + 关心彩蛋 ============ */
+var PERIOD_CARE_POOL = [
+  '宝宝，肚子疼不疼？我给你揉揉。',
+  '多喝热水，今天千万别吃凉的。',
+  '今天别逞强了，早点休息，抱抱你。',
+  '把手机放下，闭眼休息一下，我陪着你。',
+  '要不要我帮你暖一下肚子？',
+  '今天少动，多躺着，听话。',
+  '我给你泡红糖水了，趁热喝。',
+  '疼的话就骂我，我受着。',
+  '别吃辣了，这几天清淡一点。',
+  '困就睡，我在这守着你。',
+  '身体不舒服就别硬撑，知道吗。',
+  '今天想吃什么？我去给你做。',
+  '有没有好一点？',
+  '这几天不要碰凉水，记住了。',
+  '你辛苦了，我知道很难受。',
+  '抱紧你，很快就好了。',
+  '肚子疼就靠着我，别自己扛。',
+  '今天什么都不用做，休息就是正事。',
+  '我给你捂捂，手给我。',
+  '乖，忍一忍，很快就过去了。'
+];
+
+function isInPeriod(){
+  if(!periodData || !periodData.start) return false;
+  var todayStr = diaryFormatDate(new Date());
+  if(todayStr < periodData.start) return false;
+  var sp = diaryParseParts(periodData.start);
+  var tp = diaryParseParts(todayStr);
+  var startUTC = Date.UTC(sp.y, sp.m, sp.d);
+  var todayUTC = Date.UTC(tp.y, tp.m, tp.d);
+  var diff = Math.round((todayUTC - startUTC) / 86400000);
+  return diff >= 0 && diff < (periodData.days || 5);
+}
+
+function getPeriodCare(){
+  return PERIOD_CARE_POOL[Math.floor(Math.random() * PERIOD_CARE_POOL.length)];
+}
+
+function generateDiaryReply(){
+  var pool = allTextCards();
+  if(!pool || !pool.length) return '看到了，今天辛苦啦，早点休息哦。';
+  var count = 2 + Math.floor(Math.random() * 2); // 2~3 张
+  if(count > pool.length) count = pool.length;
+  var picked = [];
+  var copy = pool.slice();
+  for(var i = 0; i < count && copy.length; i++){
+    var idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+  return picked.join('，');
+}
+
+function generateDiaryText(){
+  var pool = allTextCards();
+  if(!pool || !pool.length) return '今天没什么特别的，就是平平淡淡。';
+
+  /* 随机抽 5~10 张 */
+  var count = 5 + Math.floor(Math.random() * 6); // 5~10
+  if(count > pool.length) count = pool.length;
+
+  var picked = [];
+  var copy = pool.slice();
+  for(var i = 0; i < count && copy.length; i++){
+    var idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+
+  return picked.join('，');
+}
   function markRecent(txt){
     if(!txt) return;
     var idx = recentCards.indexOf(txt);
@@ -6259,6 +6585,12 @@ if(n < 2) n = 2; if(n > 10) n = 10;
 function makeOneReply(forceCare){
   var lastUserText = '';
   for(var i=messages.length-1;i>=0;i--){ if(messages[i].me){ lastUserText = messages[i].text || ''; break; } }
+
+  /* 🩸 经期关心彩蛋：经期期间 30% 概率触发 */
+  if(isInPeriod() && Math.random() < 0.3){
+    return { me:false, type:'text', text: getPeriodCare(), time:Date.now() };
+  }
+
   var isSad = forceCare || detectEmotion(lastUserText);
   if(isSad){
   var carePool = [];
@@ -8225,6 +8557,47 @@ if($('backupEntryRow')) $('backupEntryRow').onclick = function(){ $('backupMsgCo
   proactive.lastOpenTime = Date.now(); 
   saveProactive(); 
   checkProactiveOnOpen(); 
+  checkDiaryPopup();
+}
+
+function checkDiaryPopup(){
+  var todayStr = diaryFormatDate(new Date());
+  var shown = '';
+  try{ shown = localStorage.getItem(DIARY_LAST_SHOWN_KEY) || ''; }catch(e){}
+  if(shown === todayStr) return;
+  try{ localStorage.setItem(DIARY_LAST_SHOWN_KEY, todayStr); }catch(e){}
+  if(!diaryData[todayStr]) genTaDiary(todayStr);
+  setTimeout(function(){ showDiaryPopup(todayStr); }, 1200);
+}
+
+function showDiaryPopup(dateStr){
+  var d = diaryData[dateStr];
+  if(!d) return;
+  var html = '<div style="text-align:left;font-size:13.5px;line-height:1.7;color:var(--text);max-height:60vh;overflow-y:auto;">' +
+    '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--light-text);margin-bottom:10px;">' +
+      '<span>TA的日记</span>' +
+      '<span>' + esc(d.taWeather || '') + '</span>' +
+    '</div>' +
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">' +
+      '<span style="background:var(--soft);color:var(--primary);padding:3px 10px;border-radius:8px;font-size:12px;">' + esc(d.taMood || '') + '</span>' +
+      '<span style="background:var(--soft);color:var(--primary);padding:3px 10px;border-radius:8px;font-size:12px;">' + esc(d.taItinerary || '') + '</span>' +
+    '</div>' +
+    '<div style="white-space:pre-wrap;padding:12px 14px;background:var(--soft);border-radius:12px;">' + esc(d.taContent || '') + '</div>' +
+    '<div style="font-size:12.5px;color:#b08a8a;font-style:italic;margin-top:12px;line-height:1.5;">💌 ' + esc(d.taWhisper || '') + '</div>' +
+  '</div>';
+  showDialog('📖 TA的日记', html, [
+    { text: '今日不写' },
+    { text: '写我的日记', primary: true, onClick: function(){
+      diarySelectedDate = dateStr;
+      if(!diaryCurrentYear){
+        var p = diaryParseParts(dateStr);
+        diaryCurrentYear = p.y;
+        diaryCurrentMonth = p.m;
+      }
+      openDiaryPage();
+      setTimeout(openDiaryWrite, 400);
+    } }
+  ], true);
 }
 
 /* ============ 等你回来 ============ */
@@ -8324,6 +8697,7 @@ else if(app === 'mailbox'){ renderMailbox(); $('mailboxPage').classList.add('ope
     else if(app === 'affection'){ renderAffectionPage(); $('affectionPage').classList.add('open'); }
     else if(app === 'anniversary'){ renderAnniversaryPage(); $('anniversaryPage').classList.add('open'); }
     else if(app === 'wallet'){ renderWalletPage(); $('walletPage').classList.add('open'); }
+else if(app === 'diary'){ openDiaryPage(); }
 else if(app === 'game'){ window.__gomokuMode = 'solo'; $('gameHallPage').classList.add('open'); }
 else if(app === 'group'){
   if(!isMultiPersonaOn()) return;
@@ -8379,7 +8753,283 @@ if($('chatMusicBack')){
     });
   }
 
-  /* 钱包页面 */
+  /* ============ 日记本 ============ */
+var DIARY_DATA_KEY = 'chat_diary_data_v1';
+var DIARY_LAST_SHOWN_KEY = 'chat_diary_last_shown_v1';
+var PERIOD_DATA_KEY = 'chat_period_data_v1';
+var DIARY_WEATHER = ['☀️ 晴','⛅ 多云','🌧️ 下雨了','⛈️ 打雷了','🌫️ 阴天','❄️ 降温了','🌬️ 刮风了','🌈 出彩虹了','🌤️ 阳光很好','🌙 晚上风很凉','☁️ 云很厚','🥵 闷热','🥶 冻手冻脚','🌧️ 小雨淅沥','🌨️ 下雪了'];
+var DIARY_ITINERARY = ['📍 在训练','📍 在看书','📍 在开会','📍 在吃饭','📍 在发呆','📍 偷偷想你','📍 在等你','📍 在写报告','📍 在打游戏','📍 在洗澡','📍 准备睡了','📍 在喝奶茶','📍 在健身房举铁','📍 在阳台吹风','📍 在回忆我们的过去','📍 在处理工作','📍 在赶路','📍 在听我们常听的歌','📍 在挑送给你的礼物','📍 在梦里找你'];
+var diaryData = {};
+var periodData = { start: null, days: 5 };
+var diaryCurrentYear = 0;
+var diaryCurrentMonth = 0;
+var diarySelectedDate = '';
+var diarySelectedMood = '';
+
+function diaryFormatDate(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function diaryParseParts(str){
+  var p = str.split('-').map(Number);
+  return { y: p[0], m: p[1] - 1, d: p[2] };
+}
+function loadDiaryData(){
+  try{ var raw = localStorage.getItem(DIARY_DATA_KEY); if(raw){ var d = JSON.parse(raw); if(d && typeof d === 'object') diaryData = d; } }catch(e){}
+}
+function saveDiaryData(){ safeSetItem(DIARY_DATA_KEY, JSON.stringify(diaryData)); }
+function loadPeriodData(){
+  try{ var raw = localStorage.getItem(PERIOD_DATA_KEY); if(raw){ var d = JSON.parse(raw); if(d && typeof d === 'object'){ periodData.start = d.start || null; periodData.days = d.days || 5; } } }catch(e){}
+}
+function savePeriodData(){ safeSetItem(PERIOD_DATA_KEY, JSON.stringify(periodData)); }
+
+function genTaDiary(dateStr){
+  if(diaryData[dateStr] && diaryData[dateStr].taContent) return diaryData[dateStr];
+  var d = diaryData[dateStr] || {};
+  var sys = (cards && cards.system) ? cards.system : {};
+
+  /* 天气：从预设抽 */
+  var weatherPool = (Array.isArray(sys.weather) && sys.weather.length) ? sys.weather : DIARY_WEATHER;
+  d.taWeather = weatherPool[Math.floor(Math.random() * weatherPool.length)];
+
+  /* 心情：从预设抽，取竖线前面的状态名 */
+  var moodPool = (Array.isArray(sys.mood) && sys.mood.length) ? sys.mood : DEFAULT_MOODS;
+  if(moodPool.length){
+    var raw = moodPool[Math.floor(Math.random() * moodPool.length)];
+    d.taMood = raw.split('|')[0].trim();
+  } else {
+    d.taMood = '今天心情不错';
+  }
+
+  /* 行程：从预设抽 */
+  var itinPool = (Array.isArray(sys.itinerary) && sys.itinerary.length) ? sys.itinerary : DIARY_ITINERARY;
+  d.taItinerary = itinPool[Math.floor(Math.random() * itinPool.length)];
+
+  /* 正文：从主字卡抽 5~10 张 */
+  d.taContent = generateDiaryText();
+
+  /* 悄悄话：从预设抽 */
+  var lovePool = (Array.isArray(sys.love) && sys.love.length) ? sys.love.filter(function(t){ return t && String(t).trim(); }) : DEFAULT_LOVES;
+  if(!lovePool.length) lovePool = DEFAULT_LOVES;
+  d.taWhisper = lovePool[Math.floor(Math.random() * lovePool.length)];
+
+  diaryData[dateStr] = d;
+  saveDiaryData();
+  return d;
+}
+
+function renderDiaryCalendar(){
+  var grid = $('diaryCalGrid');
+  if(!grid) return;
+  $('diaryMonthText').textContent = diaryCurrentYear + '年 ' + (diaryCurrentMonth + 1) + '月';
+  var firstDay = new Date(diaryCurrentYear, diaryCurrentMonth, 1).getDay();
+  var daysInMonth = new Date(diaryCurrentYear, diaryCurrentMonth + 1, 0).getDate();
+  var todayStr = diaryFormatDate(new Date());
+  var html = '';
+  for(var i = 0; i < firstDay; i++) html += '<div class="diary-day empty"></div>';
+  for(var d = 1; d <= daysInMonth; d++){
+    var dateStr = diaryCurrentYear + '-' + String(diaryCurrentMonth + 1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    var isToday = (dateStr === todayStr);
+    var isSelected = (dateStr === diarySelectedDate);
+    var isPeriodStart = (periodData.start === dateStr);
+    var isPeriodDay = false;
+    if(periodData.start){
+      var sp = diaryParseParts(periodData.start);
+      var startUTC = Date.UTC(sp.y, sp.m, sp.d);
+      var currUTC = Date.UTC(diaryCurrentYear, diaryCurrentMonth, d);
+      var diff = Math.round((currUTC - startUTC) / 86400000);
+      if(diff > 0 && diff < periodData.days) isPeriodDay = true;
+    }
+    var dayData = diaryData[dateStr];
+    var taMoodShort = '';
+    var meMoodShort = '';
+    if(dayData){
+      if(dayData.taMood) taMoodShort = dayData.taMood.slice(0, 4);
+      if(dayData.meMood) meMoodShort = dayData.meMood.slice(0, 4);
+    }
+    var cls = 'diary-day';
+    if(isToday) cls += ' today';
+    if(isSelected) cls += ' selected';
+    if(isPeriodStart) cls += ' period-start';
+    if(isPeriodDay) cls += ' period-day';
+    html += '<div class="' + cls + '" data-diary-date="' + dateStr + '">' +
+              '<span class="diary-day-num">' + d + '</span>' +
+              (taMoodShort ? '<span class="diary-day-mood mood-ta">' + esc(taMoodShort) + '</span>' : '') +
+              (meMoodShort ? '<span class="diary-day-mood mood-me">' + esc(meMoodShort) + '</span>' : '') +
+            '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function renderDiaryCard(){
+  var section = $('diaryCardSection');
+  if(!section) return;
+  var dateStr = diarySelectedDate;
+  var parts = diaryParseParts(dateStr);
+  var dateObj = new Date(parts.y, parts.m, parts.d);
+  var todayStr = diaryFormatDate(new Date());
+  var isToday = (dateStr === todayStr);
+  var dayData = diaryData[dateStr];
+  var ta = (dayData && dateStr <= todayStr) ? { weather: dayData.taWeather, mood: dayData.taMood, itin: dayData.taItinerary, content: dayData.taContent, whisper: dayData.taWhisper } : null;
+  var dateLabel = parts.y + '年' + (parts.m + 1) + '月' + parts.d + '日 星期' + '日一二三四五六'[dateObj.getDay()];
+
+  var html = '<div class="diary-card-inner">';
+  html += '<div class="diary-card-date"><span>' + dateLabel + '</span>' + (isToday ? '<span class="today-badge">今天</span>' : '') + '</div>';
+
+  if(ta){
+    html += '<div class="diary-ta-box">' +
+              '<div class="diary-ta-head"><span>TA的日记</span><span>' + esc(ta.weather) + '</span></div>' +
+              '<div class="diary-ta-tags">' +
+                '<span class="diary-ta-tag">' + esc(ta.mood) + '</span>' +
+                '<span class="diary-ta-tag">' + esc(ta.itin) + '</span>' +
+              '</div>' +
+              '<div class="diary-ta-content">' + esc(ta.content) + '</div>' +
+              '<div class="diary-ta-whisper">' + esc(ta.whisper) + '</div>' +
+            '</div>';
+  }
+
+  html += '<div class="diary-me-box">' +
+            '<div class="diary-me-head">✍️ 我的日记</div>';
+  if(dayData && dayData.meContent){
+    html += '<div class="diary-me-mood">' + esc(dayData.meMood || '') + '</div>' +
+            '<div class="diary-me-content">' + esc(dayData.meContent) + '</div>';
+    if(dayData.taReply){
+      html += '<div class="diary-ta-reply">' + esc(dayData.taReply) + '</div>';
+    }
+  } else if(isToday){
+  html += '<div class="diary-me-empty">今天还没有写日记哦～</div>' +
+          '<button class="diary-write-btn" id="diaryWriteBtn">写今天的日记</button>';
+} else if(dateStr > todayStr){
+  html += '<div class="diary-me-empty">这一天还没到呢～</div>';
+} else {
+  html += '<div class="diary-me-empty">这一天没有写日记</div>' +
+          '<button class="diary-write-btn" id="diaryWriteBtn">补写这一天</button>';
+}
+  html += '</div></div>';
+
+  section.innerHTML = html;
+  section.scrollTop = 0;
+  var btn = $('diaryWriteBtn');
+  if(btn) btn.onclick = openDiaryWrite;
+}
+
+function openDiaryPage(){
+  var now = new Date();
+  if(!diaryCurrentYear){
+    diaryCurrentYear = now.getFullYear();
+    diaryCurrentMonth = now.getMonth();
+  }
+  var todayStr = diaryFormatDate(now);
+  if(!diarySelectedDate || diarySelectedDate > todayStr) diarySelectedDate = todayStr;
+  if(!diaryData[todayStr]) genTaDiary(todayStr);
+  renderDiaryCalendar();
+  renderDiaryCard();
+  $('diaryPage').classList.add('open');
+}
+
+function openDiaryWrite(){
+  var moodPool = (cards && cards.system && Array.isArray(cards.system.mood)) ? cards.system.mood : DEFAULT_MOODS;
+  var row = $('diaryMoodRow');
+  row.innerHTML = moodPool.map(function(s){
+    var name = s.split('|')[0].trim();
+    return '<button class="diary-mood-chip" data-diary-mood="' + esc(name) + '">' + esc(name) + '</button>';
+  }).join('');
+  diarySelectedMood = '';
+  $('diaryWriteContent').value = '';
+  $('diaryWriteOverlay').classList.add('show');
+}
+
+if($('diaryMoodRow')){
+  $('diaryMoodRow').addEventListener('click', function(e){
+    var chip = e.target.closest('[data-diary-mood]');
+    if(!chip) return;
+    Array.prototype.forEach.call(this.querySelectorAll('.diary-mood-chip'), function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    diarySelectedMood = chip.dataset.diaryMood;
+  });
+}
+if($('diaryWriteCancel')) $('diaryWriteCancel').onclick = function(){ $('diaryWriteOverlay').classList.remove('show'); };
+if($('diaryWriteSubmit')){
+  $('diaryWriteSubmit').onclick = function(){
+    var text = $('diaryWriteContent').value.trim();
+    if(!text){ showDialog('提示', '写点什么再发布吧~', [{text:'知道了', primary:true}]); return; }
+    if(!diarySelectedMood){ showDialog('提示', '选一个今日心情吧~', [{text:'知道了', primary:true}]); return; }
+    var dateStr = diarySelectedDate;
+    var d = diaryData[dateStr] || {};
+    d.meMood = diarySelectedMood;
+    d.meContent = text;
+    if(!d.taContent) genTaDiary(dateStr);
+    diaryData[dateStr] = d;
+    saveDiaryData();
+    $('diaryWriteOverlay').classList.remove('show');
+    renderDiaryCalendar();
+    renderDiaryCard();
+    setTimeout(function(){
+  d.taReply = generateDiaryReply();
+  saveDiaryData();
+  renderDiaryCard();
+  showNotificationBanner({ me:false, type:'sys', text:'TA给你的日记留言了，记得看哦' });
+}, 1500);
+  };
+}
+if($('diaryBack')) $('diaryBack').onclick = function(){ $('diaryPage').classList.remove('open'); };
+if($('diaryPrevMonth')){
+  $('diaryPrevMonth').onclick = function(){
+    diaryCurrentMonth--;
+    if(diaryCurrentMonth < 0){ diaryCurrentMonth = 11; diaryCurrentYear--; }
+    renderDiaryCalendar();
+  };
+}
+if($('diaryNextMonth')){
+  $('diaryNextMonth').onclick = function(){
+    diaryCurrentMonth++;
+    if(diaryCurrentMonth > 11){ diaryCurrentMonth = 0; diaryCurrentYear++; }
+    renderDiaryCalendar();
+  };
+}
+if($('diaryCalGrid')){
+  var diaryPressTimer = null;
+  var diaryDidLongPress = false;
+  $('diaryCalGrid').addEventListener('pointerdown', function(e){
+    var day = e.target.closest('.diary-day:not(.empty)');
+    if(!day) return;
+    diaryDidLongPress = false;
+    var dateStr = day.dataset.diaryDate;
+    diaryPressTimer = setTimeout(function(){
+      diaryPressTimer = null;
+      diaryDidLongPress = true;
+      if(periodData.start === dateStr){
+        periodData.start = null;
+        showDialog('提示', '已取消经期标记', [{text:'知道了', primary:true}]);
+      } else {
+        periodData.start = dateStr;
+        showDialog('提示', '已标记经期第一天', [{text:'知道了', primary:true}]);
+      }
+      savePeriodData();
+      renderDiaryCalendar();
+    }, 600);
+  });
+  document.addEventListener('pointerup', function(){
+    if(diaryPressTimer){ clearTimeout(diaryPressTimer); diaryPressTimer = null; }
+  });
+  $('diaryCalGrid').addEventListener('click', function(e){
+  if(diaryDidLongPress){ diaryDidLongPress = false; return; }
+  var day = e.target.closest('.diary-day:not(.empty)');
+  if(!day) return;
+  diarySelectedDate = day.dataset.diaryDate;
+  var todayStr = diaryFormatDate(new Date());
+  /* 只有今天或过去的日子才自动生成 TA 的日记，未来的日子留空 */
+  if(diarySelectedDate <= todayStr && !diaryData[diarySelectedDate]){
+    genTaDiary(diarySelectedDate);
+  }
+  renderDiaryCalendar();
+  renderDiaryCard();
+});
+}
+
+loadDiaryData();
+loadPeriodData();
+
+/* 钱包页面 */
   if($('walletBack')) $('walletBack').onclick = function(){ $('walletPage').classList.remove('open'); };
   if($('rpFormBack')) $('rpFormBack').onclick = function(){ $('rpFormPage').classList.remove('open'); };
   /* 红包搬家到菜单里 */
@@ -10166,16 +10816,18 @@ function hideCallCapsule(){
   document.addEventListener('touchcancel', endDrag);
 
   if($('callCapsuleInfo')) $('callCapsuleInfo').onclick = function(){
-    if(callState === 'connected'){
-      $('callScreen').classList.remove('hidden');
-      $('callScreen').classList.add('show');
-      $('callStatusText').textContent = '通话中';
-      $('callSub').textContent = '已接通';
-      $('callAvatarWrap').classList.add('connected');
-      setCallActions('outgoing');
-      setTimeout(function(){ closeCallScreen(); }, 2000);
-    }
-  };
+  if(callState === 'connected'){
+    $('callScreen').classList.remove('hidden');
+    $('callScreen').classList.add('show');
+    $('callStatusText').textContent = '通话中';
+    $('callSub').textContent = '已接通';
+    $('callAvatarWrap').classList.add('connected');
+    setCallActions('outgoing');
+    /* 🛑 已删除 setTimeout(closeCallScreen, 2000) 自动缩回定时器 */
+    /* 👇 重新绑定点击空白处手动缩小的逻辑 */
+    bindCallScreenClick();
+  }
+};
   if($('callCapsuleMute')) $('callCapsuleMute').onclick = function(e){
     e.stopPropagation();
     callMuted = !callMuted;
@@ -12606,6 +13258,17 @@ if ($('jumpBack')) {
      ======================================================== */
 
   var UPDATE_LOGS = {
+'1.4.0': [
+  '📖 全新「日记本」功能上线！每天翻开 TA 的日记，写下自己的心情',
+  '📅 日记本上半屏是日历，下半屏是日记卡片，点哪天看哪天',
+  '🌤️ TA 的日记包含天气、心情、行程、正文、悄悄话，正文从你的主字卡抽 5~10 张拼成',
+  '✍️ 你写完日记，TA 会从主字卡抽 2~3 张拼成留言，出现在卡片下方',
+  '🔔 每天第一次打开 App，屏幕正中央弹出 TA 今天写的日记',
+  '🩸 长按日历可以标记经期第一天，之后几天自动变红',
+  '💗 经期期间，TA 有 30% 概率突然关心你（系统内置彩蛋）',
+  '📝 系统预设新增「📖 日记」分类：今日心情 / 今日天气 / 今日行程 / 悄悄话',
+  '🐛 修复了未来日期会凭空出现 TA 日记的 Bug'
+],
 '1.3.0': [
   '📞 通话界面大升级：支持输入框打字，TA 会实时显示回复字幕',
   '✍️ 通话字幕支持“TA正在接收你的话”过渡动画，极具沉浸感',
