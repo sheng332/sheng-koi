@@ -3533,6 +3533,13 @@ function loadTaStickers(){
 function loadUserStickers(){
   try{ var raw = localStorage.getItem(USER_STICKER_KEY); if(raw){ var d = JSON.parse(raw); userStickers = resolveStickerArray(d); } }catch(e){}
 }
+/* 👇 补上这两个缺失的保存函数 */
+function saveTaStickers(){
+  safeSetItem(TA_STICKER_KEY, JSON.stringify(serializeStickerArray(taStickers)));
+}
+function saveUserStickers(){
+  safeSetItem(USER_STICKER_KEY, JSON.stringify(serializeStickerArray(userStickers)));
+}
   function loadWallets(){
   try{
     var raw = localStorage.getItem(WALLET_ME_KEY);
@@ -9371,9 +9378,10 @@ renderPersonaChip();
 loadStats();
 loadProactive();
 loadMessages();
-  loadCards();
-  loadUserStickers();
-  loadPats();
+loadCards();
+loadUserStickers();
+loadTaStickers();   /* 👈 补上这一行 */
+loadPats();
   loadWallets();
   loadLetters();
   loadMusicPlaylist();
